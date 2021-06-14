@@ -44,6 +44,20 @@ class System<State, Event> {
     final next = copy(_run);
     return System.pure(next);
   }
+
+  /// Create a new system with a Context.
+  /// 
+  /// Return a new system with some "live data" accotiated with it.
+  System<State, Event> runWithContext<Context>({
+    required Context Function() createContext,
+    required Dispose Function(Context context, Run<State, Event> run, Reduce<State, Event>? nextReduce, Effect<State, Event>? nextEffect) run,
+  }) {
+    final _run = run;
+    return copy((run) => ({reduce, effect}) {
+      final context = createContext();
+      return _run(context, run, reduce, effect);
+    });
+  }
 }
 
 Run<State, Event> _create<State, Event>({
