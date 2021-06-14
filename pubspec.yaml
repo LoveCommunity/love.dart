@@ -1,0 +1,10 @@
+name: love
+description: A state management library that is simple for complex app.
+version: 0.1.0-beta.1
+homepage: https://github.com/LoveCommunity/love.dart
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dev_dependencies:
+  test: ^1.16.0
