@@ -1,3 +1,4 @@
+import '../utils/utils.dart';
 import '../types/types.dart';
 
 class System<State, Event> {
@@ -58,6 +59,32 @@ class System<State, Event> {
       return _run(context, run, reduce, effect);
     });
   }
+
+  /// Create a new system with a Context.
+  /// 
+  /// Return a new system with some "live data" accotiated with it.
+  System<State, Event> withContext<Context>({
+    required Context Function() createContext,
+    Reduce<State, Event>? reduce,
+    ContextEffect<Context, State, Event>? effect,
+    void Function(Context context)? dispose,
+  }) => runWithContext<Context>(
+    createContext: createContext,
+    run: (context, run, nextReduce, nextEffect) {
+      final Effect<State, Event>? _effect = effect == null ? null : (state, oldState, event, dispatch) {
+        effect(context, state, oldState, event, dispatch);
+      };
+      final sourceDispose = run(
+        reduce: combineReduce(reduce, nextReduce),
+        effect: combineEffect(_effect, nextEffect),
+      );
+      final combinedDispose = dispose == null ? sourceDispose : Dispose(() {
+        dispose(context);
+        sourceDispose();
+      });
+      return combinedDispose;
+    },
+  );
 }
 
 Run<State, Event> _create<State, Event>({
