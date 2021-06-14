@@ -31,3 +31,5 @@ typedef Run<State, Event> = Dispose Function({
   Reduce<State, Event>? reduce,
   Effect<State, Event>? effect,
 });
+
+typedef CopyRun<State, Event> = Run<State, Event> Function(Run<State, Event> run);

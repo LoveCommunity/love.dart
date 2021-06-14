@@ -33,6 +33,17 @@ class System<State, Event> {
   System.create({
     required State initialState,
   }): this.pure(_create(initialState: initialState));
+
+  /// Create a new system based on current one.
+  /// 
+  /// Return a redefined system by copy a new one with custom logic.
+  /// The concept is similar to `middleware` or `interceptor`.
+  System<State, Event> copy(
+    CopyRun<State, Event> copy
+  ) {
+    final next = copy(_run);
+    return System.pure(next);
+  }
 }
 
 Run<State, Event> _create<State, Event>({
