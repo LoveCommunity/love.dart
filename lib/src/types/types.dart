@@ -16,6 +16,8 @@ typedef Consume<Event> = void Function(Event? event);
 
 /// Describe how side effect are performed
 typedef Effect<State, Event> = void Function(State state, State? oldState, Event? event, Dispatch<Event> dispatch);
+/// Describe how side effect are performed with a context.
+typedef ContextEffect<Context, State, Event> = void Function(Context context, State state, State? oldState, Event? event, Dispatch<Event> dispatch);
 
 typedef DisposeFunc = void Function();
 
