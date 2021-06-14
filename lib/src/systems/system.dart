@@ -85,6 +85,20 @@ class System<State, Event> {
       return combinedDispose;
     },
   );
+
+  /// Add a `reduce` or `effect` to the system.
+  /// 
+  /// If we adds `reduce` or `effect` mutiple times, The call side is order in serial.
+  System<State, Event> add({
+    Reduce<State, Event>? reduce,
+    Effect<State, Event>? effect,
+  }) => withContext<Null>(
+    createContext: () => null,
+    reduce: reduce,
+    effect: effect == null ? null : (context, state, oldState, event, dispatch) {
+      effect(state, oldState, event, dispatch);
+    }
+  );
 }
 
 Run<State, Event> _create<State, Event>({
