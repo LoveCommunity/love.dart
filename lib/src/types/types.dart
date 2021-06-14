@@ -12,6 +12,8 @@ class Dispatch<Event> {
   void call(Event event) => _func(event);
 }
 
+typedef Consume<Event> = void Function(Event? event);
+
 /// Describe how side effect are performed
 typedef Effect<State, Event> = void Function(State state, State? oldState, Event? event, Dispatch<Event> dispatch);
 

@@ -28,4 +28,52 @@ class System<State, Event> {
       dispose();
     });
   }
+
+  /// Create a [System] with initail state.
+  System.create({
+    required State initialState,
+  }): this.pure(_create(initialState: initialState));
 }
+
+Run<State, Event> _create<State, Event>({
+  required State initialState,
+}) => ({reduce, effect}) {
+  assert(reduce != null, 'reduce is null when system run!');
+  if (reduce == null) return Dispose.nothing();
+
+  State? state;
+  bool isDisposed = false;
+  bool consuming = false;
+
+  late Consume<Event> consume;
+
+  void _dispatch(Event event) {
+    if (isDisposed) return;
+    if (!consuming) {
+      consume(event);
+    } else {
+      Future(() => _dispatch(event));
+    }
+  }
+
+  final dispatch = Dispatch(_dispatch);
+
+  consume = (Event? event) {
+    consuming = true;
+    final oldState = state;
+    final _state = oldState != null && event != null
+      ? reduce(oldState, event)
+      : initialState;
+    state = _state;
+    effect?.call(_state, oldState, event, dispatch);
+    consuming = false;
+  };
+
+  consume(null); // initial event
+
+  return Dispose(() {
+    if (isDisposed) return;
+    isDisposed = true;
+    state = null;
+  });
+};
