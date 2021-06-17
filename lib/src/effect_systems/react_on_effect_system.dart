@@ -61,4 +61,32 @@ extension EffectSystemReactOperators<State, Event> on EffectSystem<State, Event>
     skipFirstValue: skipFirstValue,
     effect: effect,
   ));
+
+  /// Add `effect` triggered by a request which is computed from state.
+  /// 
+  /// Every time state changed, a request is computed from state, 
+  /// if a fresh request is computed, the effect will be triggered by this request.
+  /// Fresh request means newRequest is not null and newRequest are not equal to oldRequest. 
+  /// 
+  /// [request] describe how request is computed from state. 
+  /// return null if there is no request.
+  /// 
+  /// [areEqual] describe how old request and new request are treat as equal (not change).
+  /// 
+  /// [skipFirstRequest] is false if first request will trigger the effect, 
+  /// is ture if first request won't trigger effect, default is false.  
+  /// 
+  /// [effect] describe side effect.
+  ///  
+  EffectSystem<State, Event> reactRequest<Request>({
+    required Request? Function(State state) request,
+    AreEqual<Request>? areEqual,
+    bool skipFirstRequest = false,
+    required void Function(Request request, Dispatch<Event> dispatch) effect,
+  }) => forward(copy: (system) => system.reactRequest(
+    request: request,
+    areEqual: areEqual,
+    skipFirstRequest: skipFirstRequest,
+    effect: effect,
+  ));
 }
