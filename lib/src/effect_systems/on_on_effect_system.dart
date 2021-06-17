@@ -81,4 +81,47 @@ extension EffectSystemOnOperators<State, Event> on EffectSystem<State, Event> {
     test: test,
     effect: effect
   ));
+
+  /// Add effect on system run.
+  /// 
+  /// This operator will inject effect when system run,
+  /// For example, We can trigger networing call by dispatch a trigger event:
+  /// 
+  ///```dart 
+  ///  ...
+  ///  .on<LoadData>(effect: (state, event, dispatch) async {
+  ///    try {
+  ///      final data = await api.call(state.itemId);
+  ///      dispatch(LoadDataSuccess(data));
+  ///    } on Exception {
+  ///      dispatch(LoadDataError());
+  ///    }
+  ///  })
+  ///  .onRun(effect: (initialState, dispatch) {
+  ///     dispatch(LoadData()); 
+  ///  },);
+  /// ```
+  /// 
+  /// [effect] can return an optional `Dispose` function.
+  /// This can be used when this system has interaction with other service, 
+  /// which has listenable API like `Stream`, `ChangeNotifier` or `System`.
+  /// With these cases, we can listen to them (`Stream`) when systen run, 
+  /// return `Dispose` contains `cancel` logic.
+  /// Then `Dispose` will be called, when system dispose get called.
+  /// 
+  ///```dart 
+  ///  ...
+  ///  .onRun(effect: (initialState, dispatch) {
+  ///    final timer = Stream
+  ///      .periodic(Duration(seconds: 1), (it) => it);
+  ///    final subscription = timer.listen((it) => dispatch('$it'));
+  ///    return Dispose(() => subscription.cancel());
+  ///  },);
+  /// ```
+  /// 
+  EffectSystem<State, Event> onRun({
+    required Dispose? Function(State initialState, Dispatch<Event> dispatch) effect,
+  }) => forward(copy: (system) => system.onRun(
+    effect: effect,
+  ));
 }
