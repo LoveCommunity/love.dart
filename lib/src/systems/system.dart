@@ -1,6 +1,8 @@
 import '../utils/utils.dart';
 import '../types/types.dart';
 
+typedef CopySystem<State, Event> = System<State, Event> Function(System<State, Event> system);
+
 class System<State, Event> {
 
   /// Create a System with underlying run function.
