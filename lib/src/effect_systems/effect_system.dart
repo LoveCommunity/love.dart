@@ -74,6 +74,13 @@ class EffectSystem<State, Event> {
     effect: effect,
     dispose: dispose,
   ));
+
+  /// Add `effect` to the effect system.
+  EffectSystem<State, Event> add({
+    required Effect<State, Event> effect
+  }) => forward(copy: (system) => system.add(
+    effect: effect
+  ));
 }
 
 CopySystem<State, Event> _toCopySystem<State, Event>(
