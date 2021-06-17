@@ -28,6 +28,14 @@ class EffectSystem<State, Event> {
   }): this._raw(System<State, Event>
     .create(initialState: initialState)
     .add(reduce: reduce));
+
+  /// Forward operation to underlying `System`.
+  EffectSystem<State, Event> forward({
+    required CopySystem<State, Event> copy,
+  }) {
+    final next = copy(_system);
+    return EffectSystem._raw(next);
+  }
 }
 
 Run<State, Event> _toSystemRun<State, Event>(
