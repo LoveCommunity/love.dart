@@ -40,4 +40,30 @@ extension EffectSystemShareOperators<State, Event> on EffectSystem<State, Event>
       });
     };
   });
+
+  /// Share same source of truth using stretegy `forever`.
+  /// 
+  /// If `system.run` has been called mutiple time, 
+  /// this operator will make them share same source of truth. 
+  /// The source system will be running forever after first run get called, 
+  /// Which means even all running system's has been disposed, 
+  /// The source system will not be disposed either.
+  /// 
+  /// It'a useful for some global shared system, like `appSystem`.
+  /// 
+  EffectSystem<State, Event> shareForever() => copy((run) {
+    final forwarder = EffectForwarder<State, Event>();
+    bool running = false;
+    return ({effect}) {
+      final nextEffect = effect ?? (_, __, ___, ____) {};
+      final Dispose dispose = forwarder.add(effect: nextEffect);
+
+      if (!running) {
+        running = true;
+        run(effect: forwarder.effect);
+      }
+      
+      return dispose;
+    };
+  });
 }
