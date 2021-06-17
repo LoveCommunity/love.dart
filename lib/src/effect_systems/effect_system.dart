@@ -47,6 +47,20 @@ class EffectSystem<State, Event> {
     final _copy = _toCopySystem(copy);
     return forward(copy: _copy);
   }
+
+  /// Create a new effect system with a Context.
+  /// 
+  /// Return a new effect system with some "live data" accotiated with it.
+  EffectSystem<State, Event> runWithContext<Context>({
+    required Context Function() createContext,
+    required Dispose Function(Context context, EffectSystemRun<State, Event> run, Effect<State, Event>? nextEffect) run,
+  }) => forward(copy: (system) => system.runWithContext<Context>(
+    createContext: createContext,
+    run: (context, systemRun, nextReduce, nextEffect) {
+      final effectSystemRun = _toEffectSystemRun(systemRun);
+      return run(context, effectSystemRun, nextEffect);
+    },
+  ));
 }
 
 CopySystem<State, Event> _toCopySystem<State, Event>(
