@@ -38,7 +38,7 @@ typedef Run<State, Event> = Dispose Function({
 
 typedef CopyRun<State, Event> = Run<State, Event> Function(Run<State, Event> run);
 
-typedef EffectSystemRun<State, Event> = Dispose Function({Effect<State, Event> effect});
+typedef EffectSystemRun<State, Event> = Dispose Function({Effect<State, Event>? effect});
 typedef CopyEffectSystemRun<State, Event> = EffectSystemRun<State, Event> Function(EffectSystemRun<State, Event> run);
 
 /// A holder of state, oldState and event of a moment
