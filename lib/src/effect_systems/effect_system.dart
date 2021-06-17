@@ -1,5 +1,6 @@
 import '../types/types.dart';
 import '../systems/system.dart';
+import '../forwarders/effect_forwarder.dart';
 
 class EffectSystem<State, Event> {
 
@@ -81,6 +82,19 @@ class EffectSystem<State, Event> {
   }) => forward(copy: (system) => system.add(
     effect: effect
   ));
+}
+
+extension AsEffectSystem<State, Event> on System<State, Event> {
+  /// Type cast to `EffectSystem`.
+  EffectSystem<State, Event> asEffectSystem() => EffectSystem._raw(this);
+}
+
+extension EffectForwarderAsEffectSystem<State, Event> on EffectForwarder<State, Event> {
+  /// Type cast to `EffectSystem`.
+  EffectSystem<State, Event> asEffectSystem() => EffectSystem.pure(({effect}) {
+    if (effect == null) return Dispose.nothing();
+    return add(effect: effect);
+  });
 }
 
 CopySystem<State, Event> _toCopySystem<State, Event>(
