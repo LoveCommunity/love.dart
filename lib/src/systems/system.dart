@@ -3,7 +3,7 @@ import '../types/types.dart';
 
 class System<State, Event> {
 
-  /// Create a System with underlinying run function.
+  /// Create a System with underlying run function.
   /// 
   /// It can be used when we has custom run logic. 
   /// Like Mock `System` that is used for testing purpose.
