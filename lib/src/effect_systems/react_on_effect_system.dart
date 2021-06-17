@@ -35,4 +35,30 @@ extension EffectSystemReactOperators<State, Event> on EffectSystem<State, Event>
     skipFirstValue: skipFirstValue,
     effect: effect,
   ));
+
+  /// Add `effect` triggered by react partial state value change,
+  /// it will cancel previous effect when value changed.
+  /// 
+  /// [value] describe which part of value is observed.
+  /// 
+  /// [areEqual] describe how old value and new value are treat as equal (not change).
+  /// 
+  /// [skipFirstValue] is false if first value triggers the effect, 
+  /// is ture if first value won't trigger effect, default is false.
+  /// 
+  /// [effect] describe side effect, if effect has cancellation mechanism,
+  /// We can return a `Dispose` function contain the cancellation logic in effect callback.
+  /// This `Dispose` will be called when value changed or system dispose is called.
+  /// 
+  EffectSystem<State, Event> reactLatest<Value>({
+    required Value Function(State state) value,
+    AreEqual<Value>? areEqual,
+    bool skipFirstValue = false,
+    required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
+  }) => forward(copy: (system) => system.reactLatest(
+    value: value,
+    areEqual: areEqual,
+    skipFirstValue: skipFirstValue,
+    effect: effect,
+  ));
 }
