@@ -36,7 +36,30 @@ class EffectSystem<State, Event> {
     final next = copy(_system);
     return EffectSystem._raw(next);
   }
+
+  /// Create a new effect system based on current one.
+  /// 
+  /// Return a redefined effect system by copy a new one with custom logic.
+  /// The concept is similar to `middleware` or `interceptor`.
+  EffectSystem<State, Event> copy(
+    CopyEffectSystemRun<State, Event> copy
+  ) {
+    final _copy = _toCopySystem(copy);
+    return forward(copy: _copy);
+  }
 }
+
+CopySystem<State, Event> _toCopySystem<State, Event>(
+  CopyEffectSystemRun<State, Event> copy
+) => (system) => system.copy((run) {
+  final _run = _toEffectSystemRun(run);
+  final _next = copy(_run);
+  return ({reduce, effect}) => _next(effect: effect);
+});
+
+EffectSystemRun<State, Event> _toEffectSystemRun<State, Event>(
+  Run<State, Event> run
+) => ({effect}) => run(effect: effect);
 
 Run<State, Event> _toSystemRun<State, Event>(
   EffectSystemRun<State, Event> effectSystemRun
