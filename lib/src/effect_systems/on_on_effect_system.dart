@@ -124,4 +124,11 @@ extension EffectSystemOnOperators<State, Event> on EffectSystem<State, Event> {
   }) => forward(copy: (system) => system.onRun(
     effect: effect,
   ));
+  
+  /// Add code block that tied with running system's dispose function.
+  EffectSystem<State, Event> onDispose({
+    required void Function() run
+  }) => forward(copy: (system) => system.onDispose(
+    run: run,
+  ));
 }
