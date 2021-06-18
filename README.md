@@ -6,7 +6,7 @@ A state management library that is simple for complex app.
 
 ## Why
 
-love has DNA of ReactiveX, Redux and RxFeedback. so it is:
+love has DNA of [ReactiveX], [Redux] and [RxFeedback]. so it is:
 
 * Unified - one is all, all is one (System<State, Event>)
 * Declarative - system are first declared, effects begin after run is called
@@ -360,7 +360,7 @@ We can use `onRun` operator to make it cleaner:
 +   },);
 ```
 
-We have other `on*` operators for different use cases. If you want to learn more please follow the reference:
+We have other `on*` operators for different use cases. If you want to learn more please follow the [API Reference]:
 
 * on
 * onLatest
@@ -399,12 +399,12 @@ This effect will react to hole state change then trigger a save call.
 
 There is another important effect which use this trigger. Can you gusse what is it?
 
-Hit: Flutter or React.
+Hit: [Flutter] or [React].
 
-Yes, it's `presentation effect`. With declarative UI library like Flutter or React, build (render) is triggered by react state change. 
+Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react state change. 
 We'll discuss this later in **Presentaton Effect** Section.
 
-There are other `react*` operators for different use cases. If you want to learn more please follow api reference:
+There are other `react*` operators for different use cases. If you want to learn more please follow [API Reference]:
 
 * react
 * reactLatest
@@ -546,7 +546,7 @@ We've mentioned ealier `presentation effect` is triggered by react state change 
   )
 ```
 
-Since Flutter is full of widgets. How can we make `react operator` works together with widgets?
+Since [Flutter] is full of widgets. How can we make `react operator` works together with widgets?
 
 Is this possible:
 
@@ -582,7 +582,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-Happy to see Flutter and React works together ^_-.
+Happy to see [Flutter] and [React] works together ^_-.
 
 Even better, since this UI react to hole state (not partial value), we can use `React.state` to replace `React.value`, this way we don't need a value mapper function:
 
@@ -657,7 +657,7 @@ We can use these operators to transform `System` as `EffectSystem`:
 * share
 * shareForever
 
-If you want to learn more, please follow api reference.
+If you want to learn more, please follow [API Reference].
 
 ## Testing
 
@@ -711,9 +711,9 @@ test('CounterSystem', () async {
   
 ## Credits
 
-Without community this library won't be born. So, thank ReactiveX community, Redux community and RxSwift community. 
+Without community this library won't be born. So, thank [ReactiveX] community, [Redux] community and [RxSwift] community. 
 
-Special thank to @kzaher who is original author of RxSwift and RxFeedback, he shared a lot of knownledge with us, that make this library possible today.
+Special thank to @kzaher who is original author of [RxSwift] and [RxFeedback], he shared a lot of knownledge with us, that make this library possible today.
 
 Last and important, thank you for reading.
 ## License
@@ -727,3 +727,11 @@ The MIT License (MIT)
 
 [love_overview_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_overview_diagram.png
 [love_detail_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_detail_diagram.png
+
+[ReactiveX]:http://reactivex.io/
+[Redux]:https://redux.js.org/
+[RxFeedback]:https://github.com/NoTests/RxFeedback.swift
+[RxSwift]:https://github.com/ReactiveX/RxSwift
+[Flutter]:https://flutter.dev/
+[React]:https://reactjs.org/
+[API Reference]:https://pub.dev/documentation/love/0.1.0-beta.1/love/love-library.html
