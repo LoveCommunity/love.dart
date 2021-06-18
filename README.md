@@ -713,7 +713,7 @@ test('CounterSystem', () async {
 
 Without community this library won't be born. So, thank [ReactiveX] community, [Redux] community and [RxSwift] community. 
 
-Special thank to @kzaher who is original author of [RxSwift] and [RxFeedback], he shared a lot of knownledge with us, that make this library possible today.
+Special thank to [@kzaher] who is original author of [RxSwift] and [RxFeedback], he shared a lot of knownledge with us, that make this library possible today.
 
 Last and important, thank you for reading.
 ## License
@@ -735,3 +735,4 @@ The MIT License (MIT)
 [Flutter]:https://flutter.dev/
 [React]:https://reactjs.org/
 [API Reference]:https://pub.dev/documentation/love/0.1.0-beta.1/love/love-library.html
+[@kzaher]:https://github.com/kzaher
