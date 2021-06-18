@@ -1,12 +1,12 @@
 # love
 
-![][love_overview_diagram]
-
 A state management library that is simple for complex app.
+
+![][love_overview_diagram]
 
 ## Why
 
-love has DNA of [ReactiveX], [Redux] and [RxFeedback]. so it is:
+**love** has DNA of [ReactiveX], [Redux] and [RxFeedback]. so it is:
 
 * Unified - one is all, all is one (System<State, Event>)
 * Declarative - system are first declared, effects begin after run is called
@@ -78,7 +78,7 @@ OldState: 0
 
 We hope the code is self explianed. If you can guess what this code works for. That's very nice! 
 
-This example first decare a counter system, state is the counts, events are `increase` and `decrease`. We run the system to log output.
+This example first declare a counter system, state is the counts, events are `increase` and `decrease`. Then we run the system to log output, after 3 seconds we stop this system. 
 
 The code is not very elegant for now, we have better way to aproach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
 
@@ -187,7 +187,7 @@ typedef Effect<State, Event> = void Function(State state, State? oldState, Event
   * Timer
   * ...
 
-These are `log effect` and `mock effect`:
+Bellow are `log effect` and `mock effect`:
 
 ```dart
     ...
@@ -332,7 +332,7 @@ We can even move `effect` around `reduce` when they share same condition:
     ...
 ```
 
-There are some speciel events, for example, event is null on system run:
+There are speciel cases. for example, we want to dispatch events on system run:
 
 ```dart
     ...
@@ -344,7 +344,7 @@ There are some speciel events, for example, event is null on system run:
     },);
 ```
 
-We can use `onRun` operator to make it cleaner:
+We can use `onRun` operator instead:
 
 ```diff
     ...
@@ -397,7 +397,7 @@ We have a series of operators that has prifix `react` to aproach this:
 
 This effect will react to hole state change then trigger a save call. 
 
-There is another important effect which use this trigger. Can you gusse what is it?
+There is another important effect which use this trigger. Can you guess what is it?
 
 Hit: [Flutter] or [React].
 
@@ -430,7 +430,7 @@ final dispose = counterSystem.run();
 When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
 
 ```dart
-await Future.delayed(Duration(seconds: 6));
+await Future.delayed(Duration(seconds: 3));
 
 dispose();
 ```
@@ -556,8 +556,8 @@ Is this possible:
     value: (state) => state,
     effect: (value, dispatch) {
       return TextButton(
-        child: Text('$value'),
         onPressed: () => dispatch(CounterEventIncrease()),
+        child: Text('$value'),
       );
     },
   )
@@ -574,8 +574,8 @@ Widget build(BuildContext context) {
     value: (state) => state,
     builder: (context, value, dispatch) {
       return TextButton(
-        child: Text('$value'),
         onPressed: () => dispatch(CounterEventIncrease()),
+        child: Text('$value'),
       );
     }
   );
@@ -593,8 +593,8 @@ Widget build(BuildContext context) {
       .asEffectSystem(),
     builder: (context, state, dispatch) {
       return TextButton(
-        child: Text('$state'),
         onPressed: () => dispatch(CounterEventIncrease()),
+        child: Text('$state'),
       );
     }
   );
@@ -610,9 +610,9 @@ If you read the code carefully, you may ask what is this for?
 
 ## Effect System
 
-**`EffectSystem` is a variant of `System` that can't redefine reduce downside.**
+**`EffectSystem` is a variant of `System` that can't redefine reduce further.**
 
-It's useful when we have confirmed the defination of `reduce` is complete, we don't want it to be redefined later. 
+It's useful when we have confirmed the defination of `reduce` is complete, we don't want it to be redefined later, but effect can be redefined further.
 
 So these red code are not supported with `EffectSystem`, but other places are supported the same as `System`:
 
