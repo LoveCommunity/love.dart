@@ -612,7 +612,7 @@ If you read the code carefully, you may ask what is this for?
 
 **`EffectSystem` is a variant of `System` that can't redefine reduce further.**
 
-It's useful when we have confirmed the defination of `reduce` is complete, we don't want it to be redefined later, but effect can be redefined further.
+It's useful when we have confirmed the defination of `reduce` is complete, we don't want it to be redefined later, but `effect` can be redefined further.
 
 So these red code are not supported with `EffectSystem`, but other places are supported the same as `System`:
 
