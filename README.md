@@ -15,6 +15,11 @@ A state management library that is simple for complex app.
 * Elegant - code is clean for human to read and write
 * Testable - system can be test straightforward
 
+## Libraries
+
+* [love] - dart only state management library. if we are developing pure dart app, please [install love]
+* [flutter_love] - provide flutter widgets handle common use case with [love]. if we are developing flutter app, please [install flutter_love]
+
 ## Counter Example
 
 ```dart
@@ -709,6 +714,10 @@ The MIT License (MIT)
 [love_overview_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_overview_diagram.png
 [love_detail_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_detail_diagram.png
 
+[love]:https://pub.dev/packages/love/versions/0.1.0-beta.1
+[install love]:https://pub.dev/packages/love/versions/0.1.0-beta.1/install
+[flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.2
+[install flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.2/install
 [ReactiveX]:http://reactivex.io/
 [Redux]:https://redux.js.org/
 [RxFeedback]:https://github.com/NoTests/RxFeedback.swift
