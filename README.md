@@ -1,6 +1,6 @@
 # love
 
-A state management library that is simple for complex app.
+A state management library that is functional, elegant and predictable.
 
 ![][love_overview_diagram]
 
