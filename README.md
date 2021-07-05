@@ -563,32 +563,11 @@ Is this possible:
   )
 ```
 
-Yeah, we can introduce `React` widget, it is a combination of `react operator` and widget:
-
-```dart
-// bellow are real life code that works with flutter
-Widget build(BuildContext context) {
-  return React.value<int>(
-    system: counterSystem
-      .asEffectSystem(),
-    value: (state) => state,
-    builder: (context, value, dispatch) {
-      return TextButton(
-        onPressed: () => dispatch(CounterEventIncrease()),
-        child: Text('$value'),
-      );
-    }
-  );
-}
-```
-
-Happy to see [Flutter] and [React] works together ^_-.
-
-Even better, since this UI react to hole state (not partial value), we can use `React.state` to replace `React.value`, this way we don't need a value mapper function:
+Yeah, we can introduce `React*` widget, it is a combination of `react operator` and widget:
 
 ```dart
 Widget build(BuildContext context) {
-  return React.state(
+  return ReactState<int, CounterEvent>(
     system: counterSystem
       .asEffectSystem(),
     builder: (context, state, dispatch) {
@@ -600,6 +579,8 @@ Widget build(BuildContext context) {
   );
 }
 ```
+
+Happy to see [Flutter] and [React] works together ^_-.
 
 If you read the code carefully, you may ask what is this for?
 
