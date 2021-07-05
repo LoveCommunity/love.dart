@@ -1,6 +1,6 @@
 # love
 
-A state management library that is simple for complex app.
+A state management library that is functional, elegant and predictable.
 
 ![][love_overview_diagram]
 
@@ -714,8 +714,8 @@ The MIT License (MIT)
 [love_overview_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_overview_diagram.png
 [love_detail_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_detail_diagram.png
 
-[love]:https://pub.dev/packages/love/versions/0.1.0-beta.1
-[install love]:https://pub.dev/packages/love/versions/0.1.0-beta.1/install
+[love]:https://pub.dev/packages/love/versions/0.1.0-beta.2
+[install love]:https://pub.dev/packages/love/versions/0.1.0-beta.2/install
 [flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.2
 [install flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.2/install
 [ReactiveX]:http://reactivex.io/
@@ -724,5 +724,5 @@ The MIT License (MIT)
 [RxSwift]:https://github.com/ReactiveX/RxSwift
 [Flutter]:https://flutter.dev/
 [React]:https://reactjs.org/
-[API Reference]:https://pub.dev/documentation/love/0.1.0-beta.1/love/love-library.html
+[API Reference]:https://pub.dev/documentation/love/0.1.0-beta.2/love/love-library.html
 [@kzaher]:https://github.com/kzaher
