@@ -1,6 +1,7 @@
 ## [0.1.0-beta.2] - 2020-07-05
 
 * refactor - remove `onEvent` and `reactState` operators
+* docs - add `Libraries` section
 
 ## [0.1.0-beta.1] - 2020-06-18
 
