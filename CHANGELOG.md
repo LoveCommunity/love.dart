@@ -1,3 +1,7 @@
+## [0.1.0-beta.2] - 2020-07-05
+
+* refactor - remove `onEvent` and `reactState` operators
+
 ## [0.1.0-beta.1] - 2020-06-18
 
 * feature - add `System<State, Event>` and operators
