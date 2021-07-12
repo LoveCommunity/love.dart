@@ -1,4 +1,5 @@
 import '../types/types.dart';
+import 'package:meta/meta.dart';
 
 /// `EffectForwarder` can forward effect from one side to another.
 /// 
@@ -26,6 +27,7 @@ import '../types/types.dart';
 ///  dispose(); // dispose system
 ///```
 /// 
+@visibleForTesting
 class EffectForwarder<State, Event> {
 
   List<Effect<State, Event>> _effects = [];

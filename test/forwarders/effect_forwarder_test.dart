@@ -1,4 +1,5 @@
 
+import 'package:love/src/forwarders/effect_forwarder.dart';
 import 'package:test/test.dart';
 import 'package:love/love.dart';
 
