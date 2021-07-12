@@ -17,8 +17,8 @@ A state management library that is functional, elegant and predictable.
 
 ## Libraries
 
-* [love] - dart only state management library. if we are developing pure dart app, please [install love]
-* [flutter_love] - provide flutter widgets handle common use case with [love]. if we are developing flutter app, please [install flutter_love]
+* [love] - dart only state management library. if we are developing pure dart app, we can [install love]
+* [flutter_love] - provide flutter widgets handle common use case with [love]. if we are developing flutter app, we can [install flutter_love]
 
 ## Counter Example
 
@@ -573,8 +573,7 @@ Yeah, we can introduce `React*` widget, it is a combination of `react operator` 
 ```dart
 Widget build(BuildContext context) {
   return ReactState<int, CounterEvent>(
-    system: counterSystem
-      .asEffectSystem(),
+    system: counterSystem,
     builder: (context, state, dispatch) {
       return TextButton(
         onPressed: () => dispatch(CounterEventIncrease()),
@@ -586,64 +585,6 @@ Widget build(BuildContext context) {
 ```
 
 Happy to see [Flutter] and [React] works together ^_-.
-
-If you read the code carefully, you may ask what is this for?
-
-```dart
-  counterSystem
-    .asEffectSystem(),
-```
-
-## Effect System
-
-**`EffectSystem` is a variant of `System` that can't redefine reduce further.**
-
-It's useful when we have confirmed the defination of `reduce` is complete, we don't want it to be redefined later, but `effect` can be redefined further.
-
-So these red code are not supported with `EffectSystem`, but other places are supported the same as `System`:
-
-
-```diff
-  ...
-  .on<CounterEventIncrease>(
--   reduce: (state, event) => state + 1,
-    effect: (state, event, dispatch) async {
-      await Future.delayed(Duration(seconds: 3));
-      dispatch(CounterEventDecrease());
-    },
-  )
-- .on<CounterEventDecrease>(
--   reduce: (state, event) => state - 1,
-- )
-  .add(effect: (state, oldState, event, dispatch) {
-    print('\nEvent: $event');
-    print('State: $state');
-    print('OldState: $oldState');
-  })
-  .react<int>(
-    value: (state) => state,
-    skipFirstValue: true,
-    effect: (value, dispatch) {
-      print('Simulate persistence save call with state: $value');
-    },
-  )
-  .onRun(effect: (initialState, dispatch) {
-    dispatch(CounterEventIncrease());
-  },)
-  .run(
--   reduce: (state, event) { ... },
-    effect: (state, oldState, event, dispatch) { ... },
-  );
-```
-
-
-We can use these operators to transform `System` as `EffectSystem`:
-
-* asEffectSystem
-* share
-* shareForever
-
-If you want to learn more, please follow [API Reference].
 
 ## Testing
 
