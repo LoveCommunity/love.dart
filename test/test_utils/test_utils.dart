@@ -40,19 +40,6 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
   awaitMilliseconds: awaitMilliseconds
 );
 
-Future<SystemTestResult<State, Event>> testEffectSystem<State, Event>({
-  required EffectSystem<State, Event> system,
-  required List<TestEvent<Event>> Function(
-    TestEventDispatch<Event> Function(int delay, Event event) dispatch,
-    TestEventDispose<Event> Function(int delay) dispose,
-  ) events,
-  required int awaitMilliseconds,
-}) => _testRun(
-  run: system.run, 
-  events: events, 
-  awaitMilliseconds: awaitMilliseconds
-);
-
 Future<SystemTestResult<State, Event>> _testRun<State, Event>({
   required EffectSystemRun<State, Event> run,
   required List<TestEvent<Event>> Function(
@@ -112,14 +99,6 @@ System<String, String> createTestSystem({
 }) => System<String, String>
   .create(initialState: initialState)
   .add(reduce: reduce);
-
-EffectSystem<String, String> createTestEffectSystem({
-  required String initialState,
-}) => EffectSystem<String, String>
-  .create(
-    initialState: initialState, 
-    reduce: reduce
-  );
 
 Future<T> delayed<T>(int milliseconds, [FutureOr<T> Function()? computation]) 
   => Future.delayed(Duration(milliseconds: milliseconds), computation);
