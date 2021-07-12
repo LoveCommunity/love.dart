@@ -1,4 +1,4 @@
-## [0.1.0-beta.3]
+## [0.1.0-beta.3] - 2020-07-12
 
 * refactor - remove `EffectSystem` for simplicity
 * refactor - update `system.share*` operators to return `System` 
