@@ -34,19 +34,6 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
     TestEventDispose<Event> Function(int delay) dispose,
   ) events,
   required int awaitMilliseconds,
-}) => _testRun(
-  run: ({effect}) => system.run(effect: effect), 
-  events: events, 
-  awaitMilliseconds: awaitMilliseconds
-);
-
-Future<SystemTestResult<State, Event>> _testRun<State, Event>({
-  required EffectSystemRun<State, Event> run,
-  required List<TestEvent<Event>> Function(
-    TestEventDispatch<Event> Function(int delay, Event event) dispatch,
-    TestEventDispose<Event> Function(int delay) dispose,
-  ) events,
-  required int awaitMilliseconds,
 }) async {
 
   Dispose? dispose;
@@ -56,7 +43,7 @@ Future<SystemTestResult<State, Event>> _testRun<State, Event>({
   List<Event?> _events = [];
   bool isDisposed = false;
 
-  final _dispose = run(
+  final _dispose = system.run(
     effect: (state, oldState, event, dispatch) {
       states.add(state);
       oldStates.add(oldState);

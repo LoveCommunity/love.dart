@@ -3,6 +3,7 @@
 * refactor - remove `EffectSystem` for simplicity
 * refactor - update `system.share*` operators to return `System` 
 * refactor - make `EffectForwarder` internal
+* refactor - remove types `EffectSystemRun` and `CopyEffectSystemRun`
 
 ## [0.1.0-beta.2] - 2020-07-05
 
