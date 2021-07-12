@@ -1,3 +1,8 @@
+## [0.1.0-beta.3]
+
+* refactor - remove `EffectSystem` for simplicity
+* refactor - update `system.share*` operators to return `System` 
+
 ## [0.1.0-beta.2] - 2020-07-05
 
 * refactor - remove `onEvent` and `reactState` operators
