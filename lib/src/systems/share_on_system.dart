@@ -1,6 +1,6 @@
 import 'system.dart';
-import '../effect_systems/effect_system.dart';
-import '../effect_systems/share_on_effect_system.dart';
+import '../types/types.dart';
+import '../forwarders/effect_forwarder.dart';
 
 extension ShareOperators<State, Event> on System<State, Event> {
 
@@ -17,8 +17,30 @@ extension ShareOperators<State, Event> on System<State, Event> {
   /// but they share same source of turth in this page.
   /// Another detail page has another source of truth that's the scoped means.
   /// 
-  EffectSystem<State, Event> share() => asEffectSystem()
-    .share();
+  System<State, Event> share() => copy((run) {
+    final forwarder = EffectForwarder<State, Event>();
+    int count = 0;
+    Dispose? sourceDispose;
+    return ({reduce, effect}) {
+      assert(reduce == null, 'downward `reduce` is not null in share context.');
+      final nextEffect = effect ?? (_, __, ___, ____) {};
+      final Dispose dispose = forwarder.add(effect: nextEffect);
+      count += 1;
+
+      if (count == 1) {
+        sourceDispose = run(effect: forwarder.effect);
+      }
+
+      return Dispose(() {
+        dispose();
+        count -= 1;
+        if (count == 0 && sourceDispose != null) {
+          sourceDispose?.call();
+          sourceDispose = null;
+        }
+      });
+    };
+  });
 
   /// Share same source of truth using stretegy `forever`.
   /// 
@@ -30,6 +52,20 @@ extension ShareOperators<State, Event> on System<State, Event> {
   /// 
   /// It'a useful for some global shared system, like `appSystem`.
   /// 
-  EffectSystem<State, Event> shareForever() => asEffectSystem()
-    .shareForever();
+  System<State, Event> shareForever() => copy((run) {
+    final forwarder = EffectForwarder<State, Event>();
+    bool running = false;
+    return ({reduce, effect}) {
+      assert(reduce == null, 'downward `reduce` is not null in share context.');
+      final nextEffect = effect ?? (_, __, ___, ____) {};
+      final Dispose dispose = forwarder.add(effect: nextEffect);
+
+      if (!running) {
+        running = true;
+        run(effect: forwarder.effect);
+      }
+      
+      return dispose;
+    };
+  });
 }
