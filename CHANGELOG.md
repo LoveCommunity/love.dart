@@ -1,3 +1,7 @@
+## [0.1.0-beta.4] - 2020-07-12
+
+* refactor - downgrade meta to version 1.3.0 to compatible with flutter test
+
 ## [0.1.0-beta.3] - 2020-07-12
 
 * refactor - remove `EffectSystem` for simplicity
