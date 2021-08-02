@@ -412,7 +412,6 @@ There are other `react*` operators for different use cases. If you want to learn
 
 * react
 * reactLatest
-* reactRequest
 * reactLatestRequest
 * reactState
 
