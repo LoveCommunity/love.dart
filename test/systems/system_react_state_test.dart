@@ -14,6 +14,7 @@ void main() {
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .reactState(
+          skipFirstState: false,
           effect: (state, dispatch) {
             stateParameters.add(state);
             effectInvoked += 1;
