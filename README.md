@@ -368,7 +368,6 @@ We can use `onRun` operator instead:
 We have other `on*` operators for different use cases. If you want to learn more please follow the [API Reference]:
 
 * on
-* onLatest
 * onEvent
 * onRun
 * onDispose
