@@ -9,12 +9,13 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old state and new state are treat as equal (not change).
   /// 
-  /// [skipFirstState] is false if first state will trigger the effect,
-  /// is true if first value won't trigger effect, default is false.
+  /// [skipFirstState] is true if first state is skipped and won't trigger effect,
+  /// is false if first state will trigger effect, default is true.
   /// 
+  /// [effect] describe side effect.
   System<State, Event> reactState({
     AreEqual<State>? areEqual,
-    bool skipFirstState = false,
+    bool skipFirstState = true,
     required void Function(State state, Dispatch<Event> dispatch) effect,
   }) => react<State>(
     value: (state) => state,
@@ -29,14 +30,14 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is false if first value will trigger the effect, 
-  /// is ture if first value won't trigger effect, default is false.  
+  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect, 
+  /// is false if first value will trigger effect, default is true.  
   ///
   /// [effect] describe side effect.
   System<State, Event> react<Value>({
     required Value Function(State state) value,
     AreEqual<Value>? areEqual,
-    bool skipFirstValue = false,
+    bool skipFirstValue = true,
     required void Function(Value value, Dispatch<Event> dispatch) effect,
   }) => _reactRequest(
     test: (state) => OptionalValue(value(state)),
@@ -52,8 +53,8 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is false if first value triggers the effect, 
-  /// is ture if first value won't trigger effect, default is false.
+  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect,
+  /// is false if first value triggers effect, default is true.
   /// 
   /// [effect] describe side effect, if effect has cancellation mechanism,
   /// We can return a `Dispose` function contain the cancellation logic in effect callback.
@@ -62,7 +63,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   System<State, Event> reactLatest<Value>({
     required Value Function(State state) value,
     AreEqual<Value>? areEqual,
-    bool skipFirstValue = false,
+    bool skipFirstValue = true,
     required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
   }) => _reactLatestRequest(
     test: (state) => OptionalValue(value(state)),
@@ -74,7 +75,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   System<State, Event> _reactRequest<Request>({
     required Optional<Request> Function(State state) test,
     AreEqual<Request>? areEqual,
-    bool skipFirstRequest = false,
+    bool skipFirstRequest = true,
     required void Function(Request request, Dispatch<Event> dispatch) effect,
   }) => withContext<_RequestContext<Request, Event>>(
     createContext: () => _RequestContext(
@@ -104,7 +105,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   System<State, Event> _reactLatestRequest<Request>({
     required Optional<Request> Function(State state) test,
     AreEqual<Request>? areEqual,
-    bool skipFirstReqeust = false,
+    bool skipFirstReqeust = true,
     required Dispose? Function(Request request, Dispatch<Event> dispatch) effect,
   }) => withContext<_LatestRequestContext<Request, Event>>(
     createContext: () => _LatestRequestContext(
@@ -172,7 +173,3 @@ bool _optinalChanged<Value>({
     return false;
   }
 }
-
-Optional<Value> _toOptional<Value>(Value? value) => value == null
-  ? OptionalNone()
-  : OptionalValue(value);

@@ -17,6 +17,7 @@ void main() {
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .react<String>(
+          skipFirstValue: false,
           value: (state) {
             stateParameters.add(state);
             valueInvoked += 1;

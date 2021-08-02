@@ -390,7 +390,6 @@ We have a series of operators that has prifix `react` to aproach this:
 -   },)
 +   .react<int>(
 +     value: (state) => state,
-+     skipFirstValue: true, // exclude initial state
 +     effect: (value, dispatch) {
 +       // effect - persistence
 +       print('Simulate persistence save call with state: $value');
@@ -404,14 +403,12 @@ This effect will react state change then trigger a save call. Since it react to 
 ```diff
 -   .react<int>(
 -     value: (state) => state,
--     skipFirstValue: true, // exclude initial state
 -     effect: (value, dispatch) {
 -       // effect - persistence
 -       print('Simulate persistence save call with state: $value');
 -     },
 -   )
 +   .reactState(
-+     skipFirstState: true, // exclude initial state
 +     effect: (state, dispatch) {
 +       // effect - persistence
 +       print('Simulate persistence save call with state: $state');
@@ -542,7 +539,6 @@ final counterSystem = System<int, CounterEvent>
     print('OldState: $oldState');
   })
   .reactState(
-    skipFirstState: true,
     effect: (state, dispatch) {
       print('Simulate persistence save call with state: $state');
     },
