@@ -3,6 +3,7 @@
 * refactor - remove `system.onLatest` operator for simplicity
 * refactor - remove `system.reactRequest` operator for simplicity
 * refactor - remove `system.reactLatestRequest` operator for simplicity
+* feature - add `system.reactState` operator
 
 ## [0.1.0-beta.4] - 2020-07-12
 
