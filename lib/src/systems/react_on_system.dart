@@ -5,6 +5,24 @@ import '../types/latest_context.dart';
 
 extension ReactOperators<State, Event> on System<State, Event> {
 
+  /// Add `effect` triggerd by react hole state change.
+  /// 
+  /// [areEqual] describe how old state and new state are treat as equal (not change).
+  /// 
+  /// [skipFirstState] is false if first state will trigger the effect,
+  /// is true if first value won't trigger effect, default is false.
+  /// 
+  System<State, Event> reactState({
+    AreEqual<State>? areEqual,
+    bool skipFirstState = false,
+    required void Function(State state, Dispatch<Event> dispatch) effect,
+  }) => react<State>(
+    value: (state) => state,
+    areEqual: areEqual,
+    skipFirstValue: skipFirstState,
+    effect: effect
+  );
+
   /// Add `effect` triggered by react partial state value change.
   /// 
   /// [value] describe which part of value is observed.
