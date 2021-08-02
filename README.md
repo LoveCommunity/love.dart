@@ -399,7 +399,25 @@ We have a series of operators that has prifix `react` to aproach this:
     ...
 ```
 
-This effect will react to hole state change then trigger a save call. 
+This effect will react state change then trigger a save call. Since it react to hold state (not partial value) change, we can use a convenience operator `reactState` instead, then we don't need a value map function here:
+
+```diff
+-   .react<int>(
+-     value: (state) => state,
+-     skipFirstValue: true, // exclude initial state
+-     effect: (value, dispatch) {
+-       // effect - persistence
+-       print('Simulate persistence save call with state: $value');
+-     },
+-   )
++   .reactState(
++     skipFirstState: true, // exclude initial state
++     effect: (state, dispatch) {
++       // effect - persistence
++       print('Simulate persistence save call with state: $state');
++     },
++   )
+```
 
 There is another important effect which use this trigger. Can you guess what is it?
 
@@ -523,11 +541,10 @@ final counterSystem = System<int, CounterEvent>
     print('State: $state');
     print('OldState: $oldState');
   })
-  .react<int>(
-    value: (state) => state,
-    skipFirstValue: true,
-    effect: (value, dispatch) {
-      print('Simulate persistence save call with state: $value');
+  .reactState(
+    skipFirstState: true,
+    effect: (state, dispatch) {
+      print('Simulate persistence save call with state: $state');
     },
   )
   .onRun(effect: (initialState, dispatch) {
@@ -540,32 +557,30 @@ final counterSystem = System<int, CounterEvent>
 We've mentioned ealier `presentation effect` is triggered by react state change with declarative UI library:
 
 ```dart
-  .react<int>(
-    value: (state) => state,
-    effect: (value, dispatch) {
-      print('Simulate presentation effect (build, render) with state: $value');
+  .reactState(
+    effect: (state, dispatch) {
+      print('Simulate presentation effect (build, render) with state: $state');
     },
   )
 ```
 
-Since [Flutter] is full of widgets. How can we make `react operator` works together with widgets?
+Since [Flutter] is full of widgets. How can we make `react* operators` works together with widgets?
 
 Is this possible:
 
 ```dart
   // bellow are just imagination that only works in our mind
-  .react<int>(
-    value: (state) => state,
-    effect: (value, dispatch) {
+  .reactState(
+    effect: (state, dispatch) {
       return TextButton(
         onPressed: () => dispatch(CounterEventIncrease()),
-        child: Text('$value'),
+        child: Text('$state'),
       );
     },
   )
 ```
 
-Yeah, we can introduce `React*` widget, it is a combination of `react operator` and widget:
+Yeah, we can introduce `React*` widgets, they are combination of `react* operators` and widget:
 
 ```dart
 Widget build(BuildContext context) {
