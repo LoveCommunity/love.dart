@@ -7,7 +7,7 @@ extension OnOperators<State, Event> on System<State, Event> {
   /// 
   /// [test] is used for testing if event meet some condition, 
   /// return null if it not pass test, return a payload if it pass the test.
-  /// If [test] is ommited, it will use safe cast as condition.
+  /// If [test] is omitted, it will use safe cast as condition.
   /// 
   /// Note: The event parameter in `reduce` and `effect` are smart casted to the ChildEvent type.
   System<State, Event> on<ChildEvent>({
@@ -37,7 +37,7 @@ extension OnOperators<State, Event> on System<State, Event> {
   /// Add effect on system run.
   /// 
   /// This operator will inject effect when system run,
-  /// For example, We can trigger networing call by dispatch a trigger event:
+  /// For example, We can trigger networking call by dispatch a trigger event:
   /// 
   ///```dart 
   ///  ...
@@ -57,7 +57,7 @@ extension OnOperators<State, Event> on System<State, Event> {
   /// [effect] can return an optional `Dispose` function.
   /// This can be used when this system has interaction with other service, 
   /// which has listenable API like `Stream`, `ChangeNotifier` or `System`.
-  /// With these cases, we can listen to them (`Stream`) when systen run, 
+  /// With these cases, we can listen to them (`Stream`) when system run, 
   /// return `Dispose` contains `cancel` logic.
   /// Then `Dispose` will be called, when system dispose get called.
   /// 

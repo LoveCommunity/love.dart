@@ -5,7 +5,7 @@ import '../types/latest_context.dart';
 
 extension ReactOperators<State, Event> on System<State, Event> {
 
-  /// Add `effect` triggerd by react hole state change.
+  /// Add `effect` triggered by react hole state change.
   /// 
   /// [areEqual] describe how old state and new state are treat as equal (not change).
   /// 
@@ -30,7 +30,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect, 
+  /// [skipFirstValue] is true if first value is skipped and won't trigger effect, 
   /// is false if first value will trigger effect, default is true.  
   ///
   /// [effect] describe side effect.
@@ -53,7 +53,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect,
+  /// [skipFirstValue] is true if first value is skipped and won't trigger effect,
   /// is false if first value triggers effect, default is true.
   /// 
   /// [effect] describe side effect, if effect has cancellation mechanism,
@@ -68,7 +68,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   }) => _reactLatestRequest(
     test: (state) => OptionalValue(value(state)),
     areEqual: areEqual,
-    skipFirstReqeust: skipFirstValue,
+    skipFirstRequest: skipFirstValue,
     effect: effect,
   );
 
@@ -84,7 +84,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
     effect: (context, state, oldState, event, dispatch) {
       final request = test(state);
       final oldRequest = context.oldRequest;
-      final changed = _optinalChanged(
+      final changed = _optionalChanged(
         oldValue: oldRequest,
         value: request,
         areEqual: areEqual
@@ -105,12 +105,12 @@ extension ReactOperators<State, Event> on System<State, Event> {
   System<State, Event> _reactLatestRequest<Request>({
     required Optional<Request> Function(State state) test,
     AreEqual<Request>? areEqual,
-    bool skipFirstReqeust = true,
+    bool skipFirstRequest = true,
     required Dispose? Function(Request request, Dispatch<Event> dispatch) effect,
   }) => withContext<_LatestRequestContext<Request, Event>>(
     createContext: () => _LatestRequestContext(
       requestContext: _RequestContext(
-        skipRequestOnce: skipFirstReqeust,
+        skipRequestOnce: skipFirstRequest,
       ),
       latestContext: LatestContext(),
     ),
@@ -119,7 +119,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
       final requestContext = context.requestContext;
       final request = test(state);
       final oldRequest = requestContext.oldRequest;
-      final changed = _optinalChanged(
+      final changed = _optionalChanged(
         oldValue: oldRequest,
         value: request,
         areEqual: areEqual,
@@ -157,7 +157,7 @@ class _LatestRequestContext<Request, Event> {
   final LatestContext<Event> latestContext;
 }
 
-bool _optinalChanged<Value>({
+bool _optionalChanged<Value>({
   required Optional<Value> oldValue,
   required Optional<Value> value,
   AreEqual<Value>? areEqual,

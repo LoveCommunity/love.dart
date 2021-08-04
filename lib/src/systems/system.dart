@@ -32,7 +32,7 @@ class System<State, Event> {
     });
   }
 
-  /// Create a [System] with initail state.
+  /// Create a [System] with initial state.
   System.create({
     required State initialState,
   }): this.pure(_create(initialState: initialState));
@@ -50,7 +50,7 @@ class System<State, Event> {
 
   /// Create a new system with a Context.
   /// 
-  /// Return a new system with some "live data" accotiated with it.
+  /// Return a new system with some "live data" associated with it.
   System<State, Event> runWithContext<Context>({
     required Context Function() createContext,
     required Dispose Function(Context context, Run<State, Event> run, Reduce<State, Event>? nextReduce, Effect<State, Event>? nextEffect) run,
@@ -64,7 +64,7 @@ class System<State, Event> {
 
   /// Create a new system with a Context.
   /// 
-  /// Return a new system with some "live data" accotiated with it.
+  /// Return a new system with some "live data" associated with it.
   System<State, Event> withContext<Context>({
     required Context Function() createContext,
     Reduce<State, Event>? reduce,
@@ -90,7 +90,7 @@ class System<State, Event> {
 
   /// Add a `reduce` or `effect` to the system.
   /// 
-  /// If we adds `reduce` or `effect` mutiple times, The call side is order in serial.
+  /// If we adds `reduce` or `effect` multiple times, The call side order is in serial.
   System<State, Event> add({
     Reduce<State, Event>? reduce,
     Effect<State, Event>? effect,
