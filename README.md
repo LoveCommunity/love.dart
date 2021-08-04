@@ -81,7 +81,7 @@ State: 1
 OldState: 0
 ```
 
-We hope the code is self explianed. If you can guess what this code works for. That's very nice! 
+We hope the code is self explained. If you can guess what this code works for. That's very nice! 
 
 This example first declare a counter system, state is the counts, events are `increase` and `decrease`. Then we run the system to log output, after 3 seconds we stop this system. 
 
@@ -103,7 +103,7 @@ For Example, the Counter State is counts:
 
 ## Event
 
-**Event is description of what happenned.**
+**Event is description of what happened.**
 
 For Example, the Counter Event is `increase` and `decrease` which describe what happened:
 
@@ -167,7 +167,7 @@ We can make it cleaner:
     ...
 ```
 
-It's more elegent for us to read and write.
+It's more elegant for us to read and write.
 
 Note: Reduce is pure function that only purpose is to compute a new state with current state and event. There is no side effect in this function.
 
@@ -186,7 +186,7 @@ typedef Effect<State, Event> = void Function(State state, State? oldState, Event
   * Presentation
   * Log
   * Networking
-  * Pensistence
+  * Persistence
   * Analytics
   * Bluetooth
   * Timer
@@ -250,7 +250,7 @@ We can also add `persistence effect`:
 
 ```
 
-This persistence save function will be called when state changed, but initial state is skiped since most of time initial state is restored from persistence layer, there is no need to save it back again. 
+This persistence save function will be called when state changed, but initial state is skipped since most of time initial state is restored from persistence layer, there is no need to save it back again. 
 
 ## Effect Trigger
 
@@ -289,7 +289,7 @@ Here, We have two kind of **Effect Trigger**:
 
 **Event Based Trigger will trigger effect when event meet some condition**.
 
-We have a series of operators (methods) that has prifix `on` to approach this better:
+We have a series of operators (methods) that has prefix `on` to approach this better:
 
 
 ```diff
@@ -337,7 +337,7 @@ We can even move `effect` around `reduce` when they share same condition:
     ...
 ```
 
-There are speciel cases. for example, we want to dispatch events on system run:
+There are special cases. for example, we want to dispatch events on system run:
 
 ```dart
     ...
@@ -375,7 +375,7 @@ We have other `on*` operators for different use cases. If we want to learn more 
 
 **State Based Trigger will trigger effect by react state change.**
 
-We have a series of operators that has prifix `react` to approach this:
+We have a series of operators that has prefix `react` to approach this:
 
 ```diff
     ...
@@ -420,7 +420,7 @@ There is another important effect which use this trigger. Can you guess what is 
 Hit: [Flutter] or [React].
 
 Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react state change. 
-We'll discuss this later in **Presentaton Effect** Section.
+We'll discuss this later in **Presentation Effect** Section.
 
 There are other `react*` operators for different use cases. If we want to learn more please follow [API Reference]:
 
@@ -549,7 +549,7 @@ final counterSystem = System<int, CounterEvent>
 
 ## Presentation Effect (With Flutter)
 
-We've mentioned ealier `presentation effect` is triggered by react state change with declarative UI library:
+We've mentioned earlier `presentation effect` is triggered by react state change with declarative UI library:
 
 ```dart
   .reactState(
@@ -649,9 +649,9 @@ test('CounterSystem', () async {
 
 Without community this library won't be born. So, thank [ReactiveX] community, [Redux] community and [RxSwift] community. 
 
-Thank [@miyoyo] for giving feedback that helped us shap this library.
+Thank [@miyoyo] for giving feedback that helped us shape this library.
 
-Special thank to [@kzaher] who is original author of [RxSwift] and [RxFeedback], he shared a lot of knownledge with us, that make this library possible today.
+Special thank to [@kzaher] who is original author of [RxSwift] and [RxFeedback], he shared a lot of knowledge with us, that make this library possible today.
 
 Last and important, thank you for reading.
 ## License
