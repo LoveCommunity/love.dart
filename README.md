@@ -365,7 +365,7 @@ We can use `onRun` operator instead:
 +   },);
 ```
 
-We have other `on*` operators for different use cases. If you want to learn more please follow the [API Reference]:
+We have other `on*` operators for different use cases. If we want to learn more please follow the [API Reference]:
 
 * on
 * onRun
@@ -422,7 +422,7 @@ Hit: [Flutter] or [React].
 Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react state change. 
 We'll discuss this later in **Presentaton Effect** Section.
 
-There are other `react*` operators for different use cases. If you want to learn more please follow [API Reference]:
+There are other `react*` operators for different use cases. If we want to learn more please follow [API Reference]:
 
 * react
 * reactLatest
