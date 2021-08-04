@@ -85,7 +85,7 @@ We hope the code is self explianed. If you can guess what this code works for. T
 
 This example first declare a counter system, state is the counts, events are `increase` and `decrease`. Then we run the system to log output, after 3 seconds we stop this system. 
 
-The code is not very elegant for now, we have better way to aproach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
+The code is not very elegant for now, we have better way to approach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
 
 ## How it works?
 
@@ -171,7 +171,7 @@ It's more elegent for us to read and write.
 
 Note: Reduce is pure function that only purpose is to compute a new state with current state and event. There is no side effect in this function.
 
-Then, how to aproach side effect?
+Then, how to approach side effect?
 
 ## Effect
 
@@ -289,7 +289,7 @@ Here, We have two kind of **Effect Trigger**:
 
 **Event Based Trigger will trigger effect when event meet some condition**.
 
-We have a series of operators (methods) that has prifix `on` to aproach this better:
+We have a series of operators (methods) that has prifix `on` to approach this better:
 
 
 ```diff
@@ -375,7 +375,7 @@ We have other `on*` operators for different use cases. If we want to learn more 
 
 **State Based Trigger will trigger effect by react state change.**
 
-We have a series of operators that has prifix `react` to aproach this:
+We have a series of operators that has prifix `react` to approach this:
 
 ```diff
     ...
