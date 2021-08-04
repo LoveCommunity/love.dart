@@ -593,6 +593,8 @@ Widget build(BuildContext context) {
 
 Happy to see [Flutter] and [React] works together ^_-.
 
+If we want to learn more please visit [flutter_love].
+
 ## Testing
 
 Test can be done straightforward:
