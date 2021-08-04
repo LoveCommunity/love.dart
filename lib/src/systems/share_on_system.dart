@@ -12,7 +12,7 @@ extension ShareOperators<State, Event> on System<State, Event> {
   /// then the source system will be disposed.
   /// 
   /// It's useful for some scoped system like `detailPageSystem`, 
-  /// Downside `run` will share same source of truth for this page only.
+  /// downward `run` will share same source of truth for this page only.
   /// The system can be run multiple times for different concerns (performance optimization),
   /// but they share same source of truth in this page.
   /// Another detail page has another source of truth that's the scoped means.
