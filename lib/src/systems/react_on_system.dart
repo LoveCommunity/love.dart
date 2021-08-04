@@ -30,7 +30,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect, 
+  /// [skipFirstValue] is true if first value is skipped and won't trigger effect, 
   /// is false if first value will trigger effect, default is true.  
   ///
   /// [effect] describe side effect.
@@ -53,7 +53,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is ture if first value is skipped and won't trigger effect,
+  /// [skipFirstValue] is true if first value is skipped and won't trigger effect,
   /// is false if first value triggers effect, default is true.
   /// 
   /// [effect] describe side effect, if effect has cancellation mechanism,
