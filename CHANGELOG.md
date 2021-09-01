@@ -1,3 +1,7 @@
+## main
+
+* refactor - rename parameter `skipFirst*` to `skipInitial*`
+
 ## [0.1.0-beta.5] - 2020-08-06
 
 * refactor - remove `system.onLatest` operator for simplicity

@@ -9,18 +9,18 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old state and new state are treat as equal (not change).
   /// 
-  /// [skipFirstState] is true if first state is skipped and won't trigger effect,
-  /// is false if first state will trigger effect, default is true.
+  /// [skipInitialState] is true if initial state is skipped and won't trigger effect,
+  /// is false if initial state will trigger effect, default is true.
   /// 
   /// [effect] describe side effect.
   System<State, Event> reactState({
     AreEqual<State>? areEqual,
-    bool skipFirstState = true,
+    bool skipInitialState = true,
     required void Function(State state, Dispatch<Event> dispatch) effect,
   }) => react<State>(
     value: (state) => state,
     areEqual: areEqual,
-    skipFirstValue: skipFirstState,
+    skipInitialValue: skipInitialState,
     effect: effect
   );
 
@@ -30,19 +30,19 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is true if first value is skipped and won't trigger effect, 
-  /// is false if first value will trigger effect, default is true.  
+  /// [skipInitialValue] is true if initial value is skipped and won't trigger effect, 
+  /// is false if initial value will trigger effect, default is true.  
   ///
   /// [effect] describe side effect.
   System<State, Event> react<Value>({
     required Value Function(State state) value,
     AreEqual<Value>? areEqual,
-    bool skipFirstValue = true,
+    bool skipInitialValue = true,
     required void Function(Value value, Dispatch<Event> dispatch) effect,
   }) => _reactRequest(
     test: (state) => OptionalValue(value(state)),
     areEqual: areEqual,
-    skipFirstRequest: skipFirstValue,
+    skipFirstRequest: skipInitialValue,
     effect: effect,
   );
 
@@ -53,8 +53,8 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [areEqual] describe how old value and new value are treat as equal (not change).
   /// 
-  /// [skipFirstValue] is true if first value is skipped and won't trigger effect,
-  /// is false if first value triggers effect, default is true.
+  /// [skipInitialValue] is true if initial value is skipped and won't trigger effect,
+  /// is false if initial value triggers effect, default is true.
   /// 
   /// [effect] describe side effect, if effect has cancellation mechanism,
   /// We can return a `Dispose` function contain the cancellation logic in effect callback.
@@ -63,12 +63,12 @@ extension ReactOperators<State, Event> on System<State, Event> {
   System<State, Event> reactLatest<Value>({
     required Value Function(State state) value,
     AreEqual<Value>? areEqual,
-    bool skipFirstValue = true,
+    bool skipInitialValue = true,
     required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
   }) => _reactLatestRequest(
     test: (state) => OptionalValue(value(state)),
     areEqual: areEqual,
-    skipFirstRequest: skipFirstValue,
+    skipFirstRequest: skipInitialValue,
     effect: effect,
   );
 
