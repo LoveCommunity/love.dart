@@ -39,12 +39,31 @@ extension ReactOperators<State, Event> on System<State, Event> {
     AreEqual<Value>? areEqual,
     bool skipInitialValue = true,
     required void Function(Value value, Dispatch<Event> dispatch) effect,
-  }) => _reactRequest(
-    test: (state) => OptionalValue(value(state)),
-    areEqual: areEqual,
-    skipFirstRequest: skipInitialValue,
-    effect: effect,
-  );
+  }) {
+    final _areEqual = areEqual ?? defaultAreEqual;
+    return withContext<_ReactContext<Value>>(
+      createContext: () => _ReactContext(),
+      effect: (context, state, oldState, event, dispatch) {
+        final _value = value(state);
+        final bool _shouldUpdateOldValue;
+        final bool _shouldTriggerEffect;
+        if (event == null) {
+          _shouldTriggerEffect = !skipInitialValue;
+          _shouldUpdateOldValue = true;
+        } else {
+          final _oldValue = context.oldValue as Value;
+          _shouldTriggerEffect = !_areEqual(_oldValue, _value);
+          _shouldUpdateOldValue = _shouldTriggerEffect;
+        }
+        if (_shouldUpdateOldValue) {
+          context.oldValue = _value;
+        }
+        if (_shouldTriggerEffect) {
+          effect(_value, dispatch);
+        }
+      },
+    );
+  }
 
   /// Add `effect` triggered by react partial state value change,
   /// it will cancel previous effect when value changed.
@@ -70,36 +89,6 @@ extension ReactOperators<State, Event> on System<State, Event> {
     areEqual: areEqual,
     skipFirstRequest: skipInitialValue,
     effect: effect,
-  );
-
-  System<State, Event> _reactRequest<Request>({
-    required Optional<Request> Function(State state) test,
-    AreEqual<Request>? areEqual,
-    bool skipFirstRequest = true,
-    required void Function(Request request, Dispatch<Event> dispatch) effect,
-  }) => withContext<_RequestContext<Request, Event>>(
-    createContext: () => _RequestContext(
-      skipRequestOnce: skipFirstRequest
-    ),
-    effect: (context, state, oldState, event, dispatch) {
-      final request = test(state);
-      final oldRequest = context.oldRequest;
-      final changed = _optionalChanged(
-        oldValue: oldRequest,
-        value: request,
-        areEqual: areEqual
-      );
-      if (changed) {
-        context.oldRequest = request;
-        if (request is OptionalValue<Request>) {
-          if (context.skipRequestOnce) {
-            context.skipRequestOnce = false;
-            return;
-          }
-          effect(request.value, dispatch);
-        }
-      }
-    },
   );
 
   System<State, Event> _reactLatestRequest<Request>({
@@ -138,6 +127,10 @@ extension ReactOperators<State, Event> on System<State, Event> {
     },
     dispose: (context) => context.latestContext.disposePreviousEffect(),
   );  
+}
+
+class _ReactContext<Value> {
+  Value? oldValue;
 }
 
 class _RequestContext<Request, Event> {
