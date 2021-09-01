@@ -1,6 +1,5 @@
 import 'system.dart';
 import '../types/types.dart';
-import '../types/optional.dart';
 import '../types/latest_context.dart';
 
 extension ReactOperators<State, Event> on System<State, Event> {
@@ -84,85 +83,44 @@ extension ReactOperators<State, Event> on System<State, Event> {
     AreEqual<Value>? areEqual,
     bool skipInitialValue = true,
     required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
-  }) => _reactLatestRequest(
-    test: (state) => OptionalValue(value(state)),
-    areEqual: areEqual,
-    skipFirstRequest: skipInitialValue,
-    effect: effect,
-  );
-
-  System<State, Event> _reactLatestRequest<Request>({
-    required Optional<Request> Function(State state) test,
-    AreEqual<Request>? areEqual,
-    bool skipFirstRequest = true,
-    required Dispose? Function(Request request, Dispatch<Event> dispatch) effect,
-  }) => withContext<_LatestRequestContext<Request, Event>>(
-    createContext: () => _LatestRequestContext(
-      requestContext: _RequestContext(
-        skipRequestOnce: skipFirstRequest,
-      ),
-      latestContext: LatestContext(),
-    ),
-    effect: (context, state, oldState, event, dispatch) {
-      final latestContext = context.latestContext;
-      final requestContext = context.requestContext;
-      final request = test(state);
-      final oldRequest = requestContext.oldRequest;
-      final changed = _optionalChanged(
-        oldValue: oldRequest,
-        value: request,
-        areEqual: areEqual,
-      );
-      if (changed) {
-        requestContext.oldRequest = request;
-        latestContext.disposePreviousEffect();
-        if (request is OptionalValue<Request>) {
-          if (requestContext.skipRequestOnce) {
-            requestContext.skipRequestOnce = false;
-            return;
-          }
-          latestContext.dispose = effect(request.value, latestContext.versioned(dispatch));
+  }) {
+    final _areEqual = areEqual ?? defaultAreEqual;
+    return withContext<_ReactLatestContext<Value, Event>>(
+      createContext: () => _ReactLatestContext(),
+      effect: (context, state, oldState, event, dispatch) {
+        final reactContext = context.reactContext;
+        final _value = value(state);
+        final bool _shouldUpdateOldValue;
+        final bool _shouldTriggerEffect;
+        if (event == null) {
+          _shouldTriggerEffect = !skipInitialValue;
+          _shouldUpdateOldValue = true;
+        } else {
+          final _oldValue = reactContext.oldValue as Value;
+          _shouldTriggerEffect = !_areEqual(_oldValue, _value);
+          _shouldUpdateOldValue = _shouldTriggerEffect;
         }
-      }
-    },
-    dispose: (context) => context.latestContext.disposePreviousEffect(),
-  );  
+        if (_shouldUpdateOldValue) {
+          reactContext.oldValue = _value;
+        }
+        if (_shouldTriggerEffect) {
+          final latestContext = context.latestContext;
+          latestContext.disposePreviousEffect();
+          latestContext.dispose = effect(_value, latestContext.versioned(dispatch));
+        }
+      },
+      dispose: (context) {
+        context.latestContext.disposePreviousEffect();
+      },
+    );
+  }
 }
 
 class _ReactContext<Value> {
   Value? oldValue;
 }
 
-class _RequestContext<Request, Event> {
-  _RequestContext({
-    required this.skipRequestOnce,
-  });
-  bool skipRequestOnce;
-  Optional<Request> oldRequest = OptionalNone();
-}
-
-class _LatestRequestContext<Request, Event> {
-  _LatestRequestContext({
-    required this.requestContext,
-    required this.latestContext,
-  });
-  final _RequestContext<Request, Event> requestContext;
-  final LatestContext<Event> latestContext;
-}
-
-bool _optionalChanged<Value>({
-  required Optional<Value> oldValue,
-  required Optional<Value> value,
-  AreEqual<Value>? areEqual,
-}) {
-  final AreEqual<Value> _areEqual = areEqual ?? (it1, it2) => it1 == it2;
-  if (oldValue is OptionalValue<Value> && value is OptionalValue<Value>) {
-    return !_areEqual(oldValue.value, value.value);
-  } else if (oldValue is OptionalNone<Value> && value is OptionalValue<Value>) {
-    return true;
-  } else if (oldValue is OptionalValue<Value> && value is OptionalNone<Value>) {
-    return true;
-  } else {
-    return false;
-  }
+class _ReactLatestContext<Value, Event> {
+  final _ReactContext<Value> reactContext = _ReactContext();
+  final LatestContext<Event> latestContext = LatestContext();
 }
