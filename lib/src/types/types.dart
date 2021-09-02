@@ -1,6 +1,7 @@
 
 /// Describe if a and b are equal
 typedef AreEqual<T> = bool Function(T it1, T it2);
+bool defaultAreEqual<T>(T it1, T it2) => it1 == it2;
 
 /// Describe how state update when event come
 typedef Reduce<State, Event> = State Function(State state, Event event);
