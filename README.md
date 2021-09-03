@@ -61,7 +61,7 @@ void main() async {
 
   final dispose = counterSystem.run();
 
-  await Future.delayed(Duration(seconds: 3));
+  await Future<void>.delayed(Duration(seconds: 3));
 
   dispose();
 }
@@ -221,7 +221,7 @@ Then, what about async stuff like `networking effect` or `timer effect`:
 +   .add(effect: (state, oldState, event, dispatch) async {
 +     // effect - auto decrease via async event
 +     if (event is CounterEventIncrease) {
-+       await Future.delayed(Duration(seconds: 3));
++       await Future<void>.delayed(Duration(seconds: 3));
 +       dispatch(CounterEventDecrease());
 +     }
 +   })
@@ -261,7 +261,7 @@ We've added `timer effect` and `persistence effect`. For now, Instead of thinkin
     .add(effect: (state, oldState, event, dispatch) async {
       // effect - auto decrease via async event
       if (event is CounterEventIncrease) {
-        await Future.delayed(Duration(seconds: 3));
+        await Future<void>.delayed(Duration(seconds: 3));
         dispatch(CounterEventDecrease());
       }
     })
@@ -297,14 +297,14 @@ We have a series of operators (methods) that has prefix `on` to approach this be
 -   .add(effect: (state, oldState, event, dispatch) async {
 -     // effect - auto decrease via async event
 -     if (event is CounterEventIncrease) {
--       await Future.delayed(Duration(seconds: 3));
+-       await Future<void>.delayed(Duration(seconds: 3));
 -       dispatch(CounterEventDecrease());
 -     }
 -   })
 +   .on<CounterEventIncrease>(
 +     effect: (state, event, dispatch) async {
 +       // effect - auto decrease via async event
-+       await Future.delayed(Duration(seconds: 3));
++       await Future<void>.delayed(Duration(seconds: 3));
 +       dispatch(CounterEventDecrease());
 +     },
 +   )
@@ -319,7 +319,7 @@ We can even move `effect` around `reduce` when they share same condition:
       reduce: (state, event) => state + 1,
 +     effect: (state, event, dispatch) async {
 +       // effect - auto decrease via async event
-+       await Future.delayed(Duration(seconds: 3));
++       await Future<void>.delayed(Duration(seconds: 3));
 +       dispatch(CounterEventDecrease());
 +     },
     )
@@ -330,7 +330,7 @@ We can even move `effect` around `reduce` when they share same condition:
 -   .on<CounterEventIncrease>(
 -     effect: (state, event, dispatch) async {
 -       // effect - auto decrease via async event
--       await Future.delayed(Duration(seconds: 3));
+-       await Future<void>.delayed(Duration(seconds: 3));
 -       dispatch(CounterEventDecrease());
 -     },
 -   )
@@ -446,7 +446,7 @@ final dispose = counterSystem.run();
 When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
 
 ```dart
-await Future.delayed(Duration(seconds: 3));
+await Future<void>.delayed(Duration(seconds: 3));
 
 dispose();
 ```
@@ -499,7 +499,7 @@ final counterSystem = System<int, CounterEvent>
   })
   .add(effect: (state, oldState, event, dispatch) async {
     if (event is CounterEventIncrease) {
-      await Future.delayed(Duration(seconds: 3));
+      await Future<void>.delayed(Duration(seconds: 3));
       dispatch(CounterEventDecrease());
     }
   })
@@ -525,7 +525,7 @@ final counterSystem = System<int, CounterEvent>
   .on<CounterEventIncrease>(
     reduce: (state, event) => state + 1,
     effect: (state, event, dispatch) async {
-      await Future.delayed(Duration(seconds: 3));
+      await Future<void>.delayed(Duration(seconds: 3));
       dispatch(CounterEventDecrease());
     },
   )
@@ -625,13 +625,13 @@ test('CounterSystem', () async {
       if (event == null) {
         // inject mock events
         dispatch(CounterEventIncrease());
-        await Future.delayed(Duration(milliseconds: 20));
+        await Future<void>.delayed(Duration(milliseconds: 20));
         dispatch(CounterEventDecrease());
       }
     },
   );
 
-  await Future.delayed(Duration(milliseconds: 60));
+  await Future<void>.delayed(Duration(milliseconds: 60));
 
   dispose();
 
