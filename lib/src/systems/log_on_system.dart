@@ -3,7 +3,7 @@ import 'system.dart';
 import 'on_on_system.dart';
 import 'dart:core' as core; // resolve conflict with parameter 'system.log.print'
 
-extension LogOperator<State, Event> on System<State, Event> {
+extension LogOperators<State, Event> on System<State, Event> {
 
   /// Add log `effect` to the system.
   /// 
