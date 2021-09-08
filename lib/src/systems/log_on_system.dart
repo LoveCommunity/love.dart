@@ -92,10 +92,8 @@ extension LogOperator<State, Event> on System<State, Event> {
     final _label = label ?? '$runtimeType';
     final _print = print ?? (core.String message) => core.print(message);
     return this
-      .onRun(effect: (initialState, _) { 
-        _print('$_label Run');
-       })
       .add(effect: (state, oldState, event, _) { 
+        if (event == null) _print('$_label Run');
         _print('$_label Update {\n  event: $event\n  oldState: $oldState\n  state: $state\n}');
        })
       .onDispose(run: () {
