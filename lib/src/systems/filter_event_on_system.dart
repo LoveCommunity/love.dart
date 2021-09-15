@@ -2,10 +2,97 @@ import 'system.dart';
 import '../types/types.dart';
 import '../utils/utils.dart';
 
+/// Describe how to intercept event
 typedef EventInterceptor<Context, Event> = void Function(Context context, Dispatch<Event> dispatch, Event event);
 
 extension FilterEventOperators<State, Event> on System<State, Event> {
 
+  /// An interceptor that can intercept downward event.
+  /// 
+  /// This is a low level operator which can be used for supporting high level operator
+  /// like `system.ignoreEvent` and `system.debounceOn`.
+  /// 
+  /// ## API overview
+  /// 
+  /// The key point for this operator is, we are associating a custom `Context` with it:
+  /// 
+  /// ```dart
+  /// 
+  /// class SomeContext { ... }
+  /// 
+  /// ...
+  /// 
+  /// system
+  ///  .eventInterceptor<SomeContext>(
+  ///    createContext: () => SomeContext(), // create context here
+  ///    updateContext: (context, state, oldState, event, dispatch) {
+  ///      // update context here if needed.
+  ///    },
+  ///    interceptor: (context, dispatch, event) {
+  ///      // intercept event base on the context,
+  ///      // call `dispatch(event);` if we pass the event,
+  ///      // don't call `dispatch(event);` if we ignore the event.
+  ///    },
+  ///    dispose: (context) {
+  ///      // dispose the context if needed.
+  ///    }
+  ///  )
+  ///  ...
+  /// ```
+  /// 
+  /// ## Usage Example
+  /// 
+  /// `system.ignoreEvent` - Ignore event based on current state and candidate event.
+  /// 
+  /// Bellow code shown how to implement high level `system.ignoreEvent` 
+  /// based on low level `system.eventInterceptor`:
+  /// 
+  /// ```dart
+  /// 
+  /// class _IgnoreEventContext<State> {
+  ///   late State state;
+  /// }
+  /// 
+  /// extension FilterEventOperators<State, Event> on System<State, Event> {
+  /// 
+  ///   ...
+  /// 
+  ///   System<State, Event> ignoreEvent({
+  ///     required bool Function(State state, Event event) when
+  ///   }) {
+  ///     final test = when;
+  ///     return eventInterceptor<_IgnoreEventContext<State>>( //  <-- call `this.eventInterceptor`
+  ///       createContext: () => _IgnoreEventContext(),
+  ///       updateContext: (context, state, oldState, event, dispatch) {
+  ///         context.state = state; // cache current state in context
+  ///       },
+  ///       interceptor: (context, dispatch, event) {
+  ///         final shouldIgnoreEvent = test(context.state, event);
+  ///         if (!shouldIgnoreEvent) {
+  ///           dispatch(event);
+  ///         }
+  ///       },
+  ///     );
+  ///   }
+  /// }
+  /// ```
+  /// 
+  /// Usage of `system.ignoreEvent`:
+  /// 
+  /// ```dart
+  /// futureSystem
+  ///   .ignoreEvent(
+  ///     when: (state, event) => event is TriggerLoadData && state.loading
+  ///   ) 
+  ///   ...
+  /// ```
+  /// 
+  /// Above code shown if the system is already in loading status, 
+  /// then upcoming `TriggerLoadData` event will be ignored.
+  /// 
+  /// We can treat `system.ignoreEvent` as a special case of `system.eventInterceptor`,
+  /// As an analogy, if we say `system.ignoreEvent` is a square, then `system.eventInterceptor` is a rectangle.
+  /// 
   System<State, Event> eventInterceptor<Context>({
     required Context Function() createContext,
     ContextEffect<Context, State, Event>? updateContext,
