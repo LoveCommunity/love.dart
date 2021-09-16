@@ -4,6 +4,7 @@
 * refactor - reimplement `system.react` and `system.reactLatest` operators
 * feature - add `system.log` operator
 * feature - add `system.eventInterceptor` operator to intercept event
+* feature - add `system.ignoreEvent` operator to filter event
 
 ## [0.1.0-beta.5] - 2020-08-06
 

@@ -7,6 +7,54 @@ typedef EventInterceptor<Context, Event> = void Function(Context context, Dispat
 
 extension FilterEventOperators<State, Event> on System<State, Event> {
 
+  /// Ignore event based on current state and candidate event.
+  /// 
+  /// ## Usage Example
+  /// 
+  /// ```dart
+  /// futureSystem
+  ///   .ignoreEvent(
+  ///     when: (state, event) => event is TriggerLoadData && state.loading
+  ///   ) 
+  ///   ...
+  /// ```
+  /// 
+  /// Above code shown if the system is already in loading status, 
+  /// then upcoming `TriggerLoadData` event will be ignored.
+  /// 
+  /// ## API overview
+  /// 
+  /// This operator will intercept downward candidate event if condition is met.
+  /// 
+  /// ```dart
+  /// system
+  ///   .ignoreEvent(
+  ///     when: (state, event) { // --> describe if candidate event should be ignored
+  ///       // `state` is current state
+  ///       // `event` is candidate event
+  ///       // return true if we ignore the event
+  ///       // return false if we pass the event
+  ///       ...
+  ///     }
+  ///   )
+  ///   ...
+  /// ```
+  /// 
+  System<State, Event> ignoreEvent({
+    required bool Function(State state, Event event) when,
+  }) => eventInterceptor<_IgnoreEventContext<State>>(
+    createContext: () => _IgnoreEventContext(),
+    updateContext: (context, state, oldState, event, dispatch) {
+      context.state = state;
+    },
+    interceptor: (context, dispatch, event) {
+      final shouldIgnoreEvent = when(context.state, event);
+      if (!shouldIgnoreEvent) {
+        dispatch(event);
+      }
+    }
+  );
+
   /// An interceptor that can intercept downward event.
   /// 
   /// This is a low level operator which can be used for supporting high level operator
@@ -143,6 +191,10 @@ Effect<State, Event>? _eventInterceptorEffect<Context, State, Event>({
     _updateContextEffect,
     _nextEffect,
   );
+}
+
+class _IgnoreEventContext<State> {
+  late State state;
 }
 
 class _EventInterceptorContext<ChildContext, Event> {
