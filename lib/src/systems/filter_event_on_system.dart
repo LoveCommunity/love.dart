@@ -42,13 +42,10 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// 
   /// ## Usage Example
   /// 
-  /// `system.ignoreEvent` - Ignore event based on current state and candidate event.
-  /// 
   /// Bellow code shown how to implement high level `system.ignoreEvent` 
   /// based on low level `system.eventInterceptor`:
   /// 
   /// ```dart
-  /// 
   /// class _IgnoreEventContext<State> {
   ///   late State state;
   /// }
@@ -57,6 +54,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// 
   ///   ...
   /// 
+  ///   /// Ignore event based on current state and candidate event.
   ///   System<State, Event> ignoreEvent({
   ///     required bool Function(State state, Event event) when
   ///   }) {
