@@ -1,5 +1,7 @@
 import '../types/types.dart';
 
+R? safeAs<T, R>(T value) => value is R ? value : null;
+
 Reduce<State, Event>? combineReduce<State, Event>(
   Reduce<State, Event>? reduce,
   Reduce<State, Event>? nextReduce,

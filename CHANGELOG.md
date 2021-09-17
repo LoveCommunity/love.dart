@@ -5,6 +5,7 @@
 * feature - add `system.log` operator
 * feature - add `system.eventInterceptor` operator to intercept event
 * feature - add `system.ignoreEvent` operator to filter event
+* feature - add `system.debounceOn` operator
 
 ## [0.1.0-beta.5] - 2020-08-06
 

@@ -1,4 +1,5 @@
 import '../types/types.dart';
+import '../utils/utils.dart';
 import 'system.dart';
 
 extension OnOperators<State, Event> on System<State, Event> {
@@ -15,7 +16,7 @@ extension OnOperators<State, Event> on System<State, Event> {
     Reduce<State, ChildEvent>? reduce,
     void Function(State state, ChildEvent event, Dispatch<Event> dispatch)? effect,
   }) {
-    final _test = test ?? _safeAs;
+    final _test = test ?? safeAs;
     return add(
       reduce: reduce == null ? null : (state, event) {
         return _testEvent(event, 
@@ -113,4 +114,3 @@ Result? _testEvent<Result, ChildEvent, Event>(Event event, {
   if (childEvent != null) return then(childEvent);
 }
 
-R? _safeAs<T, R>(T value) => value is R ? value : null;
