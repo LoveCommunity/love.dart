@@ -433,13 +433,13 @@ There are other `react*` operators for different use cases. If we want to learn 
 We've introduced how to add `log` effect:
 
 ```dart
-  ...
-  .add(effect: (state, oldState, event, dispatch) {
-    print('\nEvent: $event');
-    print('OldState: $oldState');
-    print('State: $state');
-  })
-  ...
+    ...
+    .add(effect: (state, oldState, event, dispatch) {
+      print('\nEvent: $event');
+      print('OldState: $oldState');
+      print('State: $state');
+    })
+    ...
 ```
 
 Output:
@@ -458,14 +458,14 @@ State: 1
 Since `log` is a common effect, we have introduced built-in `log` operator to address it:
 
 ```diff
-  ...
-- .add(effect: (state, oldState, event, dispatch) {
--   print('\nEvent: $event');
--   print('OldState: $oldState');
--   print('State: $state');
-- })
-+ .log()
-  ...
+    ...
+-   .add(effect: (state, oldState, event, dispatch) {
+-     print('\nEvent: $event');
+-     print('OldState: $oldState');
+-     print('State: $state');
+-   })
++   .log()
+    ...
 ```
 
 Output becomes:
