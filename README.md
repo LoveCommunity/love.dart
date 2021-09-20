@@ -652,6 +652,42 @@ Happy to see [Flutter] and [React] works together ^_-.
 
 If we want to learn more please visit [flutter_love].
 
+## Filter Event Operators
+
+Operators which can prevent unnecessary event dispatching. 
+
+### ignoreEvent
+
+Ignore event based on current state and candidate event.
+
+```dart
+  futureSystem
+    .ignoreEvent(
+      when: (state, event) => event is TriggerLoadData && state.loading
+    )
+    ...
+```
+
+Above code shown if the system is already in loading status, then upcoming `TriggerLoadData` event will be ignored.
+
+### debounceOn
+
+Apply [debounce logic] to some events.
+
+```dart
+  searchSystem
+    ...
+    .on<UpdateKeyword>(
+      reduce: (state, event) => state.copyWith(keyword: event.keyword)
+    )
+    .debounceOn<UpdateKeyword>(
+      duration: const Duration(seconds: 1)
+    )
+    ...
+```
+
+Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), system will drop these events to reduce unnecessary dispatching, it will pass event if it's stable.
+
 ## Testing
 
 Test can be done straightforward:
@@ -728,6 +764,7 @@ The MIT License (MIT)
 [flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.5
 [install flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.5/install
 [ReactiveX]:http://reactivex.io/
+[debounce logic]:http://reactivex.io/documentation/operators/debounce.html
 [Redux]:https://redux.js.org/
 [RxFeedback]:https://github.com/NoTests/RxFeedback.swift
 [RxSwift]:https://github.com/ReactiveX/RxSwift
