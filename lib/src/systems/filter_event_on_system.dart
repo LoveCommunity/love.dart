@@ -102,8 +102,8 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
     required Duration duration, 
   }) {
     final _test = test ?? safeAs;
-    return eventInterceptor<_DebounceEventContext>(
-      createContext: () => _DebounceEventContext(),
+    return eventInterceptor<_DebounceOnContext>(
+      createContext: () => _DebounceOnContext(),
       interceptor: (context, dispatch, event) {
         final childEvent = _test(event);
         if (childEvent == null) {
@@ -266,7 +266,7 @@ class _IgnoreEventContext<State> {
   late State state;
 }
 
-class _DebounceEventContext {
+class _DebounceOnContext {
   Object? identifier;
 }
 
