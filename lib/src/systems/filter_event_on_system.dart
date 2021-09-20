@@ -55,6 +55,75 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
     }
   );
 
+
+  /// Drop conditional events when they are dispatched in high frequency.
+  /// 
+  /// It's similar to [Rx.observable.debounce](http://reactivex.io/documentation/operators/debounce.html)
+  /// 
+  /// ## Usage Example
+  /// 
+  /// ```dart
+  /// searchSystem
+  ///   ...
+  ///   .on<UpdateKeyword>(
+  ///     reduce: (state, event) => state.copyWith(keyword: event.keyword)
+  ///   )
+  ///   .debounceOn<UpdateKeyword>(
+  ///     duration: const Duration(seconds: 1)
+  ///   )
+  ///   ...
+  /// ```
+  /// 
+  /// Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), 
+  /// system will drop these events to reduce unnecessary dispatching, 
+  /// it will pass (not drop) event if 1 seconds has passed without dispatch another `UpdateKeyword` event.
+  ///
+  /// ## API overview
+  /// 
+  /// This operator will drop downward candidate event if condition is met and these events are dispatched with high frequency.
+  /// 
+  /// ```dart
+  /// system
+  ///   .debounceOn<ChildEvent>(
+  ///     test: (event) { // -> test if we are concern about this event, this parameter is optional,
+  ///                     // if `test` is emitted, then we will try safe cast `Event event` to `ChildEvent? event`.
+  ///       // `Event event` here is candidate event
+  ///       // return `ChildEvent childEvent` if we are concern about it
+  ///       // return null if we are not concern about it
+  ///       ...
+  ///     },
+  ///     duration: ... // time interval used for judgment
+  ///   )
+  ///   ...
+  /// ```
+  /// 
+  System<State, Event> debounceOn<ChildEvent>({
+    ChildEvent? Function(Event event)? test,
+    required Duration duration, 
+  }) {
+    final _test = test ?? safeAs;
+    return eventInterceptor<_DebounceOnContext>(
+      createContext: () => _DebounceOnContext(),
+      interceptor: (context, dispatch, event) {
+        final childEvent = _test(event);
+        if (childEvent == null) {
+          dispatch(event);
+        } else {
+          final identifier = Object();
+          context.identifier = identifier;
+          Future<void>.delayed(duration).then((_) {
+            if (identical(context.identifier, identifier)) {
+              dispatch(event);
+            }
+          });
+        }
+      },
+      dispose: (context) {
+        context.identifier = null;
+      },
+    );
+  }
+
   /// An interceptor that can intercept downward event.
   /// 
   /// This is a low level operator which can be used for supporting high level operator
@@ -195,6 +264,10 @@ Effect<State, Event>? _eventInterceptorEffect<Context, State, Event>({
 
 class _IgnoreEventContext<State> {
   late State state;
+}
+
+class _DebounceOnContext {
+  Object? identifier;
 }
 
 class _EventInterceptorContext<ChildContext, Event> {
