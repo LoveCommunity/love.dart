@@ -20,11 +20,7 @@ void main() async {
     .on<CounterEventDecrease>(
       reduce: (state, event) => state - 1,
     )
-    .add(effect: (state, oldState, event, dispatch) {
-      print('\nEvent: $event');
-      print('State: $state');
-      print('OldState: $oldState');
-    })
+    .log()
     .reactState(
       effect: (state, dispatch) {
         print('Simulate persistence save call with state: $state');
