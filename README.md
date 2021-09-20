@@ -49,8 +49,8 @@ void main() async {
     .add(effect: (state, oldState, event, dispatch) {
       // effect - log update
       print('\nEvent: $event');
-      print('State: $state');
       print('OldState: $oldState');
+      print('State: $state');
     })
     .add(effect: (state, oldState, event, dispatch) {
       // effect - inject mock events
@@ -73,12 +73,12 @@ Output:
 ```
 
 Event: null
-State: 0
 OldState: null
+State: 0
 
 Event: Instance of 'CounterEventIncrease'
-State: 1
 OldState: 0
+State: 1
 ```
 
 We hope the code is self explained. If you can guess what this code works for. That's very nice! 
@@ -428,6 +428,67 @@ There are other `react*` operators for different use cases. If we want to learn 
 * reactLatest
 * reactState
 
+## High Level Effect Operator
+
+We've introduced how to add `log` effect:
+
+```dart
+  ...
+  .add(effect: (state, oldState, event, dispatch) {
+    print('\nEvent: $event');
+    print('OldState: $oldState');
+    print('State: $state');
+  })
+  ...
+```
+
+Output:
+
+```
+
+Event: null
+OldState: null
+State: 0
+
+Event: Instance of 'CounterEventIncrease'
+OldState: 0
+State: 1
+```
+
+Since `log` is a common effect, we have introduced built-in `log` operator to address it:
+
+```diff
+  ...
+- .add(effect: (state, oldState, event, dispatch) {
+-   print('\nEvent: $event');
+-   print('OldState: $oldState');
+-   print('State: $state');
+- })
++ .log()
+  ...
+```
+
+Output becomes:
+
+```
+System<int, CounterEvent> Run
+System<int, CounterEvent> Update {
+  event: null
+  oldState: null
+  state: 0
+}
+System<int, CounterEvent> Update {
+  event: Instance of 'CounterEventIncrease'
+  oldState: 0
+  state: 1
+}
+System<int, CounterEvent> Dispose
+```
+
+As we see, `log` operator not only log `updates`, but also log system `run` and `dispose` with prefix `runtimeType` label.
+
+`log` is a scene optimization operator, if we are repeatedly write similar code to solve similar problem. Then we can extract operators for reusing solution. `log` is one of these operators.
+
 ## Run
 
 We've declared our `counterSystem`:
@@ -532,11 +593,7 @@ final counterSystem = System<int, CounterEvent>
   .on<CounterEventDecrease>(
     reduce: (state, event) => state - 1,
   )
-  .add(effect: (state, oldState, event, dispatch) {
-    print('\nEvent: $event');
-    print('State: $state');
-    print('OldState: $oldState');
-  })
+  .log()
   .reactState(
     effect: (state, dispatch) {
       print('Simulate persistence save call with state: $state');
