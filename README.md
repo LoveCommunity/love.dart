@@ -1,6 +1,6 @@
 # love
 
-A state management library that is functional, elegant and predictable.
+A state management library that is declarative, predictable and elegant.
 
 ![][love_overview_diagram]
 
@@ -616,7 +616,7 @@ We've mentioned earlier `presentation effect` is triggered by react state change
   )
 ```
 
-Since [Flutter] is full of widgets. How can we make `react* operators` works together with widgets?
+Since [Flutter] is full of widgets. How can we make `react* operators` work together with widgets?
 
 Is this possible:
 
