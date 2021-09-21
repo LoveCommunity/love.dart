@@ -59,8 +59,8 @@ void main() {
   test('System.copy.reduce', () async {
 
     int invoked = 0;
-    List<String> stateParameters = [];
-    List<String> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String> eventParameters = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -132,9 +132,9 @@ void main() {
   test('System.copy.effect', () async {
 
     int invoked = 0;
-    List<String> stateParameters = [];
-    List<String?> oldStatesParameters = [];
-    List<String?> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String?> oldStatesParameters = [];
+    final List<String?> eventParameters = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

@@ -7,8 +7,8 @@ void main() {
   test('System.ignoreEvent', () async {
 
     int whenInvoked = 0;
-    List<String> stateParameters = [];
-    List<String> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String> eventParameters = [];
     
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

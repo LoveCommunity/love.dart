@@ -10,8 +10,8 @@ void main() {
     TestContext? _context;
 
     int invoked = 0;
-    List<String> stateParameters = [];
-    List<String> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String> eventParameters = [];
     
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

@@ -38,9 +38,9 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
 
   Dispose? dispose;
 
-  List<State> states = [];
-  List<State?> oldStates = [];
-  List<Event?> _events = [];
+  final List<State> states = [];
+  final List<State?> oldStates = [];
+  final List<Event?> _events = [];
   bool isDisposed = false;
 
   final _dispose = system.run(

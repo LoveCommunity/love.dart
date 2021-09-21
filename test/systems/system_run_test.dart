@@ -10,9 +10,9 @@ void main() {
 
     Dispose? dispose;
 
-    List<String> states = [];
-    List<String?> oldStates = [];
-    List<String?> events = [];
+    final List<String> states = [];
+    final List<String?> oldStates = [];
+    final List<String?> events = [];
     bool isDisposed = false;
 
     final system = createTestSystem(initialState: 'a');
