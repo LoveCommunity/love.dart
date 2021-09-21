@@ -8,8 +8,8 @@ void main() {
   test('System.add.reduce', () async {
 
     int invoked = 0;
-    List<String> stateParameters = [];
-    List<String> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String> eventParameters = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -78,14 +78,14 @@ void main() {
   test('System.add.reduce.order', () async {
 
     int invoked1 = 0;
-    List<String> stateParameters1 = [];
-    List<String> eventParameters1 = [];
+    final List<String> stateParameters1 = [];
+    final List<String> eventParameters1 = [];
 
     int invoked2 = 0;
-    List<String> stateParameters2 = [];
-    List<String> eventParameters2 = [];
+    final List<String> stateParameters2 = [];
+    final List<String> eventParameters2 = [];
 
-    List<int> _orders = [];
+    final List<int> _orders = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -186,9 +186,9 @@ void main() {
   test('System.add.effect', () async {
 
     int invoked = 0;
-    List<String> stateParameters = [];
-    List<String?> _oldStateParameters = [];
-    List<String?> eventParameters = [];
+    final List<String> stateParameters = [];
+    final List<String?> _oldStateParameters = [];
+    final List<String?> eventParameters = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -277,16 +277,16 @@ void main() {
   test('System.add.effect.order', () async {
 
     int invoked1 = 0;
-    List<String> stateParameters1 = [];
-    List<String?> _oldStateParameters1 = [];
-    List<String?> eventParameters1 = [];
+    final List<String> stateParameters1 = [];
+    final List<String?> _oldStateParameters1 = [];
+    final List<String?> eventParameters1 = [];
 
     int invoked2 = 0;
-    List<String> stateParameters2 = [];
-    List<String?> _oldStateParameters2 = [];
-    List<String?> eventParameters2 = [];
+    final List<String> stateParameters2 = [];
+    final List<String?> _oldStateParameters2 = [];
+    final List<String?> eventParameters2 = [];
 
-    List<int> _orders = [];
+    final List<int> _orders = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

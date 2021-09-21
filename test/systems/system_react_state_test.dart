@@ -9,7 +9,7 @@ void main() {
   test('System.reactState', () async {
     int effectInvoked = 0;
     int dispatchInvoked = 0;
-    List<String> stateParameters = [];
+    final List<String> stateParameters = [];
  
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

@@ -30,7 +30,7 @@ import 'package:meta/meta.dart';
 @visibleForTesting
 class EffectForwarder<State, Event> {
 
-  List<Effect<State, Event>> _effects = [];
+  final List<Effect<State, Event>> _effects = [];
   State? _state;
   Dispatch<Event>? _dispatch;
 

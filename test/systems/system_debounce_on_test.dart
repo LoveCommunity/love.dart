@@ -7,7 +7,7 @@ void main() {
   test('System.debounceOn', () async {
 
     int testInvoked = 0;
-    List<String> eventParameters = [];
+    final List<String> eventParameters = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

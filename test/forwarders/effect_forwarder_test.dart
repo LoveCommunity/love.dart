@@ -7,10 +7,10 @@ void main() {
 
   test('EffectForwarder.effect', () {
 
-    List<String> states = [];
-    List<String?> oldStates = [];
-    List<String?> events = [];
-    List<String> dispatchedEvents = [];
+    final List<String> states = [];
+    final List<String?> oldStates = [];
+    final List<String?> events = [];
+    final List<String> dispatchedEvents = [];
     int invoked = 0;
 
     final forwarder = EffectForwarder<String, String>();
@@ -42,10 +42,10 @@ void main() {
 
   test('EffectForwarder.dispose', () {
 
-    List<String> states = [];
-    List<String?> oldStates = [];
-    List<String?> events = [];
-    List<String> dispatchedEvents = [];
+    final List<String> states = [];
+    final List<String?> oldStates = [];
+    final List<String?> events = [];
+    final List<String> dispatchedEvents = [];
     int invoked = 0;
 
     final forwarder = EffectForwarder<String, String>();
@@ -86,9 +86,9 @@ void main() {
 
   test('EffectForwarder.replay.empty', () {
 
-    List<String> states = [];
-    List<String?> oldStates = [];
-    List<String?> events = [];
+    final List<String> states = [];
+    final List<String?> oldStates = [];
+    final List<String?> events = [];
     int invoked = 0;
 
     final forwarder = EffectForwarder<String, String>();
@@ -112,10 +112,10 @@ void main() {
 
   test('EffectForwarder.replay.last', () {
 
-    List<String> states = [];
-    List<String?> oldStates = [];
-    List<String?> events = [];
-    List<String> dispatchedEvents = [];
+    final List<String> states = [];
+    final List<String?> oldStates = [];
+    final List<String?> events = [];
+    final List<String> dispatchedEvents = [];
     int invoked = 0;
 
     final Effect<String, String> effect = (state, oldState, event, dispatch) {
@@ -146,7 +146,7 @@ void main() {
 
   test('EffectForwarder.forward.order', () {
 
-    List<int> orders = [];
+    final List<int> orders = [];
 
     final forwarder = EffectForwarder<String, String>();
 

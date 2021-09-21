@@ -664,7 +664,7 @@ Test can be done straightforward:
 ```dart
 test('CounterSystem', () async {
 
-  List<State> states = [];
+  final List<State> states = [];
 
   final counterSystem = System<int, CounterEvent>
     .create(initialState: 0)

@@ -9,7 +9,7 @@ void main() {
   test('System.onRun', () async {
 
     int invoked = 0;
-    List<String> stateParameters = [];
+    final List<String> stateParameters = [];
     
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')

@@ -113,9 +113,9 @@ void main() {
 class _TestContext {
   int updateContextInvoked = 0;
   int interceptorInvoked = 0;
-  List<String> stateParameters = [];
-  List<String?> oldStateParameters = [];
-  List<String?> eventParameters = [];
-  List<String?> interceptorEventParameters = [];
+  final List<String> stateParameters = [];
+  final List<String?> oldStateParameters = [];
+  final List<String?> eventParameters = [];
+  final List<String?> interceptorEventParameters = [];
   bool isDisposed = false;
 }

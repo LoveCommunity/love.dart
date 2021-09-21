@@ -10,9 +10,9 @@ void main() {
     int valueInvoked = 0;
     int effectInvoked = 0;
     int effectVersion = 0;
-    List<String> stateParameters = [];
-    List<String> valueParameters = [];
-    List<int> disposedVersions = [];
+    final List<String> stateParameters = [];
+    final List<String> valueParameters = [];
+    final List<int> disposedVersions = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -113,9 +113,9 @@ void main() {
     int valueInvoked = 0;
     int effectInvoked = 0;
     int effectVersion = 0;
-    List<String> stateParameters = [];
-    List<String> valueParameters = [];
-    List<int> disposedVersions = [];
+    final List<String> stateParameters = [];
+    final List<String> valueParameters = [];
+    final List<int> disposedVersions = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
