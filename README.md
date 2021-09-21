@@ -1,6 +1,6 @@
 # love
 
-A state management library that is functional, elegant and predictable.
+A state management library that is declarative, predictable and elegant.
 
 ![][love_overview_diagram]
 
@@ -199,8 +199,8 @@ Bellow are `log effect` and `mock effect`:
     .add(effect: (state, oldState, event, dispatch) {
       // effect - log update
       print('\nEvent: $event');
-      print('State: $state');
       print('OldState: $oldState');
+      print('State: $state');
     })
     .add(effect: (state, oldState, event, dispatch) {
       // effect - inject mock events
@@ -251,6 +251,66 @@ We can also add `persistence effect`:
 ```
 
 This persistence save function will be called when state changed, but initial state is skipped since most of time initial state is restored from persistence layer, there is no need to save it back again. 
+
+## High Level Effect Operator
+
+We've introduced how to add `log` effect:
+
+```dart
+    ...
+    .add(effect: (state, oldState, event, dispatch) {
+      print('\nEvent: $event');
+      print('OldState: $oldState');
+      print('State: $state');
+    })
+    ...
+```
+
+Output:
+
+```
+Event: null
+OldState: null
+State: 0
+
+Event: Instance of 'CounterEventIncrease'
+OldState: 0
+State: 1
+```
+
+Because `log` is a common effect, we can use built-in `log` operator to address it:
+
+```diff
+    ...
+-   .add(effect: (state, oldState, event, dispatch) {
+-     print('\nEvent: $event');
+-     print('OldState: $oldState');
+-     print('State: $state');
+-   })
++   .log()
+    ...
+```
+
+Output becomes:
+
+```
+System<int, CounterEvent> Run
+System<int, CounterEvent> Update {
+  event: null
+  oldState: null
+  state: 0
+}
+System<int, CounterEvent> Update {
+  event: Instance of 'CounterEventIncrease'
+  oldState: 0
+  state: 1
+}
+System<int, CounterEvent> Dispose
+```
+
+As we see, `log` operator can do more with less code, it not only log `updates`, but also log system `run` and `dispose` which maybe helpful for debug.
+
+`log` is a **scene focused operator** which scale the log demand followed with a detailed solution. If we are **repeatedly write similar code to solve similar problem**. Then we can **extract operators for reusing solution**. `log` is one of these operators.
 
 ## Effect Trigger
 
@@ -428,67 +488,6 @@ There are other `react*` operators for different use cases. If we want to learn 
 * reactLatest
 * reactState
 
-## High Level Effect Operator
-
-We've introduced how to add `log` effect:
-
-```dart
-    ...
-    .add(effect: (state, oldState, event, dispatch) {
-      print('\nEvent: $event');
-      print('OldState: $oldState');
-      print('State: $state');
-    })
-    ...
-```
-
-Output:
-
-```
-
-Event: null
-OldState: null
-State: 0
-
-Event: Instance of 'CounterEventIncrease'
-OldState: 0
-State: 1
-```
-
-Since `log` is a common effect, we have introduced built-in `log` operator to address it:
-
-```diff
-    ...
--   .add(effect: (state, oldState, event, dispatch) {
--     print('\nEvent: $event');
--     print('OldState: $oldState');
--     print('State: $state');
--   })
-+   .log()
-    ...
-```
-
-Output becomes:
-
-```
-System<int, CounterEvent> Run
-System<int, CounterEvent> Update {
-  event: null
-  oldState: null
-  state: 0
-}
-System<int, CounterEvent> Update {
-  event: Instance of 'CounterEventIncrease'
-  oldState: 0
-  state: 1
-}
-System<int, CounterEvent> Dispose
-```
-
-As we see, `log` operator not only log `updates`, but also log system `run` and `dispose` with prefix `runtimeType` label.
-
-`log` is a scene optimization operator, if we are repeatedly write similar code to solve similar problem. Then we can extract operators for reusing solution. `log` is one of these operators.
-
 ## Run
 
 We've declared our `counterSystem`:
@@ -555,8 +554,8 @@ final counterSystem = System<int, CounterEvent>
   })
   .add(effect: (state, oldState, event, dispatch) {
     print('\nEvent: $event');
-    print('State: $state');
     print('OldState: $oldState');
+    print('State: $state');
   })
   .add(effect: (state, oldState, event, dispatch) async {
     if (event is CounterEventIncrease) {
@@ -616,7 +615,7 @@ We've mentioned earlier `presentation effect` is triggered by react state change
   )
 ```
 
-Since [Flutter] is full of widgets. How can we make `react* operators` works together with widgets?
+Since [Flutter] is full of widgets. How can we make `react* operators` work together with widget?
 
 Is this possible:
 
@@ -701,6 +700,43 @@ test('CounterSystem', () async {
 });
 
 ```
+
+## Filter Event Operators
+
+Operators which can prevent unnecessary event dispatching. 
+
+### ignoreEvent
+
+Ignore event based on current state and candidate event.
+
+```dart
+  futureSystem
+    .ignoreEvent(
+      when: (state, event) => event is TriggerLoadData && state.loading
+    )
+    ...
+```
+
+Above code shown if the system is already in loading status, then upcoming `TriggerLoadData` event will be ignored.
+
+### debounceOn
+
+Apply [debounce logic] to some events.
+
+```dart
+  searchSystem
+    ...
+    .on<UpdateKeyword>(
+      reduce: (state, event) => state.copyWith(keyword: event.keyword)
+    )
+    .debounceOn<UpdateKeyword>(
+      duration: const Duration(seconds: 1)
+    )
+    ...
+```
+
+Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), system will drop these events to reduce unnecessary dispatching, it will pass event if dispatched event is stable.
+
   
 ## Credits
 
@@ -710,7 +746,7 @@ Thank [@miyoyo] for giving feedback that helped us shape this library.
 
 Special thank to [@kzaher] who is original author of [RxSwift] and [RxFeedback], he shared a lot of knowledge with us, that make this library possible today.
 
-Last and important, thank you for reading.
+Last and important, thank you for reading!
 ## License
 
 The MIT License (MIT)
@@ -728,6 +764,7 @@ The MIT License (MIT)
 [flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.5
 [install flutter_love]:https://pub.dev/packages/flutter_love/versions/0.1.0-beta.5/install
 [ReactiveX]:http://reactivex.io/
+[debounce logic]:http://reactivex.io/documentation/operators/debounce.html
 [Redux]:https://redux.js.org/
 [RxFeedback]:https://github.com/NoTests/RxFeedback.swift
 [RxSwift]:https://github.com/ReactiveX/RxSwift
