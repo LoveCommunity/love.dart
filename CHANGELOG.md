@@ -1,4 +1,4 @@
-## main
+## [0.1.0-beta.6] - 2020-09-22
 
 * refactor - rename parameter `skipFirst*` to `skipInitial*`
 * refactor - reimplement `system.react` and `system.reactLatest` operators
