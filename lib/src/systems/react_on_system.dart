@@ -6,19 +6,19 @@ extension ReactOperators<State, Event> on System<State, Event> {
 
   /// Add `effect` triggered by react hole state change.
   /// 
-  /// [areEqual] describe how old state and new state are treat as equal (not change).
+  /// [equals] describe if old state and new state are equal.
   /// 
   /// [skipInitialState] is true if initial state is skipped and won't trigger effect,
   /// is false if initial state will trigger effect, default is true.
   /// 
   /// [effect] describe side effect.
   System<State, Event> reactState({
-    AreEqual<State>? areEqual,
+    Equals<State>? equals,
     bool skipInitialState = true,
     required void Function(State state, Dispatch<Event> dispatch) effect,
   }) => react<State>(
     value: (state) => state,
-    areEqual: areEqual,
+    equals: equals,
     skipInitialValue: skipInitialState,
     effect: effect
   );
@@ -27,7 +27,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [value] describe which part of value is observed.
   /// 
-  /// [areEqual] describe how old value and new value are treat as equal (not change).
+  /// [equals] describe if old value and new value are equal.
   /// 
   /// [skipInitialValue] is true if initial value is skipped and won't trigger effect, 
   /// is false if initial value will trigger effect, default is true.  
@@ -35,11 +35,11 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// [effect] describe side effect.
   System<State, Event> react<Value>({
     required Value Function(State state) value,
-    AreEqual<Value>? areEqual,
+    Equals<Value>? equals,
     bool skipInitialValue = true,
     required void Function(Value value, Dispatch<Event> dispatch) effect,
   }) {
-    final _areEqual = areEqual ?? defaultAreEqual;
+    final _equals = equals ?? defaultEquals;
     return withContext<_ReactContext<Value>>(
       createContext: () => _ReactContext(),
       effect: (context, state, oldState, event, dispatch) {
@@ -51,7 +51,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
           _shouldUpdateOldValue = true;
         } else {
           final _oldValue = context.oldValue as Value;
-          _shouldTriggerEffect = !_areEqual(_oldValue, _value);
+          _shouldTriggerEffect = !_equals(_oldValue, _value);
           _shouldUpdateOldValue = _shouldTriggerEffect;
         }
         if (_shouldUpdateOldValue) {
@@ -69,7 +69,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   /// [value] describe which part of value is observed.
   /// 
-  /// [areEqual] describe how old value and new value are treat as equal (not change).
+  /// [equals] describe if old value and new value are equal.
   /// 
   /// [skipInitialValue] is true if initial value is skipped and won't trigger effect,
   /// is false if initial value triggers effect, default is true.
@@ -80,11 +80,11 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// 
   System<State, Event> reactLatest<Value>({
     required Value Function(State state) value,
-    AreEqual<Value>? areEqual,
+    Equals<Value>? equals,
     bool skipInitialValue = true,
     required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
   }) {
-    final _areEqual = areEqual ?? defaultAreEqual;
+    final _equals = equals ?? defaultEquals;
     return withContext<_ReactLatestContext<Value, Event>>(
       createContext: () => _ReactLatestContext(),
       effect: (context, state, oldState, event, dispatch) {
@@ -97,7 +97,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
           _shouldUpdateOldValue = true;
         } else {
           final _oldValue = reactContext.oldValue as Value;
-          _shouldTriggerEffect = !_areEqual(_oldValue, _value);
+          _shouldTriggerEffect = !_equals(_oldValue, _value);
           _shouldUpdateOldValue = _shouldTriggerEffect;
         }
         if (_shouldUpdateOldValue) {
