@@ -457,7 +457,7 @@ We have a series of operators that has prefix `react` to approach this:
     ...
 ```
 
-This effect will react state change then trigger a save call. Since it react to hold state (not partial value) change, we can use a convenience operator `reactState` instead, then we don't need a value map function here:
+This effect will react state change then trigger a save call. Since it react to whole state (not partial value) change, we can use a convenience operator `reactState` instead, then we don't need a value map function here:
 
 ```diff
 -   .react<int>(

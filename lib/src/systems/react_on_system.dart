@@ -4,7 +4,7 @@ import '../types/latest_context.dart';
 
 extension ReactOperators<State, Event> on System<State, Event> {
 
-  /// Add `effect` triggered by react hole state change.
+  /// Add `effect` triggered by react whole state change.
   /// 
   /// [equals] describe if old state and new state are equal.
   /// 
