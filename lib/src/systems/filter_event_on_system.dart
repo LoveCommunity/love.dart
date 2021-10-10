@@ -3,7 +3,7 @@ import '../types/types.dart';
 import '../utils/utils.dart';
 
 /// Describe how to intercept event
-typedef EventInterceptor<Context, Event> = void Function(Context context, Dispatch<Event> dispatch, Event event);
+typedef InterceptorWithContext<Context, Event> = void Function(Context context, Dispatch<Event> dispatch, Event event);
 
 extension FilterEventOperators<State, Event> on System<State, Event> {
 
@@ -211,7 +211,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   System<State, Event> eventInterceptor<Context>({
     required Context Function() createContext,
     ContextEffect<Context, State, Event>? updateContext,
-    required EventInterceptor<Context, Event> interceptor,
+    required InterceptorWithContext<Context, Event> interceptor,
     void Function(Context context)? dispose,
   }) {
     return runWithContext<_EventInterceptorContext<Context, Event>>(
@@ -243,7 +243,7 @@ Effect<State, Event>? _eventInterceptorEffect<Context, State, Event>({
   required _EventInterceptorContext<Context, Event> context,
   required ContextEffect<Context, State, Event>? updateContext,
   required Effect<State, Event>? nextEffect,
-  required EventInterceptor<Context, Event> interceptor,
+  required InterceptorWithContext<Context, Event> interceptor,
 }) {
   if (nextEffect == null) return null;
   final Effect<State, Event>? _updateContextEffect = updateContext == null ? null : (state, oldState, event, dispatch) {
@@ -284,7 +284,7 @@ class _EventInterceptorContext<ChildContext, Event> {
 
   Dispatch<Event> nextDispatch({
     required Dispatch<Event> dispatch,
-    required EventInterceptor<ChildContext, Event> interceptor,
+    required InterceptorWithContext<ChildContext, Event> interceptor,
   }) {
     if (_nextDispatch != null && identical(_dispatch, dispatch)) return _nextDispatch!;
     _dispatch = dispatch;
