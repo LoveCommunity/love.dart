@@ -24,7 +24,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// 
   /// ## API overview
   /// 
-  /// This operator will intercept downward candidate event if condition is met.
+  /// This operator will intercept candidate event if condition is met.
   /// 
   /// ```dart
   /// system
@@ -80,7 +80,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   ///
   /// ## API overview
   /// 
-  /// This operator will drop downward candidate event if condition is met and these events are dispatched with high frequency.
+  /// This operator will drop candidate event if condition is met and these events are dispatched with high frequency.
   /// 
   /// ```dart
   /// system
@@ -124,7 +124,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
     );
   }
 
-  /// An interceptor that can intercept downward event.
+  /// An interceptor that can intercept event.
   /// 
   /// This is a low level operator which can be used for supporting high level operator
   /// like `system.ignoreEvent` and `system.debounceOn`.
@@ -214,52 +214,30 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
     required InterceptorWithContext<Context, Event> interceptor,
     void Function(Context context)? dispose,
   }) {
-    return runWithContext<_EventInterceptorContext<Context, Event>>(
-      createContext: () => _EventInterceptorContext(
-        childContext: createContext(),
-      ),
-      run: (context, run, nextReduce, nextEffect) {
-        final Effect<State, Event>? effect = _eventInterceptorEffect(
-          context: context,
-          updateContext: updateContext,
-          nextEffect: nextEffect,
-          interceptor: interceptor
-        );
+    return runWithContext<Context>(
+      createContext: createContext,
+      run: (context, run, nextReduce, nextEffect, nextInterceptor) {
+        bool isDisposed = false;
+        final Effect<State, Event>? _effect = updateContext == null ? null : (state, oldState, event, dispatch) {
+          updateContext(context, state, oldState, event, dispatch);
+        };
+        final Interceptor<Event> _interceptor = (dispatch) => Dispatch((event) {
+          if (isDisposed) return;
+          interceptor(context, dispatch, event);          
+        });
         final sourceDispose = run(
           reduce: nextReduce,
-          effect: effect,
+          effect: combineEffect(_effect, nextEffect),
+          interceptor: combineInterceptor(_interceptor, nextInterceptor),
         );
         return Dispose(() {
-          context.isDisposed = true;
-          dispose?.call(context.childContext);
+          isDisposed = true;
+          dispose?.call(context);
           sourceDispose();
         });
       },
     );
   }
-}
-
-Effect<State, Event>? _eventInterceptorEffect<Context, State, Event>({
-  required _EventInterceptorContext<Context, Event> context,
-  required ContextEffect<Context, State, Event>? updateContext,
-  required Effect<State, Event>? nextEffect,
-  required InterceptorWithContext<Context, Event> interceptor,
-}) {
-  if (nextEffect == null) return null;
-  final Effect<State, Event>? _updateContextEffect = updateContext == null ? null : (state, oldState, event, dispatch) {
-    updateContext(context.childContext, state, oldState, event, dispatch);
-  };
-  final Effect<State, Event> _nextEffect = (state, oldState, event, dispatch) {
-    final Dispatch<Event> nextDispatch = context.nextDispatch(
-      dispatch: dispatch,
-      interceptor: interceptor,
-    );
-    nextEffect(state, oldState, event, nextDispatch);
-  };
-  return combineEffect(
-    _updateContextEffect,
-    _nextEffect,
-  );
 }
 
 class _IgnoreEventContext<State> {
@@ -268,30 +246,4 @@ class _IgnoreEventContext<State> {
 
 class _DebounceOnContext {
   Object? identifier;
-}
-
-class _EventInterceptorContext<ChildContext, Event> {
-
-  _EventInterceptorContext({
-    required this.childContext,
-  });
-
-  final ChildContext childContext;
-
-  bool isDisposed = false;
-  Dispatch<Event>? _dispatch;
-  Dispatch<Event>? _nextDispatch;
-
-  Dispatch<Event> nextDispatch({
-    required Dispatch<Event> dispatch,
-    required InterceptorWithContext<ChildContext, Event> interceptor,
-  }) {
-    if (_nextDispatch != null && identical(_dispatch, dispatch)) return _nextDispatch!;
-    _dispatch = dispatch;
-    _nextDispatch = Dispatch((event) {
-      if (isDisposed) return;
-      interceptor(childContext, dispatch, event);
-    });
-    return _nextDispatch!;
-  }
 }

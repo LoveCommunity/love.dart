@@ -21,8 +21,9 @@ extension ShareOperators<State, Event> on System<State, Event> {
     final forwarder = EffectForwarder<State, Event>();
     int count = 0;
     Dispose? sourceDispose;
-    return ({reduce, effect}) {
+    return ({reduce, effect, interceptor}) {
       assert(reduce == null, 'downward `reduce` is not null in share context.');
+      assert(interceptor == null, 'downward `interceptor` is not null in share context.');
       final nextEffect = effect ?? (_, __, ___, ____) {};
       final Dispose dispose = forwarder.add(effect: nextEffect);
       count += 1;
@@ -55,8 +56,10 @@ extension ShareOperators<State, Event> on System<State, Event> {
   System<State, Event> shareForever() => copy((run) {
     final forwarder = EffectForwarder<State, Event>();
     bool running = false;
-    return ({reduce, effect}) {
+    return ({reduce, effect, interceptor}) {
       assert(reduce == null, 'downward `reduce` is not null in share context.');
+      assert(interceptor == null, 'downward `interceptor` is not null in share context.');
+      
       final nextEffect = effect ?? (_, __, ___, ____) {};
       final Dispose dispose = forwarder.add(effect: nextEffect);
 

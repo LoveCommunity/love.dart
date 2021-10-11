@@ -24,6 +24,7 @@ class System<State, Event> {
     final dispose = _run(
       reduce: reduce,
       effect: effect,
+      interceptor: null,
     );
     return Dispose(() {
       if (isDisposed) return;
@@ -53,12 +54,17 @@ class System<State, Event> {
   /// Return a new system with some "live data" associated with it.
   System<State, Event> runWithContext<Context>({
     required Context Function() createContext,
-    required Dispose Function(Context context, Run<State, Event> run, Reduce<State, Event>? nextReduce, Effect<State, Event>? nextEffect) run,
+    required Dispose Function(
+      Context context, Run<State, Event> run, 
+      Reduce<State, Event>? nextReduce, 
+      Effect<State, Event>? nextEffect, 
+      Interceptor<Event>? nextInterceptor
+    ) run,
   }) {
     final _run = run;
-    return copy((run) => ({reduce, effect}) {
+    return copy((run) => ({reduce, effect, interceptor}) {
       final context = createContext();
-      return _run(context, run, reduce, effect);
+      return _run(context, run, reduce, effect, interceptor);
     });
   }
 
@@ -72,13 +78,14 @@ class System<State, Event> {
     void Function(Context context)? dispose,
   }) => runWithContext<Context>(
     createContext: createContext,
-    run: (context, run, nextReduce, nextEffect) {
+    run: (context, run, nextReduce, nextEffect, nextInterceptor) {
       final Effect<State, Event>? _effect = effect == null ? null : (state, oldState, event, dispatch) {
         effect(context, state, oldState, event, dispatch);
       };
       final sourceDispose = run(
         reduce: combineReduce(reduce, nextReduce),
         effect: combineEffect(_effect, nextEffect),
+        interceptor: nextInterceptor,
       );
       final combinedDispose = dispose == null ? sourceDispose : Dispose(() {
         dispose(context);
@@ -105,7 +112,7 @@ class System<State, Event> {
 
 Run<State, Event> _create<State, Event>({
   required State initialState,
-}) => ({reduce, effect}) {
+}) => ({reduce, effect, interceptor}) {
   assert(reduce != null, 'reduce is null when system run!');
   if (reduce == null) return Dispose.nothing();
 
@@ -124,7 +131,10 @@ Run<State, Event> _create<State, Event>({
     }
   }
 
-  final dispatch = Dispatch(_dispatch);
+  final Dispatch<Event> dispatch = () {
+    final rootDispatch = Dispatch(_dispatch);
+    return interceptor == null ? rootDispatch : interceptor(rootDispatch);
+  }();
 
   consume = (Event? event) {
     consuming = true;

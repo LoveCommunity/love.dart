@@ -1,7 +1,9 @@
 ## main
 
 * refactor - rename `areEqual` to `equals` to be consistent with dart [#93](https://github.com/LoveCommunity/love.dart/issues/93)
-* refactor - rename `EventInterceptor` to `InterceptorWithContext`
+* refactor - rename `EventInterceptor` to `InterceptorWithContext` [#96](https://github.com/LoveCommunity/love.dart/issues/96)
+* refactor - add `interceptor` to system [#96](https://github.com/LoveCommunity/love.dart/issues/96)
+* refactor - reimplement `eventInterceptor` for composability [#96](https://github.com/LoveCommunity/love.dart/issues/96)
 
 ## [0.1.0-beta.6] - 2020-09-22
 
