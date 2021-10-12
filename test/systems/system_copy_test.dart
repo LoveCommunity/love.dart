@@ -9,11 +9,12 @@ void main() {
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
-        .copy((run) => ({reduce, effect}) {
+        .copy((run) => ({reduce, effect, interceptor}) {
           invoked += 1;
           return run(
             reduce: reduce,
             effect: effect,
+            interceptor: interceptor,
           );
         }),
       events: (dispatch, dispose) => [
@@ -64,7 +65,7 @@ void main() {
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
-        .copy((run) => ({reduce, effect}) {
+        .copy((run) => ({reduce, effect, interceptor}) {
           return run(
             reduce: (state, event) {
               stateParameters.add(state);
@@ -73,6 +74,7 @@ void main() {
               return '$state+$invoked';
             },
             effect: effect,
+            interceptor: interceptor,
           );
         }),
       events: (dispatch, dispose) => [
@@ -138,7 +140,7 @@ void main() {
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
-        .copy((run) => ({reduce, effect}) {
+        .copy((run) => ({reduce, effect, interceptor}) {
           return run(
             reduce: reduce,
             effect: (state, oldState, event, dispatch) {
@@ -151,6 +153,7 @@ void main() {
               eventParameters.add(event);
               invoked += 1;
             },
+            interceptor: interceptor,
           );
         }),
       events: (dispatch, dispose) => [

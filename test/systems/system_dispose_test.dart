@@ -6,7 +6,7 @@ void main() {
   test('System.dispose', () async {
     int disposeCounts = 0;
     final system = System<String, String>
-      .pure(({effect, reduce}) {
+      .pure(({effect, reduce, interceptor}) {
         return Dispose(() => disposeCounts += 1);
       });
 

@@ -18,11 +18,12 @@ void main() {
             _context = it;
             return it;
           },
-          run: (context, run, nextReduce, nextEffect) {
+          run: (context, run, nextReduce, nextEffect, nextInterceptor) {
             context.invoked += 1;
             final dispose = run(
               reduce: nextReduce,
-              effect: nextEffect
+              effect: nextEffect,
+              interceptor: nextInterceptor,
             );
             return Dispose(() {
               context.isDisposed = true;
@@ -83,7 +84,7 @@ void main() {
             _context = it;
             return it;
           },
-          run: (context, run, nextReduce, nextEffect) {
+          run: (context, run, nextReduce, nextEffect, nextInterceptor) {
             return run(
               reduce: (state, event) {
                 context.stateParameters.add(state);
@@ -92,6 +93,7 @@ void main() {
                 return '$state+${context.invoked}';
               },
               effect: nextEffect,
+              interceptor: nextInterceptor,
             );
           },
         ),
@@ -162,7 +164,7 @@ void main() {
             _context = it;
             return it;
           },
-          run: (context, run, nextReduce, nextEffect) {
+          run: (context, run, nextReduce, nextEffect, nextInterceptor) {
             return run(
               reduce: nextReduce,
               effect: (state, oldState, event, dispatch) {
@@ -175,6 +177,7 @@ void main() {
                 context.eventParameters.add(event);
                 context.invoked += 1;
               },
+              interceptor: nextInterceptor,
             );
           },
         ),
@@ -246,5 +249,76 @@ void main() {
     ]);
 
     expect(_context!.invoked, 6);
+  });
+
+  test('System.runWithContext.interceptor', () async {
+   
+    TestContext? _context; 
+
+    final it = await testSystem<String, String>(
+      system: createTestSystem(initialState: 'a')
+        .runWithContext<TestContext>(
+          createContext: () {
+            final it = TestContext();
+            _context = it;
+            return it;
+          },
+          run: (context, run, nextReduce, nextEffect, nextInterceptor) {
+            return run(
+              reduce: nextReduce,
+              effect: nextEffect,
+              interceptor: (dispatch) => Dispatch((event) {
+                if (event != 'c') {
+                  dispatch(event);
+                };
+                context.eventParameters.add(event);
+                context.invoked += 1;
+              }),
+            );
+          },
+        ),
+      events: (dispatch, dispose) => [
+        dispatch(0, 'b'),
+        dispatch(10, 'c'),
+        dispatch(20, 'd'),
+        dispatch(30, 'e'),
+        dispose(40),
+        dispatch(50, 'f'),
+      ],
+      awaitMilliseconds: 60,
+    );
+
+    expect(it.events, [
+      null,
+      'b',
+      'd',
+      'e',
+    ]);
+
+    expect(it.states, [
+      'a',
+      'a|b',
+      'a|b|d',
+      'a|b|d|e',
+    ]);
+
+    expect(it.oldStates, [
+      null,
+      'a',
+      'a|b',
+      'a|b|d',
+    ]);
+
+    expect(it.isDisposed, true);
+
+    expect(_context!.eventParameters, [
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+    ]);
+
+    expect(_context!.invoked, 5);
   });
 }

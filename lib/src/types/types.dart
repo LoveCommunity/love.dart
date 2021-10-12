@@ -6,6 +6,9 @@ bool defaultEquals<T>(T it1, T it2) => it1 == it2;
 /// Describe how state update when event come
 typedef Reduce<State, Event> = State Function(State state, Event event);
 
+/// Describe how to intercept event
+typedef Interceptor<Event> = Dispatch<Event> Function(Dispatch<Event> dispatch);
+
 typedef DispatchFunc<Event> = void Function(Event event);
 
 /// Send event 
@@ -35,6 +38,7 @@ class Dispose {
 typedef Run<State, Event> = Dispose Function({
   Reduce<State, Event>? reduce,
   Effect<State, Event>? effect,
+  Interceptor<Event>? interceptor,
 });
 
 typedef CopyRun<State, Event> = Run<State, Event> Function(Run<State, Event> run);

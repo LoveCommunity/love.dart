@@ -29,6 +29,19 @@ Effect<State, Event>? combineEffect<State, Event>(
   });
 }
 
+Interceptor<Event>? combineInterceptor<Event>(
+  Interceptor<Event>? interceptor,
+  Interceptor<Event>? nextInterceptor,
+) {
+  return _combine(
+    interceptor,
+    nextInterceptor,
+    combine: (interceptor, nextInterceptor) {
+      return (next) => interceptor(nextInterceptor(next)); 
+    },
+  );
+}
+
 T? _combine<T>(
   T? it1, 
   T? it2, {

@@ -108,6 +108,61 @@ void main() {
     expect(_context!.updateContextInvoked, 5);
     expect(_context!.interceptorInvoked, 6);
   });
+
+  test('System.eventInterceptor.orders', () async {
+
+    int interceptorInvoked1 = 0;
+    int interceptorInvoked2 = 0;
+    final List<int> orders = [];
+
+    await testSystem<String, String>(
+      system: createTestSystem(initialState: 'a')
+        .eventInterceptor<Null>(
+          createContext: () => null,
+          interceptor: (context, dispatch, event) {
+            interceptorInvoked1 += 1;
+            orders.add(100 + interceptorInvoked1);
+            dispatch(event);
+          },
+        ).eventInterceptor<Null>(
+          createContext: () => null,
+          interceptor: (context, dispatch, event) {
+            interceptorInvoked2 += 1;
+            orders.add(200 + interceptorInvoked2);
+            dispatch(event);
+          },
+        ),
+      events: (dispatch, dispose) => [
+        dispatch(0, 'b'),
+        dispatch(10, 'c'),
+        dispatch(20, 'd'),
+        dispatch(30, 'e'),
+        dispatch(40, 'f'),
+        dispatch(50, 'g'),
+        dispose(60),
+        dispatch(70, 'h'),
+      ],
+      awaitMilliseconds: 80,
+    );
+
+    expect(interceptorInvoked1, 6);
+    expect(interceptorInvoked2, 6);
+    expect(orders, [
+      101,
+      201,
+      102,
+      202,
+      103,
+      203,
+      104,
+      204,
+      105,
+      205,
+      106,
+      206,
+    ]);
+  });
+
 }
 
 class _TestContext {

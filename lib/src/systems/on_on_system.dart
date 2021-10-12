@@ -92,9 +92,9 @@ extension OnOperators<State, Event> on System<State, Event> {
   /// Add code block that tied with running system's dispose function.
   System<State, Event> onDispose({
     required void Function() run
-  }) => copy((_run) => ({reduce, effect}) {
+  }) => copy((_run) => ({reduce, effect, interceptor}) {
     final dispose = Dispose(run);
-    final sourceDispose = _run(reduce: reduce, effect: effect);
+    final sourceDispose = _run(reduce: reduce, effect: effect, interceptor: interceptor);
     return Dispose(() {
       sourceDispose();
       dispose();
