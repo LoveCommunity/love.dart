@@ -2,7 +2,7 @@ import 'system.dart';
 import '../types/types.dart';
 import '../utils/utils.dart';
 
-/// Describe how to intercept event
+/// An event interceptor with a context associated with it
 typedef InterceptorWithContext<Context, Event> = void Function(Context context, Dispatch<Event> dispatch, Event event);
 
 extension FilterEventOperators<State, Event> on System<State, Event> {
@@ -22,7 +22,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// Above code shown if the system is already in loading status, 
   /// then upcoming `TriggerLoadData` event will be ignored.
   /// 
-  /// ## API overview
+  /// ## API Overview
   /// 
   /// This operator will intercept candidate event if condition is met.
   /// 
@@ -76,9 +76,9 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// 
   /// Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), 
   /// system will drop these events to reduce unnecessary dispatching, 
-  /// it will pass (not drop) event if 1 seconds has passed without dispatch another `UpdateKeyword` event.
+  /// it will pass (not drop) event if 1 second has passed without dispatch another `UpdateKeyword` event.
   ///
-  /// ## API overview
+  /// ## API Overview
   /// 
   /// This operator will drop candidate event if condition is met and these events are dispatched with high frequency.
   /// 
@@ -86,7 +86,7 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
   /// system
   ///   .debounceOn<ChildEvent>(
   ///     test: (event) { // -> test if we are concern about this event, this parameter is optional,
-  ///                     // if `test` is emitted, then we will try safe cast `Event event` to `ChildEvent? event`.
+  ///                     // if `test` is omitted, then we will try safe cast `Event event` to `ChildEvent? event`.
   ///       // `Event event` here is candidate event
   ///       // return `ChildEvent childEvent` if we are concern about it
   ///       // return null if we are not concern about it
@@ -126,10 +126,10 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
 
   /// An interceptor that can intercept event.
   /// 
-  /// This is a low level operator which can be used for supporting high level operator
+  /// This is a low level operator which can be used for supporting high level operators
   /// like `system.ignoreEvent` and `system.debounceOn`.
   /// 
-  /// ## API overview
+  /// ## API Overview
   /// 
   /// The key point for this operator is, we are associating a custom `Context` with it:
   /// 
