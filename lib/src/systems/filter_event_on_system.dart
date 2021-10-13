@@ -232,10 +232,10 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
         );
         return Dispose(() {
           isDisposed = true;
-          dispose?.call(context);
           sourceDispose();
         });
       },
+      dispose: dispose,
     );
   }
 }

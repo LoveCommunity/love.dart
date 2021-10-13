@@ -60,11 +60,17 @@ class System<State, Event> {
       Effect<State, Event>? nextEffect, 
       Interceptor<Event>? nextInterceptor
     ) run,
+    void Function(Context context)? dispose,
   }) {
     final _run = run;
     return copy((run) => ({reduce, effect, interceptor}) {
       final context = createContext();
-      return _run(context, run, reduce, effect, interceptor);
+      final sourceDispose = _run(context, run, reduce, effect, interceptor);
+      final combinedDispose = dispose == null ? sourceDispose : Dispose(() {
+        dispose(context);
+        sourceDispose();
+      });
+      return combinedDispose;
     });
   }
 
@@ -82,17 +88,13 @@ class System<State, Event> {
       final Effect<State, Event>? _effect = effect == null ? null : (state, oldState, event, dispatch) {
         effect(context, state, oldState, event, dispatch);
       };
-      final sourceDispose = run(
+      return run(
         reduce: combineReduce(reduce, nextReduce),
         effect: combineEffect(_effect, nextEffect),
         interceptor: nextInterceptor,
       );
-      final combinedDispose = dispose == null ? sourceDispose : Dispose(() {
-        dispose(context);
-        sourceDispose();
-      });
-      return combinedDispose;
     },
+    dispose: dispose,
   );
 
   /// Add a `reduce` or `effect` to the system.

@@ -20,15 +20,14 @@ void main() {
           },
           run: (context, run, nextReduce, nextEffect, nextInterceptor) {
             context.invoked += 1;
-            final dispose = run(
+            return run(
               reduce: nextReduce,
               effect: nextEffect,
               interceptor: nextInterceptor,
             );
-            return Dispose(() {
-              context.isDisposed = true;
-              dispose();
-            });
+          },
+          dispose: (context) {
+            context.isDisposed = true;
           },
         ),
       events: (dispatch, dispose) => [
@@ -180,6 +179,9 @@ void main() {
               interceptor: nextInterceptor,
             );
           },
+          dispose: (context) {
+            context.isDisposed = true;
+          },
         ),
       events: (dispatch, dispose) => [
         dispatch(0, 'b'),
@@ -249,6 +251,7 @@ void main() {
     ]);
 
     expect(_context!.invoked, 6);
+    expect(_context!.isDisposed, true);
   });
 
   test('System.runWithContext.interceptor', () async {
@@ -275,6 +278,9 @@ void main() {
                 context.invoked += 1;
               }),
             );
+          },
+          dispose: (context) {
+            context.isDisposed = true;
           },
         ),
       events: (dispatch, dispose) => [
@@ -320,5 +326,6 @@ void main() {
     ]);
 
     expect(_context!.invoked, 5);
+    expect(_context!.isDisposed, true);
   });
 }
