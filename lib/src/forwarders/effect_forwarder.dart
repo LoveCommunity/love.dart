@@ -1,5 +1,4 @@
 import '../types/types.dart';
-import 'package:meta/meta.dart';
 
 /// `EffectForwarder` can forward effect from one side to another.
 /// 
@@ -27,15 +26,24 @@ import 'package:meta/meta.dart';
 ///  dispose(); // dispose system
 ///```
 /// 
-@visibleForTesting
 class EffectForwarder<State, Event> {
 
   final List<Effect<State, Event>> _effects = [];
   State? _state;
   Dispatch<Event>? _dispatch;
+  bool _isDisposed = false;
+
+  void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+    _effects.clear();
+    _state = null;
+    _dispatch = null;
+  }
 
   /// Forward effect call.
   void effect(State state, State? oldState, Event? event, Dispatch<Event> dispatch) {
+    if (_isDisposed) return;
     for (var _effect in _effects) {
       _effect(state, oldState, event, dispatch);
     }
@@ -49,6 +57,7 @@ class EffectForwarder<State, Event> {
   Dispose add({
     required Effect<State, Event> effect
   }) {
+    if (_isDisposed) throw StateError('Cannot add effect after disposed');
     _effects.add(effect);
     if (_state != null && _dispatch != null) {
       effect(_state!, null, null, _dispatch!);
