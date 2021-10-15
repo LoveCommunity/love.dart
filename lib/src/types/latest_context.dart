@@ -16,7 +16,7 @@ class LatestContext<Event> {
     final identifier = Object();
     _identifier = identifier;
     return Dispatch((event) {
-      if (identifier == _identifier) {
+      if (identical(identifier, _identifier)) {
         dispatch(event);
       }
     });
