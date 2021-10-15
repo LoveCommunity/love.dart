@@ -182,4 +182,15 @@ void main() {
     dispose3();
   });
 
+  test('EffectForwarder.add.afterDisposed', () {
+    
+    final forwarder = EffectForwarder<String, String>()
+      ..dispose();
+    
+    expect(
+      () => forwarder.add(effect: (_, __, ___, ____) { }), 
+      throwsStateError
+    );
+  });
+
 }

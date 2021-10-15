@@ -18,26 +18,32 @@ extension ShareOperators<State, Event> on System<State, Event> {
   /// Another detail page has another source of truth that's the scoped means.
   /// 
   System<State, Event> share() => copy((run) {
-    final forwarder = EffectForwarder<State, Event>();
     int count = 0;
     Dispose? sourceDispose;
+    EffectForwarder<State, Event>? forwarder;
+    EffectForwarder<State, Event> getForwarder() => forwarder ??= EffectForwarder();
+    
     return ({reduce, effect, interceptor}) {
+
       assert(reduce == null, 'downward `reduce` is not null in share context.');
       assert(interceptor == null, 'downward `interceptor` is not null in share context.');
+
       final nextEffect = effect ?? (_, __, ___, ____) {};
-      final Dispose dispose = forwarder.add(effect: nextEffect);
+      final Dispose dispose = getForwarder().add(effect: nextEffect);
       count += 1;
 
       if (count == 1) {
-        sourceDispose = run(effect: forwarder.effect);
+        sourceDispose = run(effect: getForwarder().effect);
       }
 
       return Dispose(() {
         dispose();
         count -= 1;
-        if (count == 0 && sourceDispose != null) {
+        if (count == 0) {
           sourceDispose?.call();
           sourceDispose = null;
+          forwarder?.dispose();
+          forwarder = null;
         }
       });
     };
