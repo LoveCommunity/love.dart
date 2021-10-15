@@ -2,20 +2,21 @@ import 'types.dart';
 
 class LatestContext<Event> {
 
-  int _version = 0;
+  Object? _identifier;
   Dispose? _dispose;
 
   void set dispose(Dispose? dispose) {
     _dispose = Dispose(() {
       dispose?.call();
-      _version += 1;
+      _identifier = null;
     });
   }
 
   Dispatch<Event> versioned(Dispatch<Event> dispatch) {
-    final _thisVersion = _version;
+    final identifier = Object();
+    _identifier = identifier;
     return Dispatch((event) {
-      if (_thisVersion == _version) {
+      if (identifier == _identifier) {
         dispatch(event);
       }
     });
