@@ -42,7 +42,7 @@ extension LogOperators<State, Event> on System<State, Event> {
   ///   state: 0
   /// }
   /// System<int, CounterEvent> Update {
-  ///   event: Instance of 'CounterEventIncrease'
+  ///   event: Instance of 'Increment'
   ///   oldState: 0
   ///   state: 1
   /// }
@@ -67,7 +67,7 @@ extension LogOperators<State, Event> on System<State, Event> {
   ///   state: 0
   /// }
   /// CounterSystem Update {
-  ///   event: Instance of 'CounterEventIncrease'
+  ///   event: Instance of 'Increment'
   ///   oldState: 0
   ///   state: 1
   /// }

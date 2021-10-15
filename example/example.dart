@@ -3,21 +3,21 @@ import 'package:love/love.dart';
 // typedef CounterState = int;
 
 abstract class CounterEvent {}
-class CounterEventIncrease implements CounterEvent {}
-class CounterEventDecrease implements CounterEvent {}
+class Increment implements CounterEvent {}
+class Decrement implements CounterEvent {}
 
 void main() async {
   
   final counterSystem = System<int, CounterEvent>
     .create(initialState: 0)
-    .on<CounterEventIncrease>(
+    .on<Increment>(
       reduce: (state, event) => state + 1,
       effect: (state, event, dispatch) async {
         await Future<void>.delayed(Duration(seconds: 3));
-        dispatch(CounterEventDecrease());
+        dispatch(Decrement());
       },
     )
-    .on<CounterEventDecrease>(
+    .on<Decrement>(
       reduce: (state, event) => state - 1,
     )
     .log()
@@ -27,7 +27,7 @@ void main() async {
       },
     )
     .onRun(effect: (initialState, dispatch) {
-      dispatch(CounterEventIncrease());
+      dispatch(Increment());
     },);
   
   final dispose = counterSystem.run();

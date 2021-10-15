@@ -7,6 +7,7 @@
 * refactor - expose `system.runWithContext`'s `dispose` callback for disposing context [#98](https://github.com/LoveCommunity/love.dart/issues/98)
 * refactor - add `effectForwarder.dispose` method [#99](https://github.com/LoveCommunity/love.dart/issues/99)
 * refactor - prefer using `Object` as version identifier in `LatestContext` [#100](https://github.com/LoveCommunity/love.dart/issues/100)
+* example - refactor - renames `CounterEventIncrease` to `Increment`, `CounterEventDecrease` to `Decrement` [#101](https://github.com/LoveCommunity/love.dart/issues/101)
 
 ## [0.1.0-beta.6] - 2020-09-22
 
