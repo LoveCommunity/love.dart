@@ -5,7 +5,8 @@
 * refactor - add `interceptor` to system [#96](https://github.com/LoveCommunity/love.dart/issues/96)
 * refactor - reimplement `eventInterceptor` for composability [#96](https://github.com/LoveCommunity/love.dart/issues/96)
 * refactor - expose `system.runWithContext`'s `dispose` callback for disposing context [#98](https://github.com/LoveCommunity/love.dart/issues/98)
-* refactor - add `effectForwarder.dispose` method [#99](https://github.com/LoveCommunity/love.dart/issues/98)
+* refactor - add `effectForwarder.dispose` method [#99](https://github.com/LoveCommunity/love.dart/issues/99)
+* refactor - prefer using `Object` as version identifier in `LatestContext` [#100](https://github.com/LoveCommunity/love.dart/issues/100)
 
 ## [0.1.0-beta.6] - 2020-09-22
 
