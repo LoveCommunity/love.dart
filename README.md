@@ -27,21 +27,21 @@ A state management library that is declarative, predictable and elegant.
 // typedef CounterState = int;
 
 abstract class CounterEvent {}
-class CounterEventIncrease implements CounterEvent {}
-class CounterEventDecrease implements CounterEvent {}
+class Increment implements CounterEvent {}
+class Decrement implements CounterEvent {}
 
 void main() async {
 
   final counterSystem = System<int, CounterEvent>
     .create(initialState: 0)
     .add(reduce: (state, event) {
-      if (event is CounterEventIncrease) {
+      if (event is Increment) {
         return state + 1;
       }
       return state;
     })
     .add(reduce: (state, event) {
-      if (event is CounterEventDecrease) {
+      if (event is Decrement) {
         return state - 1;
       }
       return state;
@@ -55,7 +55,7 @@ void main() async {
     .add(effect: (state, oldState, event, dispatch) {
       // effect - inject mock events
       if (event == null) { // event is null on system run
-        dispatch(CounterEventIncrease());
+        dispatch(Increment());
       }
     });
 
@@ -76,14 +76,14 @@ Event: null
 OldState: null
 State: 0
 
-Event: Instance of 'CounterEventIncrease'
+Event: Instance of 'Increment'
 OldState: 0
 State: 1
 ```
 
 We hope the code is self explained. If you can guess what this code works for. That's very nice! 
 
-This example first declare a counter system, state is the counts, events are `increase` and `decrease`. Then we run the system to log output, after 3 seconds we stop this system. 
+This example first declare a counter system, state is the counts, events are `increment` and `decrement`. Then we run the system to log output, after 3 seconds we stop this system. 
 
 The code is not very elegant for now, we have better way to approach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
 
@@ -105,12 +105,12 @@ For Example, the Counter State is counts:
 
 **Event is description of what happened.**
 
-For Example, the Counter Event is `increase` and `decrease` which describe what happened:
+For Example, the Counter Event is `increment` and `decrement` which describe what happened:
 
 ```dart
 abstract class CounterEvent {}
-class CounterEventIncrease implements CounterEvent {}
-class CounterEventDecrease implements CounterEvent {}
+class Increment implements CounterEvent {}
+class Decrement implements CounterEvent {}
 ```
 
 ## Reduce
@@ -126,13 +126,13 @@ Counter Example:
 ```dart
     ...
     .add(reduce: (state, event) {
-      if (event is CounterEventIncrease) {
+      if (event is Increment) {
         return state + 1;
       }
       return state;
     })
     .add(reduce: (state, event) {
-      if (event is CounterEventDecrease) {
+      if (event is Decrement) {
         return state - 1;
       }
       return state;
@@ -140,28 +140,28 @@ Counter Example:
     ...
 ```
 
-If `increase` event happen we increase the counts, if `decrease` event happen we decrease the counts.
+If `increment` event happen we increase the counts, if `decrement` event happen we decrease the counts.
 
 We can make it cleaner:
 
 ```diff
     ...
 -   .add(reduce: (state, event) {
--     if (event is CounterEventIncrease) {
+-     if (event is Increment) {
 -       return state + 1;
 -     }
 -     return state;
 -   })
 -   .add(reduce: (state, event) {
--     if (event is CounterEventDecrease) {
+-     if (event is Decrement) {
 -       return state - 1;
 -     }
 -     return state;
 -   })
-+   .on<CounterEventIncrease>(
++   .on<Increment>(
 +     reduce: (state, event) => state + 1,
 +   )
-+   .on<CounterEventDecrease>(
++   .on<Decrement>(
 +     reduce: (state, event) => state - 1,
 +   )
     ...
@@ -205,7 +205,7 @@ Bellow are `log effect` and `mock effect`:
     .add(effect: (state, oldState, event, dispatch) {
       // effect - inject mock events
       if (event == null) { // event is null on system run
-        dispatch(CounterEventIncrease());
+        dispatch(Increment());
       }
     });
 ```
@@ -220,15 +220,15 @@ Then, what about async stuff like `networking effect` or `timer effect`:
     })
 +   .add(effect: (state, oldState, event, dispatch) async {
 +     // effect - auto decrease via async event
-+     if (event is CounterEventIncrease) {
++     if (event is Increment) {
 +       await Future<void>.delayed(Duration(seconds: 3));
-+       dispatch(CounterEventDecrease());
++       dispatch(Decrement());
 +     }
 +   })
     ...
 ```
 
-We've add a `timer effect`, when an `increase` event happen, we'll dispatch a `decrease` event after 3 seconds to restore the counts.
+We've add a `timer effect`, when an `increment` event happen, we'll dispatch a `decrement` event after 3 seconds to restore the counts.
 
 We can also add `persistence effect`:
 
@@ -273,7 +273,7 @@ Event: null
 OldState: null
 State: 0
 
-Event: Instance of 'CounterEventIncrease'
+Event: Instance of 'Increment'
 OldState: 0
 State: 1
 ```
@@ -301,7 +301,7 @@ System<int, CounterEvent> Update {
   state: 0
 }
 System<int, CounterEvent> Update {
-  event: Instance of 'CounterEventIncrease'
+  event: Instance of 'Increment'
   oldState: 0
   state: 1
 }
@@ -320,9 +320,9 @@ We've added `timer effect` and `persistence effect`. For now, Instead of thinkin
     ...
     .add(effect: (state, oldState, event, dispatch) async {
       // effect - auto decrease via async event
-      if (event is CounterEventIncrease) {
+      if (event is Increment) {
         await Future<void>.delayed(Duration(seconds: 3));
-        dispatch(CounterEventDecrease());
+        dispatch(Decrement());
       }
     })
     .add(effect: (state, oldState, event, dispatch) {
@@ -337,7 +337,7 @@ We've added `timer effect` and `persistence effect`. For now, Instead of thinkin
 ```
 
 
-It's not hard to find the first `timer effect` is triggered **on** `increase` event happen,
+It's not hard to find the first `timer effect` is triggered **on** `increment` event happen,
 the second `persistence effect` is triggered by **react** state changes.
 
 Here, We have two kind of **Effect Trigger**:
@@ -356,16 +356,16 @@ We have a series of operators (methods) that has prefix `on` to approach this be
     ...
 -   .add(effect: (state, oldState, event, dispatch) async {
 -     // effect - auto decrease via async event
--     if (event is CounterEventIncrease) {
+-     if (event is Increment) {
 -       await Future<void>.delayed(Duration(seconds: 3));
--       dispatch(CounterEventDecrease());
+-       dispatch(Decrement());
 -     }
 -   })
-+   .on<CounterEventIncrease>(
++   .on<Increment>(
 +     effect: (state, event, dispatch) async {
 +       // effect - auto decrease via async event
 +       await Future<void>.delayed(Duration(seconds: 3));
-+       dispatch(CounterEventDecrease());
++       dispatch(Decrement());
 +     },
 +   )
     ...
@@ -375,23 +375,23 @@ We can even move `effect` around `reduce` when they share same condition:
 
 ```diff
     ...
-    .on<CounterEventIncrease>(
+    .on<Increment>(
       reduce: (state, event) => state + 1,
 +     effect: (state, event, dispatch) async {
 +       // effect - auto decrease via async event
 +       await Future<void>.delayed(Duration(seconds: 3));
-+       dispatch(CounterEventDecrease());
++       dispatch(Decrement());
 +     },
     )
-    .on<CounterEventDecrease>(
+    .on<Decrement>(
       reduce: (state, event) => state - 1,
     )
     ...
--   .on<CounterEventIncrease>(
+-   .on<Increment>(
 -     effect: (state, event, dispatch) async {
 -       // effect - auto decrease via async event
 -       await Future<void>.delayed(Duration(seconds: 3));
--       dispatch(CounterEventDecrease());
+-       dispatch(Decrement());
 -     },
 -   )
     ...
@@ -404,7 +404,7 @@ There are special cases. for example, we want to dispatch events on system run:
     .add(effect: (state, oldState, event, dispatch) {
       // mock events
       if (event == null) { // event is null on system run
-        dispatch(CounterEventIncrease());
+        dispatch(Increment());
       }
     },);
 ```
@@ -416,12 +416,12 @@ We can use `onRun` operator instead:
 -   .add(effect: (state, oldState, event, dispatch) {
 -     // mock events
 -     if (event == null) { // event is null on system run
--       dispatch(CounterEventIncrease());
+-       dispatch(Increment());
 -     }
 -   },);
 +   .onRun(effect: (initialState, dispatch) {
 +     // mock events
-+     dispatch(CounterEventIncrease());
++     dispatch(Increment());
 +   },);
 ```
 
@@ -541,13 +541,13 @@ Old Code:
 final counterSystem = System<int, CounterEvent>
   .create(initialState: 0)
   .add(reduce: (state, event) {
-    if (event is CounterEventIncrease) {
+    if (event is Increment) {
       return state + 1;
     }
     return state;
   })
   .add(reduce: (state, event) {
-    if (event is CounterEventDecrease) {
+    if (event is Decrement) {
       return state - 1;
     }
     return state;
@@ -558,9 +558,9 @@ final counterSystem = System<int, CounterEvent>
     print('State: $state');
   })
   .add(effect: (state, oldState, event, dispatch) async {
-    if (event is CounterEventIncrease) {
+    if (event is Increment) {
       await Future<void>.delayed(Duration(seconds: 3));
-      dispatch(CounterEventDecrease());
+      dispatch(Decrement());
     }
   })
   .add(effect: (state, oldState, event, dispatch) {
@@ -572,7 +572,7 @@ final counterSystem = System<int, CounterEvent>
   },)
   .add(effect: (state, oldState, event, dispatch) {
     if (event == null) { 
-      dispatch(CounterEventIncrease());
+      dispatch(Increment());
     }
   });
 ```
@@ -582,14 +582,14 @@ New Code:
 ```dart
 final counterSystem = System<int, CounterEvent>
   .create(initialState: 0)
-  .on<CounterEventIncrease>(
+  .on<Increment>(
     reduce: (state, event) => state + 1,
     effect: (state, event, dispatch) async {
       await Future<void>.delayed(Duration(seconds: 3));
-      dispatch(CounterEventDecrease());
+      dispatch(Decrement());
     },
   )
-  .on<CounterEventDecrease>(
+  .on<Decrement>(
     reduce: (state, event) => state - 1,
   )
   .log()
@@ -599,7 +599,7 @@ final counterSystem = System<int, CounterEvent>
     },
   )
   .onRun(effect: (initialState, dispatch) {
-    dispatch(CounterEventIncrease());
+    dispatch(Increment());
   },);
 ```
 
@@ -624,7 +624,7 @@ Is this possible:
   .reactState(
     effect: (state, dispatch) {
       return TextButton(
-        onPressed: () => dispatch(CounterEventIncrease()),
+        onPressed: () => dispatch(Increment()),
         child: Text('$state'),
       );
     },
@@ -639,7 +639,7 @@ Widget build(BuildContext context) {
     system: counterSystem,
     builder: (context, state, dispatch) {
       return TextButton(
-        onPressed: () => dispatch(CounterEventIncrease()),
+        onPressed: () => dispatch(Increment()),
         child: Text('$state'),
       );
     }
@@ -668,10 +668,10 @@ test('CounterSystem', () async {
 
   final counterSystem = System<int, CounterEvent>
     .create(initialState: 0)
-    .on<CounterEventIncrease>(
+    .on<Increment>(
       reduce: (state, event) => state + 1,
     )
-    .on<CounterEventDecrease>(
+    .on<Decrement>(
       reduce: (state, event) => state - 1,
     );
 
@@ -680,9 +680,9 @@ test('CounterSystem', () async {
       states.add(state);
       if (event == null) {
         // inject mock events
-        dispatch(CounterEventIncrease());
+        dispatch(Increment());
         await Future<void>.delayed(Duration(milliseconds: 20));
-        dispatch(CounterEventDecrease());
+        dispatch(Decrement());
       }
     },
   );
