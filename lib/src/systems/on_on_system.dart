@@ -66,7 +66,7 @@ extension OnOperators<State, Event> on System<State, Event> {
   ///  ...
   ///  .onRun(effect: (initialState, dispatch) {
   ///    final timer = Stream
-  ///      .periodic(Duration(seconds: 1), (it) => it);
+  ///      .periodic(const Duration(seconds: 1), (it) => it);
   ///    final subscription = timer.listen((it) => dispatch('$it'));
   ///    return Dispose(() => subscription.cancel());
   ///  },);

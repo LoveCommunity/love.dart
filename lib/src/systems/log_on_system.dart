@@ -25,7 +25,7 @@ extension LogOperators<State, Event> on System<State, Event> {
   ///     .log()  // --> add log effect
   ///     .run();
   ///   
-  ///   await Future<void>.delayed(Duration(seconds: 3));
+  ///   await Future<void>.delayed(const Duration(seconds: 3));
   /// 
   ///   dispose();
   /// 
