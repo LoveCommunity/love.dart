@@ -421,7 +421,7 @@ We have other `on*` operators for different use cases. If we want to learn more 
 
 ### State Based Trigger
 
-**State Based Trigger will trigger effect by react state change.**
+**State Based Trigger will trigger effect by react to state change.**
 
 We have a series of operators that has prefix `react` to approach this:
 
@@ -445,7 +445,7 @@ We have a series of operators that has prefix `react` to approach this:
     ...
 ```
 
-This effect will react state change then trigger a save call. Since it react to whole state (not partial value) change, we can use a convenience operator `reactState` instead, then we don't need a value map function here:
+This effect will react to state change then trigger a save call. Since it react to whole state (not partial value) change, we can use a convenience operator `reactState` instead, then we don't need a value map function here:
 
 ```diff
 -   .react<int>(
@@ -467,7 +467,7 @@ There is another important effect which use this trigger. Can you guess what is 
 
 Hit: [Flutter] or [React].
 
-Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react state change. 
+Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react to state change. 
 We'll discuss this later in **Presentation Effect** Section.
 
 There are other `react*` operators for different use cases. If we want to learn more please follow [API Reference]:
@@ -572,7 +572,7 @@ final counterSystem = System<int, CounterEvent>
 
 ## Presentation Effect (With Flutter)
 
-We've mentioned earlier `presentation effect` is triggered by react state change with declarative UI library:
+We've mentioned earlier `presentation effect` is triggered by react to state change with declarative UI library:
 
 ```dart
   .reactState(
