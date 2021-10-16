@@ -13,14 +13,14 @@ import '../types/types.dart';
 ///
 ///  final dispose = system.run();
 ///
-///  await Future<void>.delayed(Duration(seconds: 3));
+///  await Future<void>.delayed(const Duration(seconds: 3));
 ///
 ///  // add effect after system is running.
 ///  final disposeEffect = forwarder.add(effect: (state, oldState, event, dispatch) {
 ///    ...
 ///  },);
 ///
-///  await Future<void>.delayed(Duration(seconds: 3));
+///  await Future<void>.delayed(const Duration(seconds: 3));
 ///
 ///  disposeEffect(); // dispose the effect
 ///  dispose(); // dispose system

@@ -13,7 +13,7 @@ void main() async {
     .on<Increment>(
       reduce: (state, event) => state + 1,
       effect: (state, event, dispatch) async {
-        await Future<void>.delayed(Duration(seconds: 3));
+        await Future<void>.delayed(const Duration(seconds: 3));
         dispatch(Decrement());
       },
     )
@@ -32,7 +32,7 @@ void main() async {
   
   final dispose = counterSystem.run();
 
-  await Future<void>.delayed(Duration(seconds: 3));
+  await Future<void>.delayed(const Duration(seconds: 3));
 
   dispose();
 }
