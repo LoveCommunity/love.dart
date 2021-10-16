@@ -32,7 +32,7 @@ void main() async {
   
   final dispose = counterSystem.run();
 
-  await Future<void>.delayed(const Duration(seconds: 3));
+  await Future<void>.delayed(const Duration(seconds: 6));
 
   dispose();
 }

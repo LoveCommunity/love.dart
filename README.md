@@ -61,7 +61,7 @@ void main() async {
 
   final dispose = counterSystem.run();
 
-  await Future<void>.delayed(const Duration(seconds: 3));
+  await Future<void>.delayed(const Duration(seconds: 6));
 
   dispose();
 }
@@ -83,7 +83,7 @@ State: 1
 
 We hope the code is self explained. If you can guess what this code works for. That's very nice! 
 
-This example first declare a counter system, state is the counts, events are `increment` and `decrement`. Then we run the system to log output, after 3 seconds we stop this system. 
+This example first declare a counter system, state is the counts, events are `increment` and `decrement`. Then we run the system to log output, after 6 seconds we stop this system. 
 
 The code is not very elegant for now, we have better way to approach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
 
@@ -506,7 +506,7 @@ final dispose = counterSystem.run();
 When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
 
 ```dart
-await Future<void>.delayed(const Duration(seconds: 3));
+await Future<void>.delayed(const Duration(seconds: 6));
 
 dispose();
 ```
