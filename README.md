@@ -1,8 +1,9 @@
-# love
+# Love
 
 A state management library that is declarative, predictable and elegant.
 
 ![][love_overview_diagram]
+
 
 ## Why
 
@@ -15,6 +16,34 @@ A state management library that is declarative, predictable and elegant.
 * Elegant - code is clean for human to read and write
 * Testable - system can be test straightforward
 
+## Table Of Contents
+- [Love](#love)
+  - [Why](#why)
+  - [Table Of Contents](#table-of-contents)
+  - [Libraries](#libraries)
+  - [Counter Example](#counter-example)
+- [Core](#core)
+  - [State](#state)
+  - [Event](#event)
+  - [Reduce](#reduce)
+  - [Effect](#effect)
+  - [Run](#run)
+- [Effect In Advance](#effect-in-advance)
+  - [Effect Trigger](#effect-trigger)
+    - [Event Based Trigger](#event-based-trigger)
+    - [State Based Trigger](#state-based-trigger)
+  - [Presentation Effect (With Flutter)](#presentation-effect-with-flutter)
+  - [Log Effect](#log-effect)
+- [Other Operators](#other-operators)
+    - [ignoreEvent](#ignoreevent)
+    - [debounceOn](#debounceon)
+- [Appendix](#appendix)
+  - [Code Review](#code-review)
+  - [Testing](#testing)
+  - [Credits](#credits)
+  - [License](#license)
+  - [End is Start](#end-is-start)
+  
 ## Libraries
 
 * [love] - dart only state management library. if we are developing pure dart app, we can [install love]
@@ -83,7 +112,9 @@ This example first declare a counter system, state is the counts, events are `in
 
 The code is not very elegant for now, we have better way to approach same thing. We'll refactor code step by step when we get new skill. We keep it this way, because it's a good start point to demonstrates how it works.
 
-## How it works?
+# Core
+
+How it works?
 
 ![][love_detail_diagram]
 
@@ -240,65 +271,32 @@ We can also add `persistence effect`:
 
 This persistence save function will be called when state changed, but initial state is skipped since most of time initial state is restored from persistence layer, there is no need to save it back again. 
 
-## High Level Effect Operator
+## Run
 
-We've introduced how to add `log` effect:
+We've declared our `counterSystem`:
 
 ```dart
-    ...
-    .add(effect: (state, oldState, event, dispatch) {
-      print('\nEvent: $event');
-      print('OldState: $oldState');
-      print('State: $state');
-    })
-    ...
+final counterSystem = System<int, CounterEvent>
+  ...;
 ```
 
-Output:
+It dose nothing until `run` is called:
 
-```
-Event: null
-OldState: null
-State: 0
-
-Event: Instance of 'Increment'
-OldState: 0
-State: 1
+```dart
+final dispose = counterSystem.run();
 ```
 
-Because `log` is a common effect, this library provide built-in `log` operator to address it:
+When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
 
-```diff
-    ...
--   .add(effect: (state, oldState, event, dispatch) {
--     print('\nEvent: $event');
--     print('OldState: $oldState');
--     print('State: $state');
--   })
-+   .log()
-    ...
+```dart
+// stop system after 6 seconds
+
+await Future<void>.delayed(const Duration(seconds: 6)); 
+
+dispose();
 ```
 
-Output becomes:
-
-```
-System<int, CounterEvent> Run
-System<int, CounterEvent> Update {
-  event: null
-  oldState: null
-  state: 0
-}
-System<int, CounterEvent> Update {
-  event: Instance of 'Increment'
-  oldState: 0
-  state: 1
-}
-System<int, CounterEvent> Dispose
-```
-
-As we see, `log` operator can do more with less code, it not only log `updates`, but also log system `run` and `dispose` which maybe helpful for debug.
-
-`log` is a **scene focused operator** which scale the log demand followed with a detailed solution. If we are **repeatedly write similar code to solve similar problem**. Then we can **extract operators for reusing solution**. `log` is one of these operators.
+# Effect In Advance
 
 ## Effect Trigger
 
@@ -413,7 +411,7 @@ We can use `onRun` operator instead:
 +   },);
 ```
 
-We have other `on*` operators for different use cases. If we want to learn more please follow the [API Reference]:
+We have other `on*` operators for different use cases. Learn more please follow the [API Reference]:
 
 * on
 * onRun
@@ -468,39 +466,158 @@ There is another important effect which use this trigger. Can you guess what is 
 Hit: [Flutter] or [React].
 
 Yes, it's `presentation effect`. With declarative UI library like [Flutter] or [React], build (render) is triggered by react to state change. 
-We'll discuss this later in **Presentation Effect** Section.
+We'll discuss this soon.
 
-There are other `react*` operators for different use cases. If we want to learn more please follow [API Reference]:
+There are other `react*` operators for different use cases. Learn more please follow [API Reference]:
 
 * react
 * reactLatest
 * reactState
 
-## Run
+## Presentation Effect (With Flutter)
 
-We've declared our `counterSystem`:
-
-```dart
-final counterSystem = System<int, CounterEvent>
-  ...;
-```
-
-It dose nothing until `run` is called:
+We've mentioned `presentation effect` is triggered by react to state change with declarative UI library:
 
 ```dart
-final dispose = counterSystem.run();
+  .reactState(
+    effect: (state, dispatch) {
+      print('Simulate presentation effect (build, render) with state: $state');
+    },
+  )
 ```
 
-When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
+Since [Flutter] is full of widgets. How can we make `react* operators` work together with widget?
+
+Is this possible:
 
 ```dart
-// stop system after 6 seconds
-
-await Future<void>.delayed(const Duration(seconds: 6)); 
-
-dispose();
+  // bellow are just imagination that only works in our mind
+  .reactState(
+    effect: (state, dispatch) {
+      return TextButton(
+        onPressed: () => dispatch(Increment()),
+        child: Text('$state'),
+      );
+    },
+  )
 ```
 
+Yeah, we can introduce `React*` widgets, they are combination of `react* operators` and widget:
+
+```dart
+Widget build(BuildContext context) {
+  return ReactState<int, CounterEvent>(
+    system: counterSystem,
+    builder: (context, state, dispatch) {
+      return TextButton(
+        onPressed: () => dispatch(Increment()),
+        child: Text('$state'),
+      );
+    }
+  );
+}
+```
+
+Happy to see [Flutter] and [React] works together ^_-.
+
+Learn more please visit [flutter_love].
+
+## Log Effect
+
+We've introduced how to add `log` effect:
+
+```dart
+    ...
+    .add(effect: (state, oldState, event, dispatch) {
+      print('\nEvent: $event');
+      print('OldState: $oldState');
+      print('State: $state');
+    })
+    ...
+```
+
+Output:
+
+```
+Event: null
+OldState: null
+State: 0
+
+Event: Instance of 'Increment'
+OldState: 0
+State: 1
+```
+
+Log is a common effect, so this library provide built-in `log` operator to address it:
+
+```diff
+    ...
+-   .add(effect: (state, oldState, event, dispatch) {
+-     print('\nEvent: $event');
+-     print('OldState: $oldState');
+-     print('State: $state');
+-   })
++   .log()
+    ...
+```
+
+Output becomes:
+
+```
+System<int, CounterEvent> Run
+System<int, CounterEvent> Update {
+  event: null
+  oldState: null
+  state: 0
+}
+System<int, CounterEvent> Update {
+  event: Instance of 'Increment'
+  oldState: 0
+  state: 1
+}
+System<int, CounterEvent> Dispose
+```
+
+As we see, `log` operator can do more with less code, it not only log `updates`, but also log system `run` and `dispose` which maybe helpful for debug.
+
+`log` is a **scene focused operator** which scale the log demand followed with a detailed solution. If we are **repeatedly write similar code to solve similar problem**. Then we can **extract operators for reusing solution**. `log` is one of these operators.
+
+
+# Other Operators
+
+### ignoreEvent
+
+Ignore event based on current state and candidate event.
+
+```dart
+  futureSystem
+    .ignoreEvent(
+      when: (state, event) => event is TriggerLoadData && state.loading
+    )
+    ...
+```
+
+Above code shown if the system is already in loading status, then upcoming `TriggerLoadData` event will be ignored.
+
+### debounceOn
+
+Apply [debounce logic] to some events.
+
+```dart
+  searchSystem
+    ...
+    .on<UpdateKeyword>(
+      reduce: (state, event) => state.copyWith(keyword: event.keyword)
+    )
+    .debounceOn<UpdateKeyword>(
+      duration: const Duration(seconds: 1)
+    )
+    ...
+```
+
+Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), system will drop these events to reduce unnecessary dispatching, it will pass event if dispatched event is stable.
+
+# Appendix
 
 ## Code Review
 
@@ -570,54 +687,6 @@ final counterSystem = System<int, CounterEvent>
   },);
 ```
 
-## Presentation Effect (With Flutter)
-
-We've mentioned earlier `presentation effect` is triggered by react to state change with declarative UI library:
-
-```dart
-  .reactState(
-    effect: (state, dispatch) {
-      print('Simulate presentation effect (build, render) with state: $state');
-    },
-  )
-```
-
-Since [Flutter] is full of widgets. How can we make `react* operators` work together with widget?
-
-Is this possible:
-
-```dart
-  // bellow are just imagination that only works in our mind
-  .reactState(
-    effect: (state, dispatch) {
-      return TextButton(
-        onPressed: () => dispatch(Increment()),
-        child: Text('$state'),
-      );
-    },
-  )
-```
-
-Yeah, we can introduce `React*` widgets, they are combination of `react* operators` and widget:
-
-```dart
-Widget build(BuildContext context) {
-  return ReactState<int, CounterEvent>(
-    system: counterSystem,
-    builder: (context, state, dispatch) {
-      return TextButton(
-        onPressed: () => dispatch(Increment()),
-        child: Text('$state'),
-      );
-    }
-  );
-}
-```
-
-Happy to see [Flutter] and [React] works together ^_-.
-
-If we want to learn more please visit [flutter_love].
-
 ## Testing
 
 Test can be done straightforward:
@@ -667,43 +736,6 @@ test('CounterSystem', () async {
 });
 
 ```
-
-## Filter Event Operators
-
-Operators which can prevent unnecessary event dispatching. 
-
-### ignoreEvent
-
-Ignore event based on current state and candidate event.
-
-```dart
-  futureSystem
-    .ignoreEvent(
-      when: (state, event) => event is TriggerLoadData && state.loading
-    )
-    ...
-```
-
-Above code shown if the system is already in loading status, then upcoming `TriggerLoadData` event will be ignored.
-
-### debounceOn
-
-Apply [debounce logic] to some events.
-
-```dart
-  searchSystem
-    ...
-    .on<UpdateKeyword>(
-      reduce: (state, event) => state.copyWith(keyword: event.keyword)
-    )
-    .debounceOn<UpdateKeyword>(
-      duration: const Duration(seconds: 1)
-    )
-    ...
-```
-
-Above code shown if `UpdateKeyword` event is dispatched with high frequency (quick typing), system will drop these events to reduce unnecessary dispatching, it will pass event if dispatched event is stable.
-
   
 ## Credits
 
