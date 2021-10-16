@@ -35,15 +35,11 @@ void main() async {
   final counterSystem = System<int, CounterEvent>
     .create(initialState: 0)
     .add(reduce: (state, event) {
-      if (event is Increment) {
-        return state + 1;
-      }
+      if (event is Increment) return state + 1;
       return state;
     })
     .add(reduce: (state, event) {
-      if (event is Decrement) {
-        return state - 1;
-      }
+      if (event is Decrement) return state - 1;
       return state;
     })
     .add(effect: (state, oldState, event, dispatch) {
@@ -126,15 +122,11 @@ Counter Example:
 ```dart
     ...
     .add(reduce: (state, event) {
-      if (event is Increment) {
-        return state + 1;
-      }
+      if (event is Increment) return state + 1;
       return state;
     })
     .add(reduce: (state, event) {
-      if (event is Decrement) {
-        return state - 1;
-      }
+      if (event is Decrement) return state - 1;
       return state;
     })
     ...
@@ -147,15 +139,11 @@ We can make it cleaner:
 ```diff
     ...
 -   .add(reduce: (state, event) {
--     if (event is Increment) {
--       return state + 1;
--     }
+-     if (event is Increment) return state + 1;
 -     return state;
 -   })
 -   .add(reduce: (state, event) {
--     if (event is Decrement) {
--       return state - 1;
--     }
+-     if (event is Decrement) return state - 1;
 -     return state;
 -   })
 +   .on<Increment>(
@@ -541,15 +529,11 @@ Old Code:
 final counterSystem = System<int, CounterEvent>
   .create(initialState: 0)
   .add(reduce: (state, event) {
-    if (event is Increment) {
-      return state + 1;
-    }
+    if (event is Increment) return state + 1;
     return state;
   })
   .add(reduce: (state, event) {
-    if (event is Decrement) {
-      return state - 1;
-    }
+    if (event is Decrement) return state - 1;
     return state;
   })
   .add(effect: (state, oldState, event, dispatch) {
