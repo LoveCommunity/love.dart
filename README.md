@@ -266,7 +266,7 @@ OldState: 0
 State: 1
 ```
 
-Because `log` is a common effect, we can use built-in `log` operator to address it:
+Because `log` is a common effect, this library provide built-in `log` operator to address it:
 
 ```diff
     ...
@@ -494,30 +494,13 @@ final dispose = counterSystem.run();
 When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
 
 ```dart
-await Future<void>.delayed(const Duration(seconds: 6));
+// stop system after 6 seconds
+
+await Future<void>.delayed(const Duration(seconds: 6)); 
 
 dispose();
 ```
 
-Optionally, We can provide additional `reduce` and `effect` when system run:
-
-```dart
-final dispose = counterSystem.run(
-  reduce: (state, event) { ... },
-  effect: (state, oldState, event, dispatch) { ... },
-);
-```
-
-It has same behavior as this:
-
-```dart
-final dispose = counterSystem
-  .add(
-    reduce: (state, event) { ... },
-    effect: (state, oldState, event, dispatch) { ... },
-  )
-  .run();
-```
 
 ## Code Review
 
