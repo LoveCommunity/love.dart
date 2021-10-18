@@ -28,10 +28,8 @@ A state management library that is declarative, predictable and elegant.
   - [Reduce](#reduce)
   - [Effect](#effect)
   - [Run](#run)
-- [Effect In Advance](#effect-in-advance)
+- [Effect Details](#effect-details)
   - [Effect Trigger](#effect-trigger)
-    - [Event Based Trigger](#event-based-trigger)
-    - [State Based Trigger](#state-based-trigger)
   - [Presentation Effect (With Flutter)](#presentation-effect-with-flutter)
   - [Log Effect](#log-effect)
 - [Other Operators](#other-operators)
@@ -196,7 +194,6 @@ Then, how to approach side effect?
 
 **Effect is a function that cause observable effect outside.**
 
-
 ```dart
 typedef Effect<State, Event> = void Function(State state, State? oldState, Event? event, Dispatch<Event> dispatch);
 ```
@@ -296,7 +293,9 @@ await Future<void>.delayed(const Duration(seconds: 6));
 dispose();
 ```
 
-# Effect In Advance
+# Effect Details
+
+Since effect plays an important role here, let's study it in depth.
 
 ## Effect Trigger
 
@@ -324,14 +323,14 @@ We've added `timer effect` and `persistence effect`. For now, Instead of thinkin
 
 
 It's not hard to find the first `timer effect` is triggered **on** `increment` event happen,
-the second `persistence effect` is triggered by **react** state changes.
+the second `persistence effect` is triggered by **react** to state changes.
 
 Here, We have two kind of **Effect Trigger**:
  *  **Event Based Trigger** 
  *  **State Based Trigger**
 
 
-### Event Based Trigger
+### Event Based Trigger <!-- omit in toc -->
 
 **Event Based Trigger will trigger effect when event meet some condition**.
 
@@ -417,7 +416,7 @@ We have other `on*` operators for different use cases. Learn more please follow 
 * onRun
 * onDispose
 
-### State Based Trigger
+### State Based Trigger <!-- omit in toc -->
 
 **State Based Trigger will trigger effect by react to state change.**
 
@@ -585,6 +584,8 @@ As we see, `log` operator can do more with less code, it not only log `updates`,
 
 # Other Operators
 
+There are other operators may help us achieve the goals. We'll introduce some of them.
+
 ### ignoreEvent
 
 Ignore event based on current state and candidate event.
@@ -621,7 +622,7 @@ Above code shown if `UpdateKeyword` event is dispatched with high frequency (qui
 
 ## Code Review
 
-We've refactored our code a lot to make it better. Let's review it to increase muscle memory.
+We've refactored our code a lot. Let's review it to increase muscle memory.
 
 Old Code:
 
