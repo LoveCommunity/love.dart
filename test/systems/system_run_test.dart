@@ -8,7 +8,7 @@ void main() {
 
   test('System.run', () async {
 
-    Dispose? dispose;
+    Disposer? disposer;
 
     final List<String> states = [];
     final List<String?> oldStates = [];
@@ -17,7 +17,7 @@ void main() {
 
     final system = createTestSystem(initialState: 'a');
     
-    final _dispose = system.run(
+    final _disposer = system.run(
       effect: (state, oldState, event, dispatch) {
         states.add(state);
         oldStates.add(oldState);
@@ -27,15 +27,15 @@ void main() {
           delayed(10, () => dispatch('c'));
           delayed(20, () => dispatch('d'));
           delayed(30, () => dispatch('e'));
-          delayed(40, () => dispose?.call());
+          delayed(40, () => disposer?.call());
           delayed(50, () => dispatch('f'));
         }
       },
     );
 
-    dispose = Dispose(() {
+    disposer = Disposer(() {
       isDisposed = true;
-      _dispose();
+      _disposer();
     });
 
     await delayed<Null>(60);

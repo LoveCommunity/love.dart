@@ -30,7 +30,7 @@ void main() {
               effectVersion += 1;
               delayed(1, () => dispatch('i'));
               final version = effectVersion;
-              return Dispose(() {
+              return Disposer(() {
                 disposedVersions.add(version);
               });
             }
@@ -133,7 +133,7 @@ void main() {
               effectVersion += 1;
               delayed(1, () => dispatch('i'));
               final version = effectVersion;
-              return Dispose(() {
+              return Disposer(() {
                 disposedVersions.add(version);
               });
             }

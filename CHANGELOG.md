@@ -1,3 +1,7 @@
+## main
+
+* break - refactor - rename `Dispose` to `Disposer` [#107](https://github.com/LoveCommunity/love.dart/issues/107)
+
 ## [0.1.0-rc.1] - 2020-10-19
 
 * refactor - rename `areEqual` to `equals` to be consistent with dart [#93](https://github.com/LoveCommunity/love.dart/issues/93)

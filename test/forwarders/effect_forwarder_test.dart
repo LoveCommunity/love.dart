@@ -27,7 +27,7 @@ void main() {
       dispatchedEvents.add(event);
     });
 
-    final dispose = forwarder.add(effect: effect);
+    final disposer = forwarder.add(effect: effect);
 
     forwarder.effect('a', null, null, dispatch);
 
@@ -37,7 +37,7 @@ void main() {
     expect(dispatchedEvents, ['e']);
     expect(invoked, 1);
 
-    dispose();
+    disposer();
   });
 
   test('EffectForwarder.dispose', () {
@@ -62,7 +62,7 @@ void main() {
       dispatchedEvents.add(event);
     });
 
-    final dispose = forwarder.add(effect: effect);
+    final disposer = forwarder.add(effect: effect);
 
     forwarder.effect('a', null, null, dispatch);
 
@@ -72,7 +72,7 @@ void main() {
     expect(dispatchedEvents, ['e']);
     expect(invoked, 1);
 
-    dispose();
+    disposer();
    
     forwarder.effect('a|b', 'a', 'b', Dispatch((_) {})); 
 
@@ -100,14 +100,14 @@ void main() {
       invoked += 1;
     }; 
 
-    final dispose = forwarder.add(effect: effect);
+    final disposer = forwarder.add(effect: effect);
 
     expect(states, <String>[]);
     expect(oldStates, <String?>[]);
     expect(events, <String?>[]);
     expect(invoked, 0);
 
-    dispose();
+    disposer();
   });
 
   test('EffectForwarder.replay.last', () {
@@ -133,7 +133,7 @@ void main() {
     final forwarder = EffectForwarder<String, String>();
     forwarder.effect('a', 'b', 'b', dispatch);
 
-    final dispose = forwarder.add(effect: effect);
+    final disposer = forwarder.add(effect: effect);
 
     expect(states, ['a']);
     expect(oldStates, [null]);
@@ -141,7 +141,7 @@ void main() {
     expect(dispatchedEvents, ['e']);
     expect(invoked, 1);
 
-    dispose();
+    disposer();
   });
 
   test('EffectForwarder.forward.order', () {

@@ -3,11 +3,11 @@ import 'types.dart';
 class LatestContext<Event> {
 
   Object? _identifier;
-  Dispose? _dispose;
+  Disposer? _disposer;
 
-  void set dispose(Dispose? dispose) {
-    _dispose = Dispose(() {
-      dispose?.call();
+  void set disposer(Disposer? disposer) {
+    _disposer = Disposer(() {
+      disposer?.call();
       _identifier = null;
     });
   }
@@ -23,9 +23,9 @@ class LatestContext<Event> {
   }
 
   void disposePreviousEffect() {
-    if (_dispose != null) {
-      _dispose?.call();
-      _dispose = null;
+    if (_disposer != null) {
+      _disposer?.call();
+      _disposer = null;
     }
   }
 }

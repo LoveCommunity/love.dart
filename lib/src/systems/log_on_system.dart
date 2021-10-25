@@ -21,13 +21,13 @@ extension LogOperators<State, Event> on System<State, Event> {
   /// 
   ///   final counterSystem = createCounterSystem();
   /// 
-  ///   final dispose = counterSystem
+  ///   final disposer = counterSystem
   ///     .log()  // --> add log effect
   ///     .run();
   ///   
   ///   await Future<void>.delayed(const Duration(seconds: 6));
   /// 
-  ///   dispose();
+  ///   disposer();
   /// 
   /// } 
   /// ```

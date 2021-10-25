@@ -55,12 +55,12 @@ extension OnOperators<State, Event> on System<State, Event> {
   ///  },);
   /// ```
   /// 
-  /// [effect] can return an optional `Dispose` function.
+  /// [effect] can return an optional `Disposer`.
   /// This can be used when this system has interaction with other service, 
   /// which has listenable API like `Stream`, `ChangeNotifier` or `System`.
   /// With these cases, we can listen to them (`Stream`) when system run, 
-  /// return `Dispose` contains `cancel` logic.
-  /// Then `Dispose` will be called, when system dispose get called.
+  /// return `Disposer` contains `cancel` logic.
+  /// Then `Disposer` will be called, when system disposer get called.
   /// 
   ///```dart 
   ///  ...
@@ -68,42 +68,42 @@ extension OnOperators<State, Event> on System<State, Event> {
   ///    final timer = Stream
   ///      .periodic(const Duration(seconds: 1), (it) => it);
   ///    final subscription = timer.listen((it) => dispatch('$it'));
-  ///    return Dispose(() => subscription.cancel());
+  ///    return Disposer(() => subscription.cancel());
   ///  },);
   /// ```
   /// 
   System<State, Event> onRun({
-    required Dispose? Function(State initialState, Dispatch<Event> dispatch) effect,
+    required Disposer? Function(State initialState, Dispatch<Event> dispatch) effect,
   }) => withContext<_OnRunContext>(
     createContext: () => _OnRunContext(),
     effect: (context, state, oldState, event, dispatch) {
       if (event == null) {
-        context.dispose = effect(state, dispatch);
+        context.disposer = effect(state, dispatch);
       }
     },
     dispose: (context) {
-      if (context.dispose != null) {
-        context.dispose?.call();
-        context.dispose = null;
+      if (context.disposer != null) {
+        context.disposer?.call();
+        context.disposer = null;
       }
     }
   );
   
-  /// Add code block that tied with running system's dispose function.
+  /// Add code block that tied with running system's disposer.
   System<State, Event> onDispose({
     required void Function() run
   }) => copy((_run) => ({reduce, effect, interceptor}) {
-    final dispose = Dispose(run);
-    final sourceDispose = _run(reduce: reduce, effect: effect, interceptor: interceptor);
-    return Dispose(() {
-      sourceDispose();
-      dispose();
+    final disposer = Disposer(run);
+    final sourceDisposer = _run(reduce: reduce, effect: effect, interceptor: interceptor);
+    return Disposer(() {
+      sourceDisposer();
+      disposer();
     });
   });
 }
 
 class _OnRunContext{
-  Dispose? dispose;
+  Disposer? disposer;
 }
 
 Result? _testEvent<Result, ChildEvent, Event>(Event event, {

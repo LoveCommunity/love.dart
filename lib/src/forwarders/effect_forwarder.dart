@@ -11,19 +11,19 @@ import '../types/types.dart';
 ///    ...
 ///    .add(effect: forwarder.effect); // forward effect
 ///
-///  final dispose = system.run();
+///  final disposer = system.run();
 ///
 ///  await Future<void>.delayed(const Duration(seconds: 6));
 ///
 ///  // add effect after system is running.
-///  final disposeEffect = forwarder.add(effect: (state, oldState, event, dispatch) {
+///  final effectDisposer = forwarder.add(effect: (state, oldState, event, dispatch) {
 ///    ...
 ///  },);
 ///
 ///  await Future<void>.delayed(const Duration(seconds: 6));
 ///
-///  disposeEffect(); // dispose the effect
-///  dispose(); // dispose system
+///  effectDisposer(); // dispose the effect
+///  disposer(); // dispose system
 ///```
 /// 
 class EffectForwarder<State, Event> {
@@ -53,8 +53,8 @@ class EffectForwarder<State, Event> {
 
   /// Register effect to this forwarder. 
   /// 
-  /// The returned `Dispose` can be used to cancel registration.
-  Dispose add({
+  /// The returned `Disposer` can be used to cancel registration.
+  Disposer add({
     required Effect<State, Event> effect
   }) {
     if (_isDisposed) throw StateError('Cannot add effect after disposed');
@@ -62,7 +62,7 @@ class EffectForwarder<State, Event> {
     if (_state != null && _dispatch != null) {
       effect(_state!, null, null, _dispatch!);
     }
-    return Dispose(() {
+    return Disposer(() {
       if (_effects.contains(effect)) {
         _effects.remove(effect);
       }

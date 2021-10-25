@@ -25,17 +25,15 @@ typedef Effect<State, Event> = void Function(State state, State? oldState, Event
 /// Describe how side effect are performed with a context.
 typedef ContextEffect<Context, State, Event> = void Function(Context context, State state, State? oldState, Event? event, Dispatch<Event> dispatch);
 
-typedef DisposeFunc = void Function();
-
 /// Describe how resources are cleaned
-class Dispose {
-  Dispose(this._func);
-  final DisposeFunc _func;
+class Disposer {
+  Disposer(this._func);
+  final void Function() _func;
   void call() => _func();
-  Dispose.nothing(): this(() {});
+  Disposer.nothing(): this(() {});
 }
 
-typedef Run<State, Event> = Dispose Function({
+typedef Run<State, Event> = Disposer Function({
   Reduce<State, Event>? reduce,
   Effect<State, Event>? effect,
   Interceptor<Event>? interceptor,
