@@ -82,11 +82,11 @@ void main() async {
       }
     });
 
-  final dispose = counterSystem.run();
+  final disposer = counterSystem.run();
 
   await Future<void>.delayed(const Duration(seconds: 6));
 
-  dispose();
+  disposer();
 }
 
 ```
@@ -280,17 +280,17 @@ final counterSystem = System<int, CounterEvent>
 It dose nothing until `run` is called:
 
 ```dart
-final dispose = counterSystem.run();
+final disposer = counterSystem.run();
 ```
 
-When `run` is called, a `dispose` function is returned. We can use this `dispose` function to stop system later:
+When `run` is called, a `disposer` is returned. We can use this `disposer` to stop system later:
 
 ```dart
 // stop system after 6 seconds
 
 await Future<void>.delayed(const Duration(seconds: 6)); 
 
-dispose();
+disposer();
 ```
 
 # Effect Details
@@ -712,7 +712,7 @@ test('CounterSystem', () async {
       reduce: (state, event) => state - 1,
     );
 
-  final dispose = counterSystem.run(
+  final disposer = counterSystem.run(
     effect: (state, oldState, event, dispatch) async {
       states.add(state);
       if (event == null) {
@@ -726,7 +726,7 @@ test('CounterSystem', () async {
 
   await Future<void>.delayed(const Duration(milliseconds: 60));
 
-  dispose();
+  disposer();
 
   expect(states, [
     0, // initial state

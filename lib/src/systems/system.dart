@@ -15,21 +15,21 @@ class System<State, Event> {
 
   /// Run the system.
   /// 
-  /// Return a Dispose function to stop system later.
-  Dispose run({
+  /// Return a Disposer to stop system later.
+  Disposer run({
     Reduce<State, Event>? reduce,
     Effect<State, Event>? effect,
   }) {
     var isDisposed = false;
-    final dispose = _run(
+    final disposer = _run(
       reduce: reduce,
       effect: effect,
       interceptor: null,
     );
-    return Dispose(() {
+    return Disposer(() {
       if (isDisposed) return;
       isDisposed = true;
-      dispose();
+      disposer();
     });
   }
 
@@ -54,7 +54,7 @@ class System<State, Event> {
   /// Return a new system with some "live data" associated with it.
   System<State, Event> runWithContext<Context>({
     required Context Function() createContext,
-    required Dispose Function(
+    required Disposer Function(
       Context context, Run<State, Event> run, 
       Reduce<State, Event>? nextReduce, 
       Effect<State, Event>? nextEffect, 
@@ -65,12 +65,12 @@ class System<State, Event> {
     final _run = run;
     return copy((run) => ({reduce, effect, interceptor}) {
       final context = createContext();
-      final sourceDispose = _run(context, run, reduce, effect, interceptor);
-      final combinedDispose = dispose == null ? sourceDispose : Dispose(() {
+      final sourceDisposer = _run(context, run, reduce, effect, interceptor);
+      final combinedDisposer = dispose == null ? sourceDisposer : Disposer(() {
         dispose(context);
-        sourceDispose();
+        sourceDisposer();
       });
-      return combinedDispose;
+      return combinedDisposer;
     });
   }
 
@@ -116,7 +116,7 @@ Run<State, Event> _create<State, Event>({
   required State initialState,
 }) => ({reduce, effect, interceptor}) {
   assert(reduce != null, 'reduce is null when system run!');
-  if (reduce == null) return Dispose.nothing();
+  if (reduce == null) return Disposer.nothing();
 
   State? state;
   bool isDisposed = false;
@@ -151,7 +151,7 @@ Run<State, Event> _create<State, Event>({
 
   consume(null); // initial event
 
-  return Dispose(() {
+  return Disposer(() {
     if (isDisposed) return;
     isDisposed = true;
     state = null;

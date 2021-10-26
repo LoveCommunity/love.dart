@@ -3,18 +3,18 @@ import 'package:love/love.dart';
 
 void main() {
 
-  test('System.dispose', () async {
+  test('System.disposer', () async {
     int disposeCounts = 0;
     final system = System<String, String>
       .pure(({effect, reduce, interceptor}) {
-        return Dispose(() => disposeCounts += 1);
+        return Disposer(() => disposeCounts += 1);
       });
 
-    final dispose = system.run();
+    final disposer = system.run();
     expect(disposeCounts, 0);
-    dispose();
+    disposer();
     expect(disposeCounts, 1);
-    dispose();
+    disposer();
     expect(disposeCounts, 1);
   });
 }

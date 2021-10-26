@@ -13,7 +13,7 @@ void main() {
     final system = System<String, String>
       .create(initialState: 'a');
 
-    final dispose = system.run(
+    final disposer = system.run(
       reduce: (state, event) => '$state|$event',
       effect: (state, oldState, event, dispatch) {
         states.add(state);
@@ -26,7 +26,7 @@ void main() {
     expect(states, ['a']);
     expect(oldStates, [null]);
 
-    dispose();
+    disposer();
     
   });
 }

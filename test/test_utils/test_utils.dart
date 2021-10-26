@@ -36,14 +36,14 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
   required int awaitMilliseconds,
 }) async {
 
-  Dispose? dispose;
+  Disposer? disposer;
 
   final List<State> states = [];
   final List<State?> oldStates = [];
   final List<Event?> _events = [];
   bool isDisposed = false;
 
-  final _dispose = system.run(
+  final _disposer = system.run(
     effect: (state, oldState, event, dispatch) {
       states.add(state);
       oldStates.add(oldState);
@@ -57,16 +57,16 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
           if (event is TestEventDispatch<Event>) {
             delayed(event.delay, () => dispatch(event.event));
           } else if (event is TestEventDispose<Event>) {
-            delayed(event.delay, () => dispose?.call());
+            delayed(event.delay, () => disposer?.call());
           }
         });
       }
     },
   );
     
-  dispose = Dispose(() {
+  disposer = Disposer(() {
     isDisposed = true;
-    _dispose();
+    _disposer();
   });
 
   await delayed<Null>(awaitMilliseconds);

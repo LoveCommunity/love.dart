@@ -75,14 +75,14 @@ extension ReactOperators<State, Event> on System<State, Event> {
   /// is false if initial value triggers effect, default is true.
   /// 
   /// [effect] describe side effect, if effect has cancellation mechanism,
-  /// We can return a `Dispose` function contain the cancellation logic in effect callback.
-  /// This `Dispose` will be called when value changed or system dispose is called.
+  /// We can return a `Disposer` contain the cancellation logic in effect callback.
+  /// This `Disposer` will be called when value changed or system disposer is called.
   /// 
   System<State, Event> reactLatest<Value>({
     required Value Function(State state) value,
     Equals<Value>? equals,
     bool skipInitialValue = true,
-    required Dispose? Function(Value value, Dispatch<Event> dispatch) effect,
+    required Disposer? Function(Value value, Dispatch<Event> dispatch) effect,
   }) {
     final _equals = equals ?? defaultEquals;
     return withContext<_ReactLatestContext<Value, Event>>(
@@ -106,7 +106,7 @@ extension ReactOperators<State, Event> on System<State, Event> {
         if (_shouldTriggerEffect) {
           final latestContext = context.latestContext;
           latestContext.disposePreviousEffect();
-          latestContext.dispose = effect(_value, latestContext.versioned(dispatch));
+          latestContext.disposer = effect(_value, latestContext.versioned(dispatch));
         }
       },
       dispose: (context) {

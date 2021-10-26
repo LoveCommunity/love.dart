@@ -30,9 +30,9 @@ void main() async {
       dispatch(Increment());
     },);
   
-  final dispose = counterSystem.run();
+  final disposer = counterSystem.run();
 
   await Future<void>.delayed(const Duration(seconds: 6));
 
-  dispose();
+  disposer();
 }

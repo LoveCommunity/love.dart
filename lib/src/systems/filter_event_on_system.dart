@@ -225,14 +225,14 @@ extension FilterEventOperators<State, Event> on System<State, Event> {
           if (isDisposed) return;
           interceptor(context, dispatch, event);          
         });
-        final sourceDispose = run(
+        final sourceDisposer = run(
           reduce: nextReduce,
           effect: combineEffect(_effect, nextEffect),
           interceptor: combineInterceptor(_interceptor, nextInterceptor),
         );
-        return Dispose(() {
+        return Disposer(() {
           isDisposed = true;
-          sourceDispose();
+          sourceDisposer();
         });
       },
       dispose: dispose,
