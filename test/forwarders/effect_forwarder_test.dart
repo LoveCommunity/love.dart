@@ -164,22 +164,22 @@ void main() {
 
     final dispatch = Dispatch<String>((_) {});
 
-    final dispose1 = forwarder.add(effect: effect1);
-    final dispose2 = forwarder.add(effect: effect2);
-    final dispose3 = forwarder.add(effect: effect3);
+    final disposer1 = forwarder.add(effect: effect1);
+    final disposer2 = forwarder.add(effect: effect2);
+    final disposer3 = forwarder.add(effect: effect3);
 
     forwarder.effect('a', null, null, dispatch);
 
     expect(orders, [1, 2, 3]);
 
-    dispose2();
+    disposer2();
 
     forwarder.effect('a', null, null, dispatch);
 
     expect(orders, [1, 2, 3, 1, 3]);
 
-    dispose1();
-    dispose3();
+    disposer1();
+    disposer3();
   });
 
   test('EffectForwarder.add.afterDisposed', () {
