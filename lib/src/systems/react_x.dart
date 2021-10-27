@@ -2,7 +2,7 @@ import 'system.dart';
 import '../types/types.dart';
 import '../types/latest_context.dart';
 
-extension ReactOperators<State, Event> on System<State, Event> {
+extension ReactX<State, Event> on System<State, Event> {
 
   /// Add `effect` triggered by react whole state change.
   /// 

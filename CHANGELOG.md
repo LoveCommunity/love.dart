@@ -1,6 +1,7 @@
 ## main
 
 * break - refactor - rename `Dispose` to `Disposer` [#107](https://github.com/LoveCommunity/love.dart/issues/107)
+* break - refactor - rename extension names to have a `x` suffix [#109](https://github.com/LoveCommunity/love.dart/issues/109)
 
 ## [0.1.0-rc.1] - 2020-10-19
 

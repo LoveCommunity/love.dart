@@ -5,7 +5,7 @@ import '../utils/utils.dart';
 /// An event interceptor with a context associated with it
 typedef InterceptorWithContext<Context, Event> = void Function(Context context, Dispatch<Event> dispatch, Event event);
 
-extension FilterEventOperators<State, Event> on System<State, Event> {
+extension EventInterceptorX<State, Event> on System<State, Event> {
 
   /// Ignore event based on current state and candidate event.
   /// 
