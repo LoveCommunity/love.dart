@@ -2,7 +2,7 @@ import '../types/types.dart';
 import '../utils/utils.dart';
 import 'system.dart';
 
-extension OnOperators<State, Event> on System<State, Event> {
+extension OnX<State, Event> on System<State, Event> {
 
   /// Add `reduce` or `effect` when event meet some condition.
   /// 

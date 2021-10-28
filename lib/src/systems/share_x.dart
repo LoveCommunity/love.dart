@@ -2,7 +2,7 @@ import 'system.dart';
 import '../types/types.dart';
 import '../forwarders/effect_forwarder.dart';
 
-extension ShareOperators<State, Event> on System<State, Event> {
+extension ShareX<State, Event> on System<State, Event> {
 
   /// Share same source of truth using strategy `refCount`.
   /// 

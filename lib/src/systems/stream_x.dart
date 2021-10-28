@@ -3,7 +3,7 @@ import 'dart:async';
 import 'system.dart';
 import '../types/types.dart';
 
-extension RxOperators<State, Event> on System<State, Event> {
+extension StreamX<State, Event> on System<State, Event> {
 
   /// Stream version of `add(effect: )`.
   /// 

@@ -1,9 +1,9 @@
 
 import 'system.dart';
-import 'on_on_system.dart';
+import 'on_x.dart';
 import 'dart:core' as core; // resolve conflict with parameter 'system.log.print'
 
-extension LogOperators<State, Event> on System<State, Event> {
+extension LogX<State, Event> on System<State, Event> {
 
   /// Add log `effect` to the system.
   /// 
