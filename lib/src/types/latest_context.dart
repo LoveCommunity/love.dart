@@ -1,4 +1,4 @@
-import 'types.dart';
+import 'types.dart' show Dispatch, Disposer;
 
 class LatestContext<Event> {
 
