@@ -3,8 +3,6 @@ import '../utils/utils.dart'
 import '../types/types.dart' 
   show Effect, Consume, ContextEffect, CopyRun, Dispatch, Disposer, Interceptor, Reduce, Run;
 
-typedef CopySystem<State, Event> = System<State, Event> Function(System<State, Event> system);
-
 class System<State, Event> {
 
   /// Create a System with underlying run function.
