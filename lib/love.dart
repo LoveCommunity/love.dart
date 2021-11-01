@@ -11,6 +11,7 @@ export 'src/systems/share_x.dart' show ShareX;
 export 'src/systems/stream_x.dart' show StreamX;
 export 'src/systems/system.dart' show System;
 export 'src/types/latest_context.dart' show LatestContext;
+export 'src/types/moment.dart' show Moment;
 export 'src/types/types.dart'
   show
     ContextEffect,
@@ -22,7 +23,6 @@ export 'src/types/types.dart'
     Effect,
     Equals,
     Interceptor,
-    Moment,
     Reduce,
     Run;
 export 'src/utils/utils.dart'

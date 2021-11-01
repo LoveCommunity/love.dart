@@ -1,6 +1,6 @@
 import 'dart:async' show Stream, StreamController, StreamSubscription;
 import 'system.dart' show System;
-import '../types/types.dart' show Moment;
+import '../types/moment.dart' show Moment;
 
 extension StreamX<State, Event> on System<State, Event> {
 
