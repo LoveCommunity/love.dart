@@ -17,7 +17,6 @@ export 'src/types/types.dart'
     ContextEffect,
     CopyRun,
     Dispatch,
-    DispatchFunc,
     Disposer,
     Effect,
     Equals,

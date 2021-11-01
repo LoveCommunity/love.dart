@@ -8,12 +8,10 @@ typedef Reduce<State, Event> = State Function(State state, Event event);
 /// Describe how to intercept event
 typedef Interceptor<Event> = Dispatch<Event> Function(Dispatch<Event> dispatch);
 
-typedef DispatchFunc<Event> = void Function(Event event);
-
 /// Send event 
 class Dispatch<Event> {
   Dispatch(this._func);
-  final DispatchFunc<Event> _func;
+  final void Function(Event event) _func;
   void call(Event event) => _func(event);
 }
 
