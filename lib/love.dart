@@ -25,9 +25,9 @@ export 'src/types/types.dart'
     Interceptor,
     Reduce,
     Run;
+export 'src/utils/safe_as.dart' show safeAs;
 export 'src/utils/utils.dart'
   show
     combineEffect,
     combineInterceptor,
-    combineReduce,
-    safeAs;
+    combineReduce;
