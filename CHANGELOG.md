@@ -5,6 +5,7 @@
 * refactor - extract `moment` class [#114](https://github.com/LoveCommunity/love.dart/issues/114)
 * refactor - extract `safeAs` function [#115](https://github.com/LoveCommunity/love.dart/issues/115)
 * refactor - extract `combine` functions [#116](https://github.com/LoveCommunity/love.dart/issues/116)
+* refactor - extract `defaultEquals` function [#117](https://github.com/LoveCommunity/love.dart/issues/117)
 
 ## [0.1.0-rc.2] - 2020-10-28
 
