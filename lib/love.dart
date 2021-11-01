@@ -16,7 +16,6 @@ export 'src/types/types.dart'
   show
     ContextEffect,
     CopyRun,
-    defaultEquals,
     Dispatch,
     DispatchFunc,
     Disposer,
@@ -30,4 +29,5 @@ export 'src/utils/combine.dart'
     combineEffect,
     combineInterceptor,
     combineReduce;
+export 'src/utils/default_equals.dart' show defaultEquals;
 export 'src/utils/safe_as.dart' show safeAs;
