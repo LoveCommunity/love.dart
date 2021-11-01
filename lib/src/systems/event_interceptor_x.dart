@@ -1,6 +1,6 @@
 import 'system.dart' show System;
 import '../types/types.dart' show ContextEffect, Dispatch, Disposer, Effect, Interceptor;
-import '../utils/utils.dart' show combineEffect, combineInterceptor;
+import '../utils/combine.dart' show combineEffect, combineInterceptor;
 import '../utils/safe_as.dart' show safeAs;
 
 /// An event interceptor with a context associated with it

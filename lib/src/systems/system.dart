@@ -1,4 +1,4 @@
-import '../utils/utils.dart'
+import '../utils/combine.dart'
   show combineEffect, combineReduce;
 import '../types/types.dart' 
   show Effect, Consume, ContextEffect, CopyRun, Dispatch, Disposer, Interceptor, Reduce, Run;
