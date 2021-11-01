@@ -1,5 +1,7 @@
-import '../utils/utils.dart';
-import '../types/types.dart';
+import '../utils/utils.dart'
+  show combineEffect, combineReduce;
+import '../types/types.dart' 
+  show Effect, Consume, ContextEffect, CopyRun, Dispatch, Disposer, Interceptor, Reduce, Run;
 
 typedef CopySystem<State, Event> = System<State, Event> Function(System<State, Event> system);
 

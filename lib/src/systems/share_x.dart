@@ -1,6 +1,6 @@
-import 'system.dart';
-import '../types/types.dart';
-import '../forwarders/effect_forwarder.dart';
+import 'system.dart' show System;
+import '../types/types.dart' show Disposer;
+import '../forwarders/effect_forwarder.dart' show EffectForwarder;
 
 extension ShareX<State, Event> on System<State, Event> {
 

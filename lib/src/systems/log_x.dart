@@ -1,7 +1,10 @@
 
-import 'system.dart';
-import 'on_x.dart';
-import 'dart:core' as core; // resolve conflict with parameter 'system.log.print'
+import 'system.dart' show System;
+import 'on_x.dart' show OnX;
+import 'dart:core' as core 
+  show
+    String,
+    print; // resolve conflict with parameter 'system.log.print'
 
 extension LogX<State, Event> on System<State, Event> {
 

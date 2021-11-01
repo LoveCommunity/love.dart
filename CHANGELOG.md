@@ -1,3 +1,7 @@
+## main
+
+* refactor - explicit import and export types [#112](https://github.com/LoveCommunity/love.dart/issues/112)
+
 ## [0.1.0-rc.2] - 2020-10-28
 
 * break - refactor - rename `Dispose` to `Disposer` [#107](https://github.com/LoveCommunity/love.dart/issues/107)

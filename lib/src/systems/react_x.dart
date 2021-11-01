@@ -1,6 +1,6 @@
-import 'system.dart';
-import '../types/types.dart';
-import '../types/latest_context.dart';
+import 'system.dart' show System;
+import '../types/types.dart' show defaultEquals, Dispatch, Disposer, Equals;
+import '../types/latest_context.dart' show LatestContext;
 
 extension ReactX<State, Event> on System<State, Event> {
 

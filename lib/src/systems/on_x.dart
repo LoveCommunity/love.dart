@@ -1,6 +1,6 @@
-import '../types/types.dart';
-import '../utils/utils.dart';
-import 'system.dart';
+import 'system.dart' show System;
+import '../types/types.dart' show Dispatch, Disposer, Reduce;
+import '../utils/utils.dart' show safeAs;
 
 extension OnX<State, Event> on System<State, Event> {
 

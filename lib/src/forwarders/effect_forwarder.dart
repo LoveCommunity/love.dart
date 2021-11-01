@@ -1,4 +1,4 @@
-import '../types/types.dart';
+import '../types/types.dart' show Dispatch, Disposer, Effect;
 
 /// `EffectForwarder` can forward effect from one side to another.
 /// 
