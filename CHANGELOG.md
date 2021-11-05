@@ -1,4 +1,4 @@
-## main
+## [0.1.0-rc.3] - 2020-11-05
 
 * refactor - explicit import and export types [#112](https://github.com/LoveCommunity/love.dart/issues/112)
 * refactor - remove unused internal type `CopySystem` [#113](https://github.com/LoveCommunity/love.dart/issues/113)
