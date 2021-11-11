@@ -15,7 +15,37 @@ class System<State, Event> {
 
   /// Run the system.
   /// 
-  /// Return a Disposer to stop system later.
+  /// System dose nothing until run is called.
+  /// After `run` get called a `Disposer` is return to stop system later: 
+  /// 
+  /// ```dart
+  /// final disposer = counterSystem.run(); // <- run the system
+  /// 
+  /// await Future<void>.delayed(const Duration(seconds: 6)); 
+  /// 
+  /// disposer(); // <- stop the system
+  /// ```
+  /// 
+  /// Optionally, We can provide additional `reduce` and `effect` when system run:
+  /// 
+  /// ```dart
+  /// final dispose = counterSystem.run(
+  ///   reduce: (state, event) { ... },
+  ///   effect: (state, oldState, event, dispatch) { ... },
+  /// );
+  /// ```
+  /// 
+  /// It has same behavior as this:
+  /// 
+  /// ```dart
+  /// final dispose = counterSystem
+  ///   .add(
+  ///     reduce: (state, event) { ... },
+  ///     effect: (state, oldState, event, dispatch) { ... },
+  ///   )
+  ///   .run();
+  /// ```
+  /// 
   Disposer run({
     Reduce<State, Event>? reduce,
     Effect<State, Event>? effect,
@@ -34,6 +64,16 @@ class System<State, Event> {
   }
 
   /// Create a [System] with initial state.
+  /// 
+  /// Create a [System] with initial state seeded into the system:
+  /// 
+  /// ```dart 
+  /// final counterSystem = System<int, CounterEvent>
+  ///   .create(initialState: 0) // <- create a counter system
+  ///                            // with initial counts 0
+  ///   ...;
+  /// ```
+  ///
   System.create({
     required State initialState,
   }): this.pure(_create(initialState: initialState));
@@ -42,6 +82,63 @@ class System<State, Event> {
   /// 
   /// Return a redefined system by copy a new one with custom logic.
   /// The concept is similar to `middleware` or `interceptor`.
+  /// 
+  /// This is a low level operator, we can use it to supporting other operators
+  /// like `runWithContext`, `onDispose`.
+  /// 
+  /// ## API Overview
+  /// 
+  /// ```dart
+  /// system
+  ///   .copy((run) => ({reduce, effect, interceptor}) {
+  ///     final _reduce = _redefineReduce(reduce); // redefine reduce if needed
+  ///     final _effect = _redefineEffect(effect); // redefine effect if needed
+  ///     final _interceptor = _redefineInterceptor(interceptor); // redefine interceptor if needed
+  ///     final disposer = run(reduce: _reduce, effect: _effect, interceptor: _interceptor);
+  ///     final _disposer = _redefineDisposer(disposer) // redefine disposer if needed
+  ///     return _disposer;
+  ///   })
+  ///   ...
+  /// ```
+  /// 
+  /// ## Usage Example
+  /// 
+  /// Bellow code showed how to create an operator `onDispose` 
+  /// which register a `dispose` callback into system
+  /// 
+  /// ```dart
+  /// System<State, Event> onDispose({
+  ///   required void Function() run
+  /// }) => copy((_run) => ({reduce, effect, interceptor}) {
+  ///   final disposer = Disposer(run);
+  ///   final sourceDisposer = _run(reduce: reduce, effect: effect, interceptor: interceptor);
+  ///   return Disposer(() {
+  ///     sourceDisposer();
+  ///     disposer();
+  ///   });
+  /// });
+  /// ```
+  /// 
+  /// It redefined the `disposer` and register the `dispose` callback
+  /// 
+  /// Usage of `system.onDispose`:
+  /// 
+  /// ```dart
+  /// 
+  /// final controller = SomeController(); // somewhere within same scope
+  /// 
+  /// ...
+  /// 
+  /// system
+  ///   ...
+  ///   .onDispose(
+  ///     run: () => controller.dispose(),
+  ///   )
+  ///   ...
+  /// ```
+  /// 
+  /// Above code will dispose `controller` if system is disposing.
+  /// 
   System<State, Event> copy(
     CopyRun<State, Event> copy
   ) {
@@ -49,9 +146,40 @@ class System<State, Event> {
     return System.pure(next);
   }
 
-  /// Create a new system with a Context.
+  /// Create a new system which can redefine how to run the system with a custom context.
   /// 
-  /// Return a new system with some "live data" associated with it.
+  /// This is a low level operator which can redefine how to run the system,
+  /// It has ability to create a custom context associating it with the system,
+  /// With a dispose callback to clean up the context.
+  /// 
+  /// It can be used for supporting other operator like `system.eventInterceptor` 
+  /// and `system.runWithContext`.
+  /// 
+  /// ## API Overview
+  /// 
+  /// ```dart
+  /// 
+  /// class SomeContext { ... }
+  /// 
+  /// ...
+  /// 
+  /// system
+  ///  .runWithContext<SomeContext>(
+  ///    createContext: () => SomeContext(), // create context here
+  ///    run: (context, run, nextReduce, nextEffect, nextInterceptor) {
+  ///      final effect = _redefineEffect(context, nextEffect);    // redefine next effect if needed
+  ///      final interceptor = _redefineInterceptor(context, nextInterceptor); // redefine interceptor if needed
+  ///      final _run = _redefineRun(context, run);                // redefine run if needed
+  ///      final disposer = _run(reduce: nextReduce, effect: effect, interceptor: interceptor);
+  ///      final _disposer = _redefineDisposer(context, disposer); // redefine disposer if needed
+  ///      return _disposer;
+  ///    },
+  ///    dispose: (context) {
+  ///      // dispose the context if needed.
+  ///    }
+  ///  )
+  ///  ...
+  /// ```
   System<State, Event> runWithContext<Context>({
     required Context Function() createContext,
     required Disposer Function(
@@ -74,9 +202,50 @@ class System<State, Event> {
     });
   }
 
-  /// Create a new system with a Context.
+  /// Adds `reduce` or `effect` into the system with a custom context.
   /// 
-  /// Return a new system with some "live data" associated with it.
+  /// This operator is an enhanced version of [system.add], it would create a custom context
+  /// when system run, we can access this context with effect callback.
+  /// When system dispose, we can do clean up with it.
+  /// 
+  /// ## Usage Example
+  ///
+  /// Bellow code showed how to register service when system run,
+  /// and unregister it when system dispose:
+  /// 
+  /// ```dart
+  /// 
+  /// class DisposerContext {
+  ///   
+  ///   Disposer? disposer;
+  /// }
+  /// 
+  /// ...
+  /// 
+  /// system
+  ///   .withContext<DisposerContext>(
+  ///     createContext: () => DisposerContext(),
+  ///     effect: (context, state, oldState, event, dispatch) {
+  ///       if (event == null) { // event is null when system run
+  ///         final Stream<User> stream = firebaseService.currentUser;
+  ///         final subscription = stream.listen((user) {
+  ///           dispatch(UpdateUser(user));
+  ///         });
+  ///         context.disposer = Disposer(() {
+  ///           subscription.cancel();     
+  ///         });
+  ///       }
+  ///     },
+  ///     dispose: (context) {
+  ///       if (context.disposer != null) {
+  ///         context.disposer?.call();        
+  ///         context.disposer = null;        
+  ///       }
+  ///     }
+  ///   )
+  ///   ...
+  /// ```
+  /// 
   System<State, Event> withContext<Context>({
     required Context Function() createContext,
     Reduce<State, Event>? reduce,
@@ -97,9 +266,34 @@ class System<State, Event> {
     dispose: dispose,
   );
 
-  /// Add a `reduce` or `effect` to the system.
+  /// Adds `reduce` or `effect` into the system.
   /// 
-  /// If we adds `reduce` or `effect` multiple times, The call side order is in serial.
+  /// If we adds `reduce` or `effect` multiple times, the call side order is in serial.
+  /// 
+  /// ## Usage Example
+  /// 
+  /// Bellow code showed how adds `reduce` or `effect` into system: 
+  /// 
+  /// ```dart
+  /// counterSystem
+  ///   ...
+  ///   .add(reduce: (state, event) {
+  ///     if (event is Increment) return state + 1;
+  ///     return state;
+  ///   })
+  ///   .add(reduce: (state, event) {
+  ///     if (event is Decrement) return state - 1;
+  ///     return state;
+  ///   })
+  ///   .add(effect: (state, oldState, event, dispatch) {
+  ///     // effect - log update
+  ///     print('\nEvent: $event');
+  ///     print('OldState: $oldState');
+  ///     print('State: $state');
+  ///   })
+  ///   ...
+  /// ``` 
+  /// 
   System<State, Event> add({
     Reduce<State, Event>? reduce,
     Effect<State, Event>? effect,
