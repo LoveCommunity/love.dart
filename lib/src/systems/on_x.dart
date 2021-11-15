@@ -6,11 +6,54 @@ extension OnX<State, Event> on System<State, Event> {
 
   /// Add `reduce` or `effect` when event meet some condition.
   /// 
-  /// [test] is used for testing if event meet some condition, 
-  /// return null if it not pass test, return a payload if it pass the test.
-  /// If [test] is omitted, it will use safe cast as condition.
+  /// ## API Overview
   /// 
-  /// Note: The event parameter in `reduce` and `effect` are smart casted to the ChildEvent type.
+  /// ```dart
+  /// system
+  ///   ...
+  ///   .on<SomeEvent>(
+  ///     test: (Event event) {       
+  ///       return event is SomeEvent // test if we are concerned about this event,
+  ///         ? event                 // return `SomeEvent` if we are concerned,
+  ///         : null;                 // return null if we are not concerned,
+  ///     },                          // `test` is nullable, defaults to safe cast as shown.
+  ///     reduce: (state, SomeEvent event) => state // compute a new state based
+  ///       .copyWith(                              // on current state and event.
+  ///         someField: event.someField,           // `reduce` is nullable.
+  ///       ), 
+  ///     effect: (state, SomeEvent event, dispatch) async { 
+  ///       // trigger effect when `SomeEvent` happen.
+  ///       // `effect` is nullable.
+  ///     },
+  ///   )
+  ///   ...
+  /// ```  
+  /// 
+  /// ## Usage Example
+  /// 
+  /// Bellow code showed how to add `reduce` and `effect`,
+  /// when `Increment` or `Decrement` event happen.
+  /// 
+  /// ```dart
+  /// counterSystem
+  ///   ...
+  ///   .on<Increment>(
+  ///     reduce: (state, event) => state + 1,
+  ///     effect: (state, event, dispatch) async {
+  ///       await Future<void>.delayed(const Duration(seconds: 3));
+  ///       dispatch(Decrement());
+  ///     },
+  ///   )
+  ///   .on<Decrement>(
+  ///     reduce: (state, event) => state - 1,
+  ///   )
+  ///   ...
+  /// ```  
+  /// 
+  /// If `Increment` happen, it will increase counts by 1, and wait 3 seconds
+  /// then `dispatch` a `Decrement` event to restore counts.
+  /// If `Decrement` happen, it will decrease counts by 1.
+  ///
   System<State, Event> on<ChildEvent>({
     ChildEvent? Function(Event event)? test,
     Reduce<State, ChildEvent>? reduce,
@@ -90,6 +133,28 @@ extension OnX<State, Event> on System<State, Event> {
   );
   
   /// Add code block that tied with running system's disposer.
+  ///
+  /// It will register a `dispose` callback into system, this callback will
+  /// be invoked right after running system dispose.
+  /// 
+  /// ## Usage Example
+  /// 
+  /// ```dart
+  /// 
+  /// final controller = SomeController(); // somewhere within same scope
+  /// 
+  /// ...
+  /// 
+  /// system
+  ///   ...
+  ///   .onDispose(
+  ///     run: () => controller.dispose(),
+  ///   )
+  ///   ...
+  /// ```
+  /// 
+  /// Above code will dispose `controller` if system is disposing.
+  /// 
   System<State, Event> onDispose({
     required void Function() run
   }) => copy((_run) => ({reduce, effect, interceptor}) {
