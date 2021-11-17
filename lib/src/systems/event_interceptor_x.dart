@@ -160,7 +160,7 @@ extension EventInterceptorX<State, Event> on System<State, Event> {
   /// 
   /// ## Usage Example
   /// 
-  /// Bellow code shown how to implement high level `system.ignoreEvent` 
+  /// Below code shown how to implement high level `system.ignoreEvent` 
   /// based on low level `system.eventInterceptor`:
   /// 
   /// ```dart

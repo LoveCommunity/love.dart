@@ -103,7 +103,7 @@ class System<State, Event> {
   /// 
   /// ## Usage Example
   /// 
-  /// Bellow code showed how to create an operator `onDispose` 
+  /// Below code showed how to create an operator `onDispose` 
   /// which register a `dispose` callback into system
   /// 
   /// ```dart
@@ -210,7 +210,7 @@ class System<State, Event> {
   /// 
   /// ## Usage Example
   ///
-  /// Bellow code showed how to register service when system run,
+  /// Below code showed how to register service when system run,
   /// and unregister it when system dispose:
   /// 
   /// ```dart
@@ -272,7 +272,7 @@ class System<State, Event> {
   /// 
   /// ## Usage Example
   /// 
-  /// Bellow code showed how adds `reduce` or `effect` into system: 
+  /// Below code showed how adds `reduce` or `effect` into system: 
   /// 
   /// ```dart
   /// counterSystem

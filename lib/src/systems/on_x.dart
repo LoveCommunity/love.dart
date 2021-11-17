@@ -31,7 +31,7 @@ extension OnX<State, Event> on System<State, Event> {
   /// 
   /// ## Usage Example
   /// 
-  /// Bellow code showed how to add `reduce` and `effect`,
+  /// Below code showed how to add `reduce` and `effect`,
   /// when `Increment` or `Decrement` event happen.
   /// 
   /// ```dart
