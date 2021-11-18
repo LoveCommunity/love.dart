@@ -5,14 +5,45 @@ import '../utils/default_equals.dart' show defaultEquals;
 
 extension ReactX<State, Event> on System<State, Event> {
 
-  /// Add `effect` triggered by react whole state change.
+  /// Add `effect` triggered by reacting to whole state change.
   /// 
-  /// [equals] describe if old state and new state are equal.
+  /// ## API Overview
   /// 
-  /// [skipInitialState] is true if initial state is skipped and won't trigger effect,
-  /// is false if initial state will trigger effect, default is true.
+  /// ```dart
+  /// system
+  ///   ...
+  ///   .reactState(
+  ///     equals: (it1, it2) {  // `equals` is used to determine if old state equals 
+  ///       return it1 == it2;  // to new state. If there are not equal, then effect
+  ///     },                    // is triggered. `equals` is nullable, defaults to 
+  ///                           // `==` as shown.
+  ///     skipInitialState: true, // return true if initial state is skipped,
+  ///                             // which won't trigger effect.
+  ///                             // return false if initial state isn't skipped,
+  ///                             // which will trigger effect.
+  ///                             // `skipInitialState` defaults to true if omitted.
+  ///     effect: (state, dispatch) { 
+  ///       // trigger effect here with new state, required
+  ///     },
+  ///   )
+  ///   ...
+  /// ```
   /// 
-  /// [effect] describe side effect.
+  /// ## Usage Example
+  /// 
+  /// Below code showed how to save state when state changed.
+  /// 
+  /// ```dart
+  /// system
+  ///   ...
+  ///   .reactState(
+  ///     effect: (state, dispatch) async {
+  ///       await storage.save(state);
+  ///     },
+  ///   )
+  ///   ...
+  /// ```
+  /// 
   System<State, Event> reactState({
     Equals<State>? equals,
     bool skipInitialState = true,
@@ -24,16 +55,47 @@ extension ReactX<State, Event> on System<State, Event> {
     effect: effect
   );
 
-  /// Add `effect` triggered by react partial state value change.
+  /// Add `effect` triggered by reacting to state's partial value change.
   /// 
-  /// [value] describe which part of value is observed.
+  /// ## API Overview
   /// 
-  /// [equals] describe if old value and new value are equal.
+  /// ```dart
+  /// system
+  ///   ...
+  ///   .react<int>(
+  ///     value: (state) => state.itemId, // map state to value, required
+  ///     equals: (value1, value2) {  // `equals` is used to determine if old value equals 
+  ///       return value1 == value2;  // to new value. If there are not equal, then effect
+  ///     },                          // is triggered. `equals` is nullable, defaults to 
+  ///                                 // `==` as shown.
+  ///     skipInitialValue: true, // return true if initial value is skipped,
+  ///                             // which won't trigger effect.
+  ///                             // return false if initial value isn't skipped,
+  ///                             // which will trigger effect.
+  ///                             // `skipInitialValue` defaults to true if omitted.
+  ///     effect: (value, dispatch) { 
+  ///       // trigger effect here with new value, required
+  ///     },
+  ///   )
+  ///   ...
+  /// ```
   /// 
-  /// [skipInitialValue] is true if initial value is skipped and won't trigger effect, 
-  /// is false if initial value will trigger effect, default is true.  
-  ///
-  /// [effect] describe side effect.
+  /// ## Usage Example
+  /// 
+  /// Below code showed how to send account changed event to analytics service,
+  /// when user id changed.
+  /// 
+  /// ```dart
+  /// system
+  ///   ...
+  ///   .react<String?>(
+  ///     value: (state) => state.userId,
+  ///     effect: (userId, dispatch) async {
+  ///       await analyticsService.onAccountChanged(userId);
+  ///     },
+  ///   )
+  ///   ...
+  /// ```
   System<State, Event> react<Value>({
     required Value Function(State state) value,
     Equals<Value>? equals,
@@ -65,19 +127,85 @@ extension ReactX<State, Event> on System<State, Event> {
     );
   }
 
-  /// Add `effect` triggered by react partial state value change,
-  /// it will cancel previous effect when value changed.
+  /// Add `effect` triggered by react state's partial value change,
+  /// it will cancel previous effect when new effect triggered or system
+  /// disposal.
   /// 
-  /// [value] describe which part of value is observed.
+  /// ## API Overview
   /// 
-  /// [equals] describe if old value and new value are equal.
+  /// ```dart
+  /// searchSystem
+  ///   ...
+  ///   .reactLatest<String>(
+  ///     value: (state) => state.keyword, // map state to value, required
+  ///     equals: (value1, value2) {  // `equals` is used to determine if old value equals 
+  ///       return value1 == value2;  // to new value. If there are not equal, then effect
+  ///     },                          // is triggered. `equals` is nullable, defaults to 
+  ///                                 // `==` as shown.
+  ///     skipInitialValue: true, // return true if initial value is skipped,
+  ///                             // which won't trigger effect.
+  ///                             // return false if initial value isn't skipped,
+  ///                             // which will trigger effect.
+  ///                             // `skipInitialValue` defaults to true if omitted.
+  ///     effect: (value, dispatch) { 
+  ///       // trigger effect here with new value, required
+  ///       return Disposer(() { // return a `Disposer` to register cancel logic 
+  ///                            // with this ticket.
+  ///                            // return null or omit return, if there is nothing
+  ///                            // to cancel.
+  ///       });
+  ///     },
+  ///   )
+  ///   ...
+  /// ```
   /// 
-  /// [skipInitialValue] is true if initial value is skipped and won't trigger effect,
-  /// is false if initial value triggers effect, default is true.
+  /// ## Usage Example
   /// 
-  /// [effect] describe side effect, if effect has cancellation mechanism,
-  /// We can return a `Disposer` contain the cancellation logic in effect callback.
-  /// This `Disposer` will be called when value changed or system disposer is called.
+  /// Below code showed how to model search bar, latest search words 
+  /// cancel previous search API call if previous one is not completed.
+  /// 
+  /// ```dart
+  /// searchSystem
+  ///   ...
+  ///   .reactLatest<String>(
+  ///     value: (state) => state.keyword,
+  ///     effect: (keyword, dispatch) async {
+  ///       try {
+  ///         final data = await api.call(keyword);
+  ///         dispatch(LoadDataSuccess(data));
+  ///       } on Exception {
+  ///         dispatch(LoadDataError());
+  ///       }
+  ///     },
+  ///   )
+  /// ```
+  /// 
+  /// For this scenario if previous search result came after latest one, 
+  /// the previous result will be ignored.
+  /// 
+  /// If search `api` provide a cancellation mechanism, 
+  /// We can return a `Disposer` to register cancel logic with this ticket.
+  /// 
+  /// For example if above `api.call` return `Stream`:
+  ///
+  /// ```dart
+  /// searchSystem
+  ///   ...
+  ///   .reactLatest<String>(
+  ///     value: (state) => state.keyword,
+  ///     effect: (keyword, dispatch) async {
+  ///       final stream = api.call(keyword); // it return stream now
+  ///       final subscription = stream.listen(
+  ///         (data) => dispatch(LoadDataSuccess(data)),
+  ///         onError: (Object _) => dispatch(LoadDataError()),
+  ///       );
+  ///       return Disposer(() => subscription.cancel()); // register cancel
+  ///     },
+  ///   )
+  ///   ... 
+  /// ```
+  /// 
+  /// This `Disposer` will be called when keyword changed or system disposal.
   /// 
   System<State, Event> reactLatest<Value>({
     required Value Function(State state) value,

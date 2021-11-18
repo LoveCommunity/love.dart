@@ -208,7 +208,7 @@ typedef Effect<State, Event> = void Function(State state, State? oldState, Event
   * Timer
   * ...
 
-Bellow are `log effect` and `mock effect`:
+Below are `log effect` and `mock effect`:
 
 ```dart
     ...
