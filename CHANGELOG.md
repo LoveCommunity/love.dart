@@ -1,3 +1,9 @@
+## [0.1.0] - 2020-11-19
+
+* docs - improve API documentation for `system.dart` by @beeth0ven in https://github.com/LoveCommunity/love.dart/pull/123
+* docs - improve API documentation for `systems/on_x.dart` by @beeth0ven in https://github.com/LoveCommunity/love.dart/pull/125
+* docs - improve API documentation for `systems/react_x.dart` by @beeth0ven in https://github.com/LoveCommunity/love.dart/pull/127
+
 ## [0.1.0-rc.3] - 2020-11-05
 
 * refactor - explicit import and export types [#112](https://github.com/LoveCommunity/love.dart/issues/112)
