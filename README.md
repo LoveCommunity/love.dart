@@ -759,8 +759,9 @@ The MIT License (MIT)
 [love_overview_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_overview_diagram.png
 [love_detail_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_detail_diagram.png
 
-[love]:https://pub.dev/packages/love/versions/0.1.0-rc.3
-[install love]:https://pub.dev/packages/love/versions/0.1.0-rc.3/install
+[love]:https://pub.dev/packages/love
+[install love]:https://pub.dev/packages/love/install
+[API Reference]:https://pub.dev/documentation/love/latest/
 [flutter_love]:https://pub.dev/packages/flutter_love
 [install flutter_love]:https://pub.dev/packages/flutter_love/install
 [ReactiveX]:http://reactivex.io/
@@ -770,6 +771,5 @@ The MIT License (MIT)
 [RxSwift]:https://github.com/ReactiveX/RxSwift
 [Flutter]:https://flutter.dev/
 [React]:https://reactjs.org/
-[API Reference]:https://pub.dev/documentation/love/0.1.0-rc.3/love/love-library.html
 [@kzaher]:https://github.com/kzaher
 [@miyoyo]:https://github.com/miyoyo
