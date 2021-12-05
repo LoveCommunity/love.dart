@@ -48,8 +48,9 @@ A state management library that is declarative, predictable and elegant.
   
 ## Libraries
 
-* [love] - dart only state management library. if we are developing pure dart app, we can [install love]
-* [flutter_love] - provide flutter widgets handle common use case with [love]. if we are developing flutter app, we can [install flutter_love]
+* [love] - dart only state management library
+* [flutter_love] - provide flutter widgets handle common use case with [love]
+* [flutter_love_provider] - provide flutter widgets to support solution based on [love] and [provider]
 
 ## Counter Example
 
@@ -764,10 +765,10 @@ The MIT License (MIT)
 [love_detail_diagram]:https://raw.githubusercontent.com/LoveCommunity/love.dart/cae498b8648b677b7f45865ea15c69221e2b747e/docs/assets/images/love_detail_diagram.png
 
 [love]:https://pub.dev/packages/love
-[install love]:https://pub.dev/packages/love/install
-[API Reference]:https://pub.dev/documentation/love/latest/
 [flutter_love]:https://pub.dev/packages/flutter_love
-[install flutter_love]:https://pub.dev/packages/flutter_love/install
+[flutter_love_provider]:https://pub.dev/packages/flutter_love_provider
+[provider]:https://pub.dev/packages/provider
+[API Reference]:https://pub.dev/documentation/love/latest/
 [ReactiveX]:http://reactivex.io/
 [debounce logic]:http://reactivex.io/documentation/operators/debounce.html
 [Redux]:https://redux.js.org/
