@@ -1,0 +1,42 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dart: [stable, beta, 2.12.0]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: ${{matrix.dart}}
+      - run: dart pub get
+      - run: dart analyze
+      - run: pub global activate coverage
+      - name: Run tests
+        run: dart 
+          --disable-service-auth-codes 
+          --pause-isolates-on-exit 
+          --enable_asserts
+          --enable-vm-service=1212 
+          test/love_test.dart &
+      - name: Collect coverage
+        run: nohup pub global run coverage:collect_coverage
+          --port=1212
+          --out=coverage/coverage.json
+          --wait-paused
+          --resume-isolates
+      - name: Generate LCOV
+        run: pub global run coverage:format_coverage
+          --lcov
+          --in=coverage/coverage.json
+          --out=coverage/lcov.info
+          --packages=.packages
+          --report-on=lib
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v2.1.0
