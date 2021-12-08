@@ -1,3 +1,10 @@
+## [0.1.1] - 2020-12-08
+
+* docs - add shields images by @beeth0ven in [133](https://github.com/LoveCommunity/love.dart/pull/133)
+* tests - add all tests `love_test.dart` by @beeth0ven in [132](https://github.com/LoveCommunity/love.dart/pull/132)
+* feature - add code coverage report to CI by @beeth0ven in [131](https://github.com/LoveCommunity/love.dart/pull/131)
+* CI - only trigger CI tests on push and pull request with main branch by @beeth0ven in [134](https://github.com/LoveCommunity/love.dart/pull/134)
+  
 ## [0.1.0] - 2020-11-19
 
 * docs - improve API documentation for `system.dart` by @beeth0ven in https://github.com/LoveCommunity/love.dart/pull/123
