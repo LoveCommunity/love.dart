@@ -769,8 +769,8 @@ The MIT License (MIT)
 [flutter_love_provider]:https://pub.dev/packages/flutter_love_provider
 [provider]:https://pub.dev/packages/provider
 [API Reference]:https://pub.dev/documentation/love/latest/
-[ReactiveX]:http://reactivex.io/
-[debounce logic]:http://reactivex.io/documentation/operators/debounce.html
+[ReactiveX]:https://reactivex.io/
+[debounce logic]:https://reactivex.io/documentation/operators/debounce.html
 [Redux]:https://redux.js.org/
 [RxFeedback]:https://github.com/NoTests/RxFeedback.swift
 [RxSwift]:https://github.com/ReactiveX/RxSwift
