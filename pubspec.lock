@@ -302,6 +302,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  typedef_equals:
+    dependency: "direct main"
+    description:
+      name: typedef_equals
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   vm_service:
     dependency: transitive
     description:
