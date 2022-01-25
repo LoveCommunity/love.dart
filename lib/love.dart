@@ -1,5 +1,9 @@
 library love;
 
+export 'package:typedef_equals/typedef_equals.dart'
+  show
+    Equals,
+    defaultEquals;
 export 'src/systems/event_interceptor_x.dart' 
   show
     EventInterceptorX,
@@ -19,7 +23,6 @@ export 'src/types/types.dart'
     Dispatch,
     Disposer,
     Effect,
-    Equals,
     Interceptor,
     Reduce,
     Run;
@@ -28,5 +31,4 @@ export 'src/utils/combine.dart'
     combineEffect,
     combineInterceptor,
     combineReduce;
-export 'src/utils/default_equals.dart' show defaultEquals;
 export 'src/utils/safe_as.dart' show safeAs;

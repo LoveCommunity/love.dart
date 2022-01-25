@@ -1,7 +1,7 @@
+import 'package:typedef_equals/typedef_equals.dart' show Equals, defaultEquals;
 import 'system.dart' show System;
-import '../types/types.dart' show Dispatch, Disposer, Equals;
+import '../types/types.dart' show Dispatch, Disposer;
 import '../types/latest_context.dart' show LatestContext;
-import '../utils/default_equals.dart' show defaultEquals;
 
 extension ReactX<State, Event> on System<State, Event> {
 
