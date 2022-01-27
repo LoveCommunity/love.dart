@@ -1,3 +1,8 @@
+## [0.1.2] - 2022-01-27
+
+* docs - prefer `https` over `http` with ReactiveX docs link in [137](https://github.com/LoveCommunity/love.dart/pull/137)
+* refactor - extract `Equals<T>` to another library in [139](https://github.com/LoveCommunity/love.dart/pull/139)
+
 ## [0.1.1] - 2020-12-08
 
 * docs - add shields images by @beeth0ven in [133](https://github.com/LoveCommunity/love.dart/pull/133)
