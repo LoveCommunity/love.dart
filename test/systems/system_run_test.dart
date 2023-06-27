@@ -17,7 +17,7 @@ void main() {
 
     final system = createTestSystem(initialState: 'a');
     
-    final _disposer = system.run(
+    final localDisposer = system.run(
       effect: (state, oldState, event, dispatch) {
         states.add(state);
         oldStates.add(oldState);
@@ -35,10 +35,10 @@ void main() {
 
     disposer = Disposer(() {
       isDisposed = true;
-      _disposer();
+      localDisposer();
     });
 
-    await delayed<Null>(60);
+    await delayed<void>(60);
   
     expect(events, [
       null,

@@ -85,7 +85,7 @@ void main() {
     final List<String> stateParameters2 = [];
     final List<String> eventParameters2 = [];
 
-    final List<int> _orders = [];
+    final List<int> orders = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -94,7 +94,7 @@ void main() {
             stateParameters1.add(state);
             eventParameters1.add(event);
             invoked1 += 1;
-            _orders.add(1);
+            orders.add(1);
             return '$state+$invoked1';
           },
         ).add(
@@ -102,7 +102,7 @@ void main() {
             stateParameters2.add(state);
             eventParameters2.add(event);
             invoked2 += 1;
-            _orders.add(2);
+            orders.add(2);
             return '$state++$invoked2';
           },
         ),
@@ -175,7 +175,7 @@ void main() {
 
     expect(invoked2, 4);
 
-    expect(_orders, [
+    expect(orders, [
       1, 2,
       1, 2,
       1, 2,
@@ -187,7 +187,7 @@ void main() {
 
     int invoked = 0;
     final List<String> stateParameters = [];
-    final List<String?> _oldStateParameters = [];
+    final List<String?> oldStateParameters = [];
     final List<String?> eventParameters = [];
 
     final it = await testSystem<String, String>(
@@ -198,7 +198,7 @@ void main() {
               dispatch('i');
             }
             stateParameters.add(state);
-            _oldStateParameters.add(oldState);
+            oldStateParameters.add(oldState);
             eventParameters.add(event);
             invoked += 1;
           },
@@ -252,7 +252,7 @@ void main() {
       'a|b|c|i|d|e',
     ]);
 
-    expect(_oldStateParameters, [
+    expect(oldStateParameters, [
       null,
       'a',
       'a|b',
@@ -278,15 +278,15 @@ void main() {
 
     int invoked1 = 0;
     final List<String> stateParameters1 = [];
-    final List<String?> _oldStateParameters1 = [];
+    final List<String?> oldStateParameters1 = [];
     final List<String?> eventParameters1 = [];
 
     int invoked2 = 0;
     final List<String> stateParameters2 = [];
-    final List<String?> _oldStateParameters2 = [];
+    final List<String?> oldStateParameters2 = [];
     final List<String?> eventParameters2 = [];
 
-    final List<int> _orders = [];
+    final List<int> orders = [];
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
@@ -296,10 +296,10 @@ void main() {
               dispatch('i');
             }
             stateParameters1.add(state);
-            _oldStateParameters1.add(oldState);
+            oldStateParameters1.add(oldState);
             eventParameters1.add(event);
             invoked1 += 1;
-            _orders.add(1);
+            orders.add(1);
           },
         ).add(
           effect: (state, oldState, event, dispatch) {
@@ -307,10 +307,10 @@ void main() {
               dispatch('j');
             }
             stateParameters2.add(state);
-            _oldStateParameters2.add(oldState);
+            oldStateParameters2.add(oldState);
             eventParameters2.add(event);
             invoked2 += 1;
-            _orders.add(2);
+            orders.add(2);
           },
         ),
       events: (dispatch, dispose) => [
@@ -366,7 +366,7 @@ void main() {
       'a|b|c|i|j|d|e',
     ]);
 
-    expect(_oldStateParameters1, [
+    expect(oldStateParameters1, [
       null,
       'a',
       'a|b',
@@ -398,7 +398,7 @@ void main() {
       'a|b|c|i|j|d|e',
     ]);
 
-    expect(_oldStateParameters2, [
+    expect(oldStateParameters2, [
       null,
       'a',
       'a|b',
@@ -420,7 +420,7 @@ void main() {
 
     expect(invoked2, 7);
 
-    expect(_orders, [
+    expect(orders, [
       1, 2,
       1, 2,
       1, 2,

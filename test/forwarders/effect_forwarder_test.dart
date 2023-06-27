@@ -15,13 +15,13 @@ void main() {
 
     final forwarder = EffectForwarder<String, String>();
 
-    final Effect<String, String> effect = (state, oldState, event, dispatch) {
+    void effect(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       states.add(state);
       oldStates.add(oldState);
       events.add(event);
       dispatch('e');
       invoked += 1;
-    }; 
+    } 
     
     final dispatch = Dispatch<String>((event) {
       dispatchedEvents.add(event);
@@ -50,13 +50,13 @@ void main() {
 
     final forwarder = EffectForwarder<String, String>();
 
-    final Effect<String, String> effect = (state, oldState, event, dispatch) {
+    void effect(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       states.add(state);
       oldStates.add(oldState);
       events.add(event);
       dispatch('e');
       invoked += 1;
-    }; 
+    } 
 
     final dispatch = Dispatch<String>((event) {
       dispatchedEvents.add(event);
@@ -93,12 +93,12 @@ void main() {
 
     final forwarder = EffectForwarder<String, String>();
 
-    final Effect<String, String> effect = (state, oldState, event, dispatch) {
+    void effect(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       states.add(state);
       oldStates.add(oldState);
       events.add(event);
       invoked += 1;
-    }; 
+    } 
 
     final disposer = forwarder.add(effect: effect);
 
@@ -118,13 +118,13 @@ void main() {
     final List<String> dispatchedEvents = [];
     int invoked = 0;
 
-    final Effect<String, String> effect = (state, oldState, event, dispatch) {
+    void effect(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       states.add(state);
       oldStates.add(oldState);
       events.add(event);
       dispatch('e');
       invoked += 1;
-    }; 
+    } 
 
     final dispatch = Dispatch<String>((event) {
       dispatchedEvents.add(event);
@@ -150,17 +150,17 @@ void main() {
 
     final forwarder = EffectForwarder<String, String>();
 
-    final Effect<String, String> effect1 = (state, oldState, event, dispatch) {
+    void effect1(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       orders.add(1);
-    }; 
+    } 
 
-    final Effect<String, String> effect2 = (state, oldState, event, dispatch) {
+    void effect2(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       orders.add(2);
-    }; 
+    } 
 
-    final Effect<String, String> effect3 = (state, oldState, event, dispatch) {
+    void effect3(String state, String? oldState, String? event, Dispatch<String> dispatch) {
       orders.add(3);
-    }; 
+    } 
 
     final dispatch = Dispatch<String>((_) {});
 

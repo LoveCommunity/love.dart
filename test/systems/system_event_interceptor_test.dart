@@ -6,14 +6,14 @@ void main() {
 
   test('System.eventInterceptor', () async {
 
-    _TestContext? _context;
+    _TestContext? testContext;
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .eventInterceptor<_TestContext>(
           createContext: () {
             final it = _TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           updateContext: (context, state, oldState, event, dispatch) {
@@ -71,7 +71,7 @@ void main() {
 
     expect(it.isDisposed, true);
  
-    expect(_context!.stateParameters, [
+    expect(testContext!.stateParameters, [
       'a',
       'a|b',
       'a|b|c',
@@ -79,7 +79,7 @@ void main() {
       'a|b|c|e|g',
     ]);
 
-    expect(_context!.oldStateParameters, [
+    expect(testContext!.oldStateParameters, [
       null,
       'a',
       'a|b',
@@ -87,7 +87,7 @@ void main() {
       'a|b|c|e',
     ]);
 
-    expect(_context!.eventParameters, [
+    expect(testContext!.eventParameters, [
       null,
       'b',
       'c',
@@ -95,7 +95,7 @@ void main() {
       'g',
     ]);
 
-    expect(_context!.interceptorEventParameters, [
+    expect(testContext!.interceptorEventParameters, [
       'b',
       'c',
       'd',
@@ -104,9 +104,9 @@ void main() {
       'g',
     ]);
 
-    expect(_context!.isDisposed, true);
-    expect(_context!.updateContextInvoked, 5);
-    expect(_context!.interceptorInvoked, 6);
+    expect(testContext!.isDisposed, true);
+    expect(testContext!.updateContextInvoked, 5);
+    expect(testContext!.interceptorInvoked, 6);
   });
 
   test('System.eventInterceptor.orders', () async {
@@ -117,15 +117,15 @@ void main() {
 
     await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
-        .eventInterceptor<Null>(
-          createContext: () => null,
+        .eventInterceptor<void>(
+          createContext: () {},
           interceptor: (context, dispatch, event) {
             interceptorInvoked1 += 1;
             orders.add(100 + interceptorInvoked1);
             dispatch(event);
           },
-        ).eventInterceptor<Null>(
-          createContext: () => null,
+        ).eventInterceptor<void>(
+          createContext: () {},
           interceptor: (context, dispatch, event) {
             interceptorInvoked2 += 1;
             orders.add(200 + interceptorInvoked2);

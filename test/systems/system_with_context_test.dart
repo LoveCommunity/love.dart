@@ -7,7 +7,7 @@ void main() {
   
   test('System.withContext.reduce', () async {
     
-    TestContext? _context;
+    TestContext? testContext;
 
     int invoked = 0;
     final List<String> stateParameters = [];
@@ -18,7 +18,7 @@ void main() {
         .withContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           reduce: (state, event) {
@@ -80,20 +80,20 @@ void main() {
       'e',
     ]);
 
-    expect(_context!.isDisposed, true);
+    expect(testContext!.isDisposed, true);
     expect(invoked, 4);
   });
 
   test('System.withContext.effect', () async {
 
-    TestContext? _context; 
+    TestContext? testContext; 
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .withContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           effect: (context, state, oldState, event, dispatch) {
@@ -147,7 +147,7 @@ void main() {
 
     expect(it.isDisposed, true);
 
-    expect(_context!.stateParameters, [
+    expect(testContext!.stateParameters, [
       'a',
       'a|b',
       'a|b|c',
@@ -156,7 +156,7 @@ void main() {
       'a|b|c|i|d|e',
     ]);
 
-    expect(_context!.oldStateParameters, [
+    expect(testContext!.oldStateParameters, [
       null,
       'a',
       'a|b',
@@ -165,7 +165,7 @@ void main() {
       'a|b|c|i|d',
     ]);
 
-    expect(_context!.eventParameters, [
+    expect(testContext!.eventParameters, [
       null,
       'b',
       'c',
@@ -174,7 +174,7 @@ void main() {
       'e',
     ]);
 
-    expect(_context!.isDisposed, true);
-    expect(_context!.invoked, 6);
+    expect(testContext!.isDisposed, true);
+    expect(testContext!.invoked, 6);
   });
 }

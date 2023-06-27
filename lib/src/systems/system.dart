@@ -190,10 +190,10 @@ class System<State, Event> {
     ) run,
     void Function(Context context)? dispose,
   }) {
-    final _run = run;
+    final localRun = run;
     return copy((run) => ({reduce, effect, interceptor}) {
       final context = createContext();
-      final sourceDisposer = _run(context, run, reduce, effect, interceptor);
+      final sourceDisposer = localRun(context, run, reduce, effect, interceptor);
       final combinedDisposer = dispose == null ? sourceDisposer : Disposer(() {
         dispose(context);
         sourceDisposer();
@@ -254,12 +254,12 @@ class System<State, Event> {
   }) => runWithContext<Context>(
     createContext: createContext,
     run: (context, run, nextReduce, nextEffect, nextInterceptor) {
-      final Effect<State, Event>? _effect = effect == null ? null : (state, oldState, event, dispatch) {
+      final Effect<State, Event>? localEffect = effect == null ? null : (state, oldState, event, dispatch) {
         effect(context, state, oldState, event, dispatch);
       };
       return run(
         reduce: combineReduce(reduce, nextReduce),
-        effect: combineEffect(_effect, nextEffect),
+        effect: combineEffect(localEffect, nextEffect),
         interceptor: nextInterceptor,
       );
     },
@@ -297,8 +297,8 @@ class System<State, Event> {
   System<State, Event> add({
     Reduce<State, Event>? reduce,
     Effect<State, Event>? effect,
-  }) => withContext<Null>(
-    createContext: () => null,
+  }) => withContext<void>(
+    createContext: () {},
     reduce: reduce,
     effect: effect == null ? null : (context, state, oldState, event, dispatch) {
       effect(state, oldState, event, dispatch);
@@ -318,28 +318,28 @@ Run<State, Event> _create<State, Event>({
 
   late Consume<Event> consume;
 
-  void _dispatch(Event event) {
+  void localDispatch(Event event) {
     if (isDisposed) return;
     if (!consuming) {
       consume(event);
     } else {
-      Future(() => _dispatch(event));
+      Future(() => localDispatch(event));
     }
   }
 
   final Dispatch<Event> dispatch = () {
-    final rootDispatch = Dispatch(_dispatch);
+    final rootDispatch = Dispatch(localDispatch);
     return interceptor == null ? rootDispatch : interceptor(rootDispatch);
   }();
 
   consume = (Event? event) {
     consuming = true;
     final oldState = state;
-    final _state = oldState != null && event != null
+    final localState = oldState != null && event != null
       ? reduce(oldState, event)
       : initialState;
-    state = _state;
-    effect?.call(_state, oldState, event, dispatch);
+    state = localState;
+    effect?.call(localState, oldState, event, dispatch);
     consuming = false;
   };
 

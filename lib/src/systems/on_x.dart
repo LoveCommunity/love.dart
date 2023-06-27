@@ -59,18 +59,18 @@ extension OnX<State, Event> on System<State, Event> {
     Reduce<State, ChildEvent>? reduce,
     void Function(State state, ChildEvent event, Dispatch<Event> dispatch)? effect,
   }) {
-    final _test = test ?? safeAs;
+    final localTest = test ?? safeAs;
     return add(
       reduce: reduce == null ? null : (state, event) {
         return _testEvent(event, 
-          test: _test, 
+          test: localTest, 
           then: (ChildEvent childEvent) => reduce(state, childEvent),
         ) ?? state;
       },
       effect: effect == null ? null : (state, oldState, event, dispatch) {
         if (oldState != null && event != null) {
           _testEvent(event, 
-            test: _test, 
+            test: localTest, 
             then: (ChildEvent childEvent) => effect(state, childEvent, dispatch),
           );
         }
@@ -157,9 +157,9 @@ extension OnX<State, Event> on System<State, Event> {
   /// 
   System<State, Event> onDispose({
     required void Function() run
-  }) => copy((_run) => ({reduce, effect, interceptor}) {
+  }) => copy((localRun) => ({reduce, effect, interceptor}) {
     final disposer = Disposer(run);
-    final sourceDisposer = _run(reduce: reduce, effect: effect, interceptor: interceptor);
+    final sourceDisposer = localRun(reduce: reduce, effect: effect, interceptor: interceptor);
     return Disposer(() {
       sourceDisposer();
       disposer();
@@ -177,5 +177,6 @@ Result? _testEvent<Result, ChildEvent, Event>(Event event, {
 }) {
   final childEvent = test(event);
   if (childEvent != null) return then(childEvent);
+  return null;
 }
 

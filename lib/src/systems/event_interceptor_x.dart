@@ -1,5 +1,5 @@
 import 'system.dart' show System;
-import '../types/types.dart' show ContextEffect, Dispatch, Disposer, Effect, Interceptor;
+import '../types/types.dart' show ContextEffect, Dispatch, Disposer, Effect;
 import '../utils/combine.dart' show combineEffect, combineInterceptor;
 import '../utils/safe_as.dart' show safeAs;
 
@@ -102,11 +102,11 @@ extension EventInterceptorX<State, Event> on System<State, Event> {
     ChildEvent? Function(Event event)? test,
     required Duration duration, 
   }) {
-    final _test = test ?? safeAs;
+    final localTest = test ?? safeAs;
     return eventInterceptor<_DebounceOnContext>(
       createContext: () => _DebounceOnContext(),
       interceptor: (context, dispatch, event) {
-        final childEvent = _test(event);
+        final childEvent = localTest(event);
         if (childEvent == null) {
           dispatch(event);
         } else {
@@ -219,17 +219,17 @@ extension EventInterceptorX<State, Event> on System<State, Event> {
       createContext: createContext,
       run: (context, run, nextReduce, nextEffect, nextInterceptor) {
         bool isDisposed = false;
-        final Effect<State, Event>? _effect = updateContext == null ? null : (state, oldState, event, dispatch) {
+        final Effect<State, Event>? localEffect = updateContext == null ? null : (state, oldState, event, dispatch) {
           updateContext(context, state, oldState, event, dispatch);
         };
-        final Interceptor<Event> _interceptor = (dispatch) => Dispatch((event) {
+        Dispatch<Event> localInterceptor(Dispatch<Event> dispatch) => Dispatch((event) {
           if (isDisposed) return;
           interceptor(context, dispatch, event);          
         });
         final sourceDisposer = run(
           reduce: nextReduce,
-          effect: combineEffect(_effect, nextEffect),
-          interceptor: combineInterceptor(_interceptor, nextInterceptor),
+          effect: combineEffect(localEffect, nextEffect),
+          interceptor: combineInterceptor(localInterceptor, nextInterceptor),
         );
         return Disposer(() {
           isDisposed = true;

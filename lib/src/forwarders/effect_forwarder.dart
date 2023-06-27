@@ -44,8 +44,8 @@ class EffectForwarder<State, Event> {
   /// Forward effect call.
   void effect(State state, State? oldState, Event? event, Dispatch<Event> dispatch) {
     if (_isDisposed) return;
-    for (var _effect in _effects) {
-      _effect(state, oldState, event, dispatch);
+    for (var localEffect in _effects) {
+      localEffect(state, oldState, event, dispatch);
     }
     _state = state;
     _dispatch = dispatch;
@@ -60,7 +60,7 @@ class EffectForwarder<State, Event> {
     if (_isDisposed) throw StateError('Cannot add effect after disposed');
     _effects.add(effect);
     if (_state != null && _dispatch != null) {
-      effect(_state!, null, null, _dispatch!);
+      effect(_state as State, null, null, _dispatch!);
     }
     return Disposer(() {
       if (_effects.contains(effect)) {

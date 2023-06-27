@@ -22,7 +22,7 @@ void main() {
           invoked += 1;
           if (moment.event == 'c') {
             return Stream.value('i');
-          };
+          }
           return null;
         })),
       events: (dispatch, dispose) => [

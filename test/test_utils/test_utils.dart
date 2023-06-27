@@ -40,41 +40,41 @@ Future<SystemTestResult<State, Event>> testSystem<State, Event>({
 
   final List<State> states = [];
   final List<State?> oldStates = [];
-  final List<Event?> _events = [];
+  final List<Event?> localEvents = [];
   bool isDisposed = false;
 
-  final _disposer = system.run(
+  final localDisposer = system.run(
     effect: (state, oldState, event, dispatch) {
       states.add(state);
       oldStates.add(oldState);
-      _events.add(event);
+      localEvents.add(event);
       if (event == null) {
         final testEvents = events(
           (delay, event) => TestEventDispatch(delay, event),
           (delay) => TestEventDispose(delay),
         );
-        testEvents.forEach((event) {
+        for (var event in testEvents) {
           if (event is TestEventDispatch<Event>) {
             delayed(event.delay, () => dispatch(event.event));
           } else if (event is TestEventDispose<Event>) {
             delayed(event.delay, () => disposer?.call());
           }
-        });
+        }
       }
     },
   );
     
   disposer = Disposer(() {
     isDisposed = true;
-    _disposer();
+    localDisposer();
   });
 
-  await delayed<Null>(awaitMilliseconds);
+  await delayed<void>(awaitMilliseconds);
 
   return SystemTestResult(
     states: states,
     oldStates: oldStates,
-    events: _events,
+    events: localEvents,
     isDisposed: isDisposed,
   );
 }

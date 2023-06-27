@@ -19,6 +19,7 @@ void main() {
             delayed(10, () => dispatch('c'));
             stateParameters.add(initialState);
             invoked += 1;
+            return null;
           },
         ),
       events: (dispatch, dispose) => [
