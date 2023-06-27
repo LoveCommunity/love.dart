@@ -5,7 +5,7 @@ class LatestContext<Event> {
   Object? _identifier;
   Disposer? _disposer;
 
-  void set disposer(Disposer? disposer) {
+  set disposer(Disposer? disposer) {
     _disposer = Disposer(() {
       disposer?.call();
       _identifier = null;

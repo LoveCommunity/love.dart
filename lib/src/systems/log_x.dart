@@ -92,15 +92,16 @@ extension LogX<State, Event> on System<State, Event> {
     core.String? label,
     void Function(core.String message)? print,
   }) {
-    final _label = label ?? '$runtimeType';
-    final _print = print ?? (core.String message) => core.print(message);
+    final localLabel = label ?? '$runtimeType';
+    final localPrint = print ?? (core.String message) => core.print(message);
+    // ignore: unnecessary_this
     return this
       .add(effect: (state, oldState, event, _) { 
-        if (event == null) _print('$_label Run');
-        _print('$_label Update {\n  event: $event\n  oldState: $oldState\n  state: $state\n}');
+        if (event == null) localPrint('$localLabel Run');
+        localPrint('$localLabel Update {\n  event: $event\n  oldState: $oldState\n  state: $state\n}');
        })
       .onDispose(run: () {
-        _print('$_label Dispose');
+        localPrint('$localLabel Dispose');
       });
   }
 }

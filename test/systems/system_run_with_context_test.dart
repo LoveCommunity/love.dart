@@ -8,14 +8,14 @@ void main() {
 
   test('System.runWithContext.nothing', () async {
 
-    TestContext? _context;
+    TestContext? testContext;
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .runWithContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           run: (context, run, nextReduce, nextEffect, nextInterceptor) {
@@ -67,20 +67,20 @@ void main() {
 
     expect(it.isDisposed, true);
 
-    expect(_context!.invoked, 1);
-    expect(_context!.isDisposed, true);
+    expect(testContext!.invoked, 1);
+    expect(testContext!.isDisposed, true);
   });
 
   test('System.runWithContext.reduce', () async {
 
-    TestContext? _context;
+    TestContext? testContext;
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .runWithContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           run: (context, run, nextReduce, nextEffect, nextInterceptor) {
@@ -133,34 +133,34 @@ void main() {
 
     expect(it.isDisposed, true);
 
-    expect(_context!.stateParameters, [
+    expect(testContext!.stateParameters, [
       'a|b',
       'a|b+1|c',
       'a|b+1|c+2|d',
       'a|b+1|c+2|d+3|e', 
     ]);
 
-    expect(_context!.eventParameters, [
+    expect(testContext!.eventParameters, [
       'b',
       'c',
       'd',
       'e',
     ]);
 
-    expect(_context!.invoked, 4);
+    expect(testContext!.invoked, 4);
     
   });
 
   test('System.runWithContext.effect', () async {
    
-    TestContext? _context; 
+    TestContext? testContext; 
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .runWithContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           run: (context, run, nextReduce, nextEffect, nextInterceptor) {
@@ -223,7 +223,7 @@ void main() {
 
     expect(it.isDisposed, true);
 
-    expect(_context!.stateParameters, [
+    expect(testContext!.stateParameters, [
       'a',
       'a|b',
       'a|b|c',
@@ -232,7 +232,7 @@ void main() {
       'a|b|c|i|d|e',
     ]);
 
-    expect(_context!.oldStateParameters, [
+    expect(testContext!.oldStateParameters, [
       null,
       'a',
       'a|b',
@@ -241,7 +241,7 @@ void main() {
       'a|b|c|i|d',
     ]);
 
-    expect(_context!.eventParameters, [
+    expect(testContext!.eventParameters, [
       null,
       'b',
       'c',
@@ -250,20 +250,20 @@ void main() {
       'e',
     ]);
 
-    expect(_context!.invoked, 6);
-    expect(_context!.isDisposed, true);
+    expect(testContext!.invoked, 6);
+    expect(testContext!.isDisposed, true);
   });
 
   test('System.runWithContext.interceptor', () async {
    
-    TestContext? _context; 
+    TestContext? testContext; 
 
     final it = await testSystem<String, String>(
       system: createTestSystem(initialState: 'a')
         .runWithContext<TestContext>(
           createContext: () {
             final it = TestContext();
-            _context = it;
+            testContext = it;
             return it;
           },
           run: (context, run, nextReduce, nextEffect, nextInterceptor) {
@@ -273,7 +273,7 @@ void main() {
               interceptor: (dispatch) => Dispatch((event) {
                 if (event != 'c') {
                   dispatch(event);
-                };
+                }
                 context.eventParameters.add(event);
                 context.invoked += 1;
               }),
@@ -317,7 +317,7 @@ void main() {
 
     expect(it.isDisposed, true);
 
-    expect(_context!.eventParameters, [
+    expect(testContext!.eventParameters, [
       'b',
       'c',
       'd',
@@ -325,7 +325,7 @@ void main() {
       'f',
     ]);
 
-    expect(_context!.invoked, 5);
-    expect(_context!.isDisposed, true);
+    expect(testContext!.invoked, 5);
+    expect(testContext!.isDisposed, true);
   });
 }

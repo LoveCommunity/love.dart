@@ -34,6 +34,7 @@ void main() {
                 disposedVersions.add(version);
               });
             }
+            return null;
           },
         ),
       events: (dispatch, dispose) => [
@@ -137,6 +138,7 @@ void main() {
                 disposedVersions.add(version);
               });
             }
+            return null;
           },
         ),
       events: (dispatch, dispose) => [

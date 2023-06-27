@@ -102,26 +102,26 @@ extension ReactX<State, Event> on System<State, Event> {
     bool skipInitialValue = true,
     required void Function(Value value, Dispatch<Event> dispatch) effect,
   }) {
-    final _equals = equals ?? defaultEquals;
+    final localEquals = equals ?? defaultEquals;
     return withContext<_ReactContext<Value>>(
       createContext: () => _ReactContext(),
       effect: (context, state, oldState, event, dispatch) {
-        final _value = value(state);
-        final bool _shouldUpdateOldValue;
-        final bool _shouldTriggerEffect;
+        final localValue = value(state);
+        final bool shouldUpdateOldValue;
+        final bool shouldTriggerEffect;
         if (event == null) {
-          _shouldTriggerEffect = !skipInitialValue;
-          _shouldUpdateOldValue = true;
+          shouldTriggerEffect = !skipInitialValue;
+          shouldUpdateOldValue = true;
         } else {
-          final _oldValue = context.oldValue as Value;
-          _shouldTriggerEffect = !_equals(_oldValue, _value);
-          _shouldUpdateOldValue = _shouldTriggerEffect;
+          final oldValue = context.oldValue as Value;
+          shouldTriggerEffect = !localEquals(oldValue, localValue);
+          shouldUpdateOldValue = shouldTriggerEffect;
         }
-        if (_shouldUpdateOldValue) {
-          context.oldValue = _value;
+        if (shouldUpdateOldValue) {
+          context.oldValue = localValue;
         }
-        if (_shouldTriggerEffect) {
-          effect(_value, dispatch);
+        if (shouldTriggerEffect) {
+          effect(localValue, dispatch);
         }
       },
     );
@@ -213,29 +213,29 @@ extension ReactX<State, Event> on System<State, Event> {
     bool skipInitialValue = true,
     required Disposer? Function(Value value, Dispatch<Event> dispatch) effect,
   }) {
-    final _equals = equals ?? defaultEquals;
+    final localEquals = equals ?? defaultEquals;
     return withContext<_ReactLatestContext<Value, Event>>(
       createContext: () => _ReactLatestContext(),
       effect: (context, state, oldState, event, dispatch) {
         final reactContext = context.reactContext;
-        final _value = value(state);
-        final bool _shouldUpdateOldValue;
-        final bool _shouldTriggerEffect;
+        final localValue = value(state);
+        final bool shouldUpdateOldValue;
+        final bool shouldTriggerEffect;
         if (event == null) {
-          _shouldTriggerEffect = !skipInitialValue;
-          _shouldUpdateOldValue = true;
+          shouldTriggerEffect = !skipInitialValue;
+          shouldUpdateOldValue = true;
         } else {
-          final _oldValue = reactContext.oldValue as Value;
-          _shouldTriggerEffect = !_equals(_oldValue, _value);
-          _shouldUpdateOldValue = _shouldTriggerEffect;
+          final oldValue = reactContext.oldValue as Value;
+          shouldTriggerEffect = !localEquals(oldValue, localValue);
+          shouldUpdateOldValue = shouldTriggerEffect;
         }
-        if (_shouldUpdateOldValue) {
-          reactContext.oldValue = _value;
+        if (shouldUpdateOldValue) {
+          reactContext.oldValue = localValue;
         }
-        if (_shouldTriggerEffect) {
+        if (shouldTriggerEffect) {
           final latestContext = context.latestContext;
           latestContext.disposePreviousEffect();
-          latestContext.disposer = effect(_value, latestContext.versioned(dispatch));
+          latestContext.disposer = effect(localValue, latestContext.versioned(dispatch));
         }
       },
       dispose: (context) {

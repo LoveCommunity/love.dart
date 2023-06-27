@@ -28,6 +28,7 @@ void main() async {
     )
     .onRun(effect: (initialState, dispatch) {
       dispatch(Increment());
+      return null;
     },);
   
   final disposer = counterSystem.run();

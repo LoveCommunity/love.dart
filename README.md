@@ -412,6 +412,7 @@ We can use `onRun` operator instead:
 +   .onRun(effect: (initialState, dispatch) {
 +     // mock events
 +     dispatch(Increment());
++     return null;
 +   },);
 ```
 
@@ -690,6 +691,7 @@ final counterSystem = System<int, CounterEvent>
   )
   .onRun(effect: (initialState, dispatch) {
     dispatch(Increment());
+    return null;
   },);
 ```
 
