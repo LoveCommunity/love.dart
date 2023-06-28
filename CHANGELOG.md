@@ -1,3 +1,12 @@
+## 0.2.0
+
+- cicd 
+  - remove `publish` workflow [\#145](https://github.com/LoveCommunity/love.dart/pull/145)
+- refactor 
+  - upgrade dependencies [\#144](https://github.com/LoveCommunity/love.dart/pull/144)
+- docs
+  - correct release year in change log [\#142](https://github.com/LoveCommunity/love.dart/pull/142)
+
 ## [0.1.2] - 2022-01-27
 
 * docs - prefer `https` over `http` with ReactiveX docs link in [137](https://github.com/LoveCommunity/love.dart/pull/137)
